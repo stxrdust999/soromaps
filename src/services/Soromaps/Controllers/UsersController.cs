@@ -54,6 +54,22 @@ namespace Soromaps.Controllers
             return Ok(user);
         }
 
+        // PUT: api/users/1
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] UserDTO dto)
+        {
+            var user = _context.Users.Find(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            user.UserName  = dto.UserName;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            user.UpdatedAt = DateTime.UtcNow;
+            _context.SaveChanges();
+            return Ok(user);
+        }
+
         // DELETE: api/users/1
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)

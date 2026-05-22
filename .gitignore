@@ -51,3 +51,4 @@ next-env.d.ts
 *.sln.docstates
 *.env
 
+/src/services/Soromaps/bin/Debug
