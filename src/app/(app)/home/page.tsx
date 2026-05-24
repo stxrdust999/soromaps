@@ -49,13 +49,22 @@ export default function HomePage() {
 
   useEffect(() => {
     setMounted(true);
-    fetch("http://localhost:5068/api/markers/4") // Considere parametrizar este ID futuramente
-      .then((response) => response.json())
-      .then((dados) => {
-        setLocations(Array.isArray(dados) ? dados : [dados]);
-      })
-      .catch((error) => console.error("Erro ao buscar locais:", error));
-  }, []);
+
+    // Verifica se o zoom é 14 ou maior
+    if (viewport.zoom >= 14) {
+      // Faz o GET para a rota que retorna a lista de markers
+      fetch("http://localhost:5068/api/markers")
+        .then((response) => response.json())
+        .then((dados) => {
+          setLocations(Array.isArray(dados) ? dados : [dados]);
+        })
+        .catch((error) => console.error("Erro ao buscar locais:", error));
+    } else {
+      // Limpa os marcadores da tela se o zoom for menor que 14
+      // Isso melhora a performance e evita um mapa poluído de longe
+      setLocations([]);
+    }
+  }, [viewport.zoom]); // <--- A dependência chave: o React roda esse bloco sempre que o zoom mudar
 
   const isFullyExpanded = snap === 1;
 
