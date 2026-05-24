@@ -53,6 +53,22 @@ namespace Soromaps.Controllers
             return Ok(marker);
         }
 
+        // PUT: api/markers/1
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] MarkerDTO dto)
+        {
+            var marker = _context.Markers.Find(id);
+            if (marker == null)
+            {
+                return NotFound();
+            }
+            marker.Nome = dto.Nome;
+            marker.Lat = dto.Lat;
+            marker.Lng = dto.Lng;
+            _context.SaveChanges();
+            return Ok(marker);
+        }
+
         // DELETE: api/markers/1
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)

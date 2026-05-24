@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import { BookImageIcon, Map as MapIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReviewPost from "./_components/review-post";
+import LocationMarker from "./_components/marker";
 
 // Importando nossos novos componentes abstraídos
 import DraggableDraftMarker from "./_components/drag-marker";
@@ -46,6 +47,14 @@ export default function HomePage() {
   const [locations, setLocations] = useState<Location[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [draftCoords, setDraftCoords] = useState({ lat: 0, lng: 0 });
+
+  const handleUpdateLocation = (updatedLocation: Location) => {
+    setLocations((prevLocations) =>
+      prevLocations.map((loc) =>
+        loc.id === updatedLocation.id ? updatedLocation : loc,
+      ),
+    );
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -123,25 +132,13 @@ export default function HomePage() {
             <MapControls position="top-right" />
 
             {/* Renderização dos pontos já existentes na API */}
+            {/* --- MARKERS DA API (Refatorados) --- */}
             {locations.map((location) => (
-              <MapMarker
+              <LocationMarker
                 key={location.id}
-                longitude={location.lng}
-                latitude={location.lat}
-              >
-                <MarkerContent>
-                  <div className="bg-primary size-4 rounded-full border-2 border-white shadow-lg cursor-pointer" />
-                </MarkerContent>
-                <MarkerTooltip>{location.nome}</MarkerTooltip>
-                <MarkerPopup>
-                  <div className="p-1">
-                    <p className="text-sm font-bold">{location.nome}</p>
-                    <p className="text-xs text-muted-foreground">
-                      Ponto de interesse
-                    </p>
-                  </div>
-                </MarkerPopup>
-              </MapMarker>
+                location={location}
+                onUpdate={handleUpdateLocation}
+              />
             ))}
 
             {/* Renderização do pino de criação (Lógica extraída) */}
