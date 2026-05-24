@@ -56,6 +56,13 @@ export default function HomePage() {
     );
   };
 
+  const handleDeleteLocation = (id: number) => {
+    // Filtra o array, mantendo apenas os pontos onde o id é diferente do id excluído
+    setLocations((prevLocations) =>
+      prevLocations.filter((loc) => loc.id !== id),
+    );
+  };
+
   useEffect(() => {
     setMounted(true);
 
@@ -138,6 +145,7 @@ export default function HomePage() {
                 key={location.id}
                 location={location}
                 onUpdate={handleUpdateLocation}
+                onDelete={handleDeleteLocation}
               />
             ))}
 

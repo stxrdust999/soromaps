@@ -17,14 +17,17 @@ interface Location {
 interface LocationMarkerProps {
   location: Location;
   onUpdate: (updatedLocation: Location) => void;
+  onDelete: (id: number) => void;
 }
 
 export default function LocationMarker({
   location,
   onUpdate,
+  onDelete,
 }: LocationMarkerProps) {
   // Controle para saber se estamos editando ou apenas visualizando
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   // Guarda o texto que o usuário está digitando no momento
   const [newName, setNewName] = useState(location.nome);
 
@@ -56,6 +59,29 @@ export default function LocationMarker({
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      // Fazendo o DELETE na API (o padrão REST é enviar a requisição para a rota do ID)
+      const response = await fetch(
+        `http://localhost:5068/api/markers/${location.id}`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      if (response.ok) {
+        // Se a API retornar sucesso, avisa a HomePage para remover o ponto da tela
+        onDelete(location.id);
+      } else {
+        alert("Erro ao excluir o ponto na API.");
+        setIsDeleting(false); // Cancela o visual de exclusão em caso de erro
+      }
+    } catch (error) {
+      console.error("Erro na requisição DELETE:", error);
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <MapMarker longitude={location.lng} latitude={location.lat}>
       <MarkerContent>
@@ -67,23 +93,35 @@ export default function LocationMarker({
 
       <MarkerPopup>
         <div className="p-2 w-48 space-y-2">
-          {!isEditing ? (
-            // --- MODO LEITURA ---
+          {isDeleting ? (
+            // --- MODO CONFIRMAÇÃO DE EXCLUSÃO ---
             <>
-              <p className="text-sm font-bold truncate">{location.nome}</p>
-              <p className="text-xs text-muted-foreground">
-                Ponto de interesse
+              <p className="text-sm font-bold text-center text-red-500">
+                Excluir ponto?
               </p>
-              <Button
-                size="sm"
-                variant="outline"
-                className="w-full"
-                onClick={() => setIsEditing(true)}
-              >
-                Editar
-              </Button>
+              <p className="text-xs text-center text-muted-foreground mb-2">
+                Isso não pode ser desfeito.
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-1/2"
+                  onClick={() => setIsDeleting(false)}
+                >
+                  Não
+                </Button>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  className="w-1/2"
+                  onClick={handleDelete}
+                >
+                  Sim
+                </Button>
+              </div>
             </>
-          ) : (
+          ) : isEditing ? (
             // --- MODO EDIÇÃO ---
             <>
               <input
@@ -100,13 +138,39 @@ export default function LocationMarker({
                   className="w-1/2"
                   onClick={() => {
                     setIsEditing(false);
-                    setNewName(location.nome); // Reseta caso o usuário desista
+                    setNewName(location.nome);
                   }}
                 >
                   Cancelar
                 </Button>
                 <Button size="sm" className="w-1/2" onClick={handleSave}>
                   Salvar
+                </Button>
+              </div>
+            </>
+          ) : (
+            // --- MODO LEITURA ---
+            <>
+              <p className="text-sm font-bold truncate">{location.nome}</p>
+              <p className="text-xs text-muted-foreground">
+                Ponto de interesse
+              </p>
+              <div className="flex gap-2 mt-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-1/2"
+                  onClick={() => setIsEditing(true)}
+                >
+                  Editar
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-1/2 text-red-500 hover:text-red-600 hover:bg-red-50"
+                  onClick={() => setIsDeleting(true)}
+                >
+                  Excluir
                 </Button>
               </div>
             </>
