@@ -1,28 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Map as MapComponent,
-  MapControls,
-  MapMarker,
-  MarkerContent,
-  MarkerPopup,
-  MarkerTooltip,
-} from "@/components/ui/map";
+import { Map as MapComponent, MapControls } from "@/components/ui/map";
 import {
   Drawer,
   DrawerContent,
-  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
 import { BookImageIcon, Map as MapIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ReviewPost from "./_components/review-post";
 import LocationMarker from "./_components/marker";
-
-// Importando nossos novos componentes abstraídos
 import DraggableDraftMarker from "./_components/drag-marker";
 import CreateMarkerControls from "./_components/create-marker-controls";
 
@@ -228,25 +217,6 @@ export default function HomePage() {
                 <span className="text-xl font-semibold tracking-tight">
                   Últimas Avaliações
                 </span>
-
-                <ReviewPost
-                  review={{
-                    userId: "1",
-                    username: "Arthur Pimenta",
-                    content:
-                      "Experiência incrível! O ambiente é super agradável e o prato principal estava impecável.",
-                    rating: 5,
-                  }}
-                />
-
-                <ReviewPost
-                  review={{
-                    userId: "2",
-                    username: "João Silva",
-                    content: "Muito bom o atendimento, voltarei com certeza!",
-                    rating: 4,
-                  }}
-                />
               </div>
             </section>
           </DrawerContent>
