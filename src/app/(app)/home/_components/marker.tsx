@@ -6,6 +6,7 @@ import {
   MarkerTooltip,
 } from "@/components/ui/map";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface Location {
   id: number;
@@ -83,7 +84,7 @@ export default function LocationMarker({
       case "edit":
         return (
           <>
-            <input
+            <Input
               type="text"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}

@@ -137,7 +137,7 @@ export default function HomePage() {
       >
         {!isFullyExpanded && (
           <MapComponent viewport={viewport} onViewportChange={setViewport}>
-            <MapControls position="top-right" />
+            <MapControls position="top-right" showLocate showCompass />
 
             {/* Renderização dos pontos já existentes na API */}
             {/* --- MARKERS DA API (Refatorados) --- */}
