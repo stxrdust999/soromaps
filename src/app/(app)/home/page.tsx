@@ -12,6 +12,7 @@ import {
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
@@ -177,6 +178,7 @@ export default function HomePage() {
                 ? "rounded-t-none border-t-0"
                 : "rounded-t-[32px]",
             )}
+            aria-describedby={undefined}
           >
             <div className="mx-auto mt-4 h-1.5 w-12 shrink-0 rounded-full bg-zinc-300" />
 
