@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -37,7 +38,15 @@ export default function RootLayout({
         inter.variable,
       )}
     >
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        {children}
+        <Toaster
+          position="bottom-right"
+          richColors
+          duration={5000}
+          closeButton
+        />
+      </body>
     </html>
   );
 }

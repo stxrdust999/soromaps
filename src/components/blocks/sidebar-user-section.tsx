@@ -1,0 +1,120 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import {
+  ChevronRightIcon,
+  LogOutIcon,
+  PencilIcon,
+  UserCircleIcon,
+} from "lucide-react";
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
+import { useRouter } from "next/navigation";
+import { logoutAction } from "@/actions/auth";
+
+interface SidebarUserSectionProps {
+  userName?: string;
+  initials?: string;
+  className?: string;
+  hasChevron?: boolean;
+}
+
+export function SidebarUserSection({
+  userName,
+  initials,
+  className,
+}: SidebarUserSectionProps) {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logoutAction();
+    router.push("/login");
+    router.refresh();
+  };
+
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <SidebarUserInfoSection
+          userName={userName}
+          initials={initials}
+          className={className}
+          hasChevron
+        />
+      </PopoverTrigger>
+
+      <PopoverContent side="right" className="mx-3 p-0 flex flex-col gap-0">
+        {/* upper section */}
+        <SidebarUserInfoSection
+          className="p-3"
+          userName={userName}
+          initials={initials}
+        />
+
+        <Separator className="m-0 p-0 w-full" />
+
+        {/* main content/lower section */}
+        <div className="pt-3 pb-1">
+          <Button
+            variant={"ghost"}
+            className="flex flex-row gap-3 w-full justify-start"
+          >
+            <PencilIcon />
+            <p>Editar perfil</p>
+          </Button>
+
+          <Button
+            variant={"ghost"}
+            className="flex flex-row gap-3 w-full justify-start"
+          >
+            <UserCircleIcon />
+            <p>Gerenciar Conta</p>
+          </Button>
+
+          <Button
+            onClick={handleLogout}
+            variant={"ghost"}
+            className="flex flex-row gap-3 w-full justify-start"
+          >
+            <LogOutIcon />
+            <p>Sair</p>
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function SidebarUserInfoSection({
+  className,
+  userName,
+  initials,
+  hasChevron = false,
+}: SidebarUserSectionProps) {
+  return (
+    <div
+      className={cn("flex flex-row items-center gap-2 px-2 py-1", className)}
+    >
+      <Avatar className="h-8 w-8 rounded-lg">
+        <AvatarFallback className="rounded-lg bg-black text-white">
+          {initials}
+        </AvatarFallback>
+      </Avatar>
+
+      <div className="grid flex-1 text-left text-sm leading-tight">
+        <span className="truncate font-semibold text-foreground">
+          {userName}
+        </span>
+        {/* <span className="truncate text-xs text-muted-foreground">
+          usuario@email.com
+        </span> */}
+      </div>
+
+      {hasChevron && (
+        <ChevronRightIcon className="ml-auto size-4 text-zinc-400" />
+      )}
+    </div>
+  );
+}

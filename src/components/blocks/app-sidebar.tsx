@@ -6,9 +6,6 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -20,18 +17,17 @@ import {
   MessageSquare,
   UserCircle,
   LogOut,
-  ChevronsUpDownIcon,
-  PencilIcon,
-  UserCircleIcon,
-  LogOutIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Separator } from "../ui/separator";
-import { cn } from "@/lib/utils";
+import { SidebarUserSection } from "./sidebar-user-section";
+import { getSession } from "@/lib/session";
 
-export function AppSidebar() {
+export async function AppSidebar() {
+  const session = await getSession();
+
+  const name = session?.userName;
+  const initials = name?.charAt(0).toUpperCase() ?? "U";
+
   return (
     <Sidebar className="overflow-hidden">
       <div className="flex flex-col h-full justify-between">
@@ -112,48 +108,7 @@ export function AppSidebar() {
         </div>
 
         <SidebarFooter>
-          <Popover>
-            <PopoverTrigger>
-              <UserSection />
-            </PopoverTrigger>
-
-            <PopoverContent
-              side="right"
-              className="mx-3 p-0 flex flex-col gap-0"
-            >
-              {/* upper section */}
-              <UserSection className="p-3" />
-
-              <Separator className="m-0 p-0 w-full" />
-
-              {/* main content/lower section */}
-              <div className="pt-3 pb-1">
-                <Button
-                  variant={"ghost"}
-                  className="flex flex-row gap-3 w-full justify-start"
-                >
-                  <PencilIcon />
-                  <p>Editar perfil</p>
-                </Button>
-
-                <Button
-                  variant={"ghost"}
-                  className="flex flex-row gap-3 w-full justify-start"
-                >
-                  <UserCircleIcon />
-                  <p>Gerenciar Conta</p>
-                </Button>
-
-                <Button
-                  variant={"ghost"}
-                  className="flex flex-row gap-3 w-full justify-start"
-                >
-                  <LogOutIcon />
-                  <p>Sair</p>
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover>
+          <SidebarUserSection userName={name} initials={initials} />
         </SidebarFooter>
       </div>
     </Sidebar>
@@ -177,30 +132,5 @@ function RouteButton({ name, url, icon }: RouteButtonProps) {
         <span className="font-medium">{name}</span>
       </Button>
     </Link>
-  );
-}
-
-function UserSection({ className }: { className?: string }) {
-  return (
-    <div
-      className={cn("flex flex-row items-center gap-2 px-2 py-1", className)}
-    >
-      <Avatar className="h-8 w-8 rounded-lg">
-        <AvatarFallback className="rounded-lg bg-black text-white">
-          US
-        </AvatarFallback>
-      </Avatar>
-
-      <div className="grid flex-1 text-left text-sm leading-tight">
-        <span className="truncate font-semibold text-foreground">
-          Usuario 01
-        </span>
-        <span className="truncate text-xs text-muted-foreground">
-          usuario@email.com
-        </span>
-      </div>
-
-      <ChevronsUpDownIcon className="ml-auto size-4 text-zinc-400" />
-    </div>
   );
 }
