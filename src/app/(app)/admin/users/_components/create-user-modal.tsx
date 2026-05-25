@@ -25,7 +25,7 @@ export default function CreateUserModal() {
 
         responseToast.success({
           title: "Usuário criado com sucesso!",
-          description: `O usuário ${data.username} foi adicionado ao sistema.`,
+          description: `O usuário ${data.userName} foi adicionado ao sistema.`,
         });
       } catch (error) {
         responseToast.error({

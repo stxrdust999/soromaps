@@ -5,6 +5,9 @@ interface ToastProps {
   description?: string;
 }
 
+/**
+ * Variantes de Toaster para uso global
+ */
 export const responseToast = {
   success: ({ title, description }: ToastProps) => {
     toast.success(title, {
@@ -16,5 +19,4 @@ export const responseToast = {
       description,
     });
   },
-  // Você pode adicionar outras variantes aqui (warning, info, etc)
 };

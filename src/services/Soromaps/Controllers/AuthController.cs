@@ -18,8 +18,7 @@ namespace Soromaps.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDTO dto)
         {
-            var user = _context.Users
-                .FirstOrDefault(u => u.UserName == dto.UserName);
+            var user = _context.Users.FirstOrDefault(u => u.UserName == dto.UserName);
 
             if (user == null)
             {
@@ -33,10 +32,7 @@ namespace Soromaps.Controllers
                 return Unauthorized("Senha incorreta");
             }
 
-            return Ok(new
-            {
-                message = "Login realizado com sucesso"
-            });
+            return Ok(new { id = user.Id, userName = user.UserName });
         }
     }
 }

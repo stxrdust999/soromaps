@@ -15,8 +15,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Conteúdo da página */}
         <div className="flex-1">{children}</div>
       </main>
-
-      <Toaster position="bottom-right" richColors duration={5000} closeButton />
     </SidebarProvider>
   );
 }
