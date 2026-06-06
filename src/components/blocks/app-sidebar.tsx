@@ -6,9 +6,6 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -31,9 +28,6 @@ export async function AppSidebar() {
 
   const name = session?.userName;
   const initials = name?.charAt(0).toUpperCase() ?? "U";
-
-  const hoverStyles =
-    "hover:bg-foreground hover:text-background transition-all duration-200";
 
   return (
     <Sidebar className="overflow-hidden">
@@ -58,108 +52,60 @@ export async function AppSidebar() {
 
           <SidebarSeparator className="mx-0 w-full bg-black/30" />
 
-          <SidebarContent>
+          <SidebarContent className="flex flex-col gap-0">
             {/* Grupo: Navegação */}
-            <SidebarGroup>
+            <SidebarGroup className="flex flex-col gap-0">
               <SidebarGroupLabel>Navegação</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className={cn("rounded-sm", hoverStyles)}
-                    >
-                      <Link href="/home">
-                        <MapIcon />
-                        <span>Mapa Interativo</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className={cn("rounded-sm", hoverStyles)}
-                    >
-                      <Link href="/places">
-                        <Search />
-                        <span>Explorar Lugares</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
+              <SidebarGroupContent className="flex flex-col gap-0">
+                <RouteButton
+                  url="/home"
+                  name="Mapa Interativo"
+                  icon={<MapIcon size={16} />}
+                />
+                <RouteButton
+                  url="/places"
+                  name="Explorar Lugares"
+                  icon={<Search size={16} />}
+                />
               </SidebarGroupContent>
             </SidebarGroup>
 
             {/* Grupo: Gestão */}
-            <SidebarGroup>
+            <SidebarGroup className="flex flex-col gap-0">
               <SidebarGroupLabel>Gestão</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className={cn("rounded-sm", hoverStyles)}
-                    >
-                      <Link href="/admin/businesses">
-                        <Store />
-                        <span>Gerenciar Comércios</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className={cn("rounded-sm", hoverStyles)}
-                    >
-                      <Link href="/admin/users">
-                        <Users />
-                        <span>Usuários</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className={cn("rounded-sm", hoverStyles)}
-                    >
-                      <Link href="/admin/reviews">
-                        <MessageSquare />
-                        <span>Avaliações</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
+              <SidebarGroupContent className="flex flex-col gap-0">
+                <RouteButton
+                  url="/admin/businesses"
+                  name="Gerenciar Comércios"
+                  icon={<Store size={16} />}
+                />
+                <RouteButton
+                  url="/admin/users"
+                  name="Usuários"
+                  icon={<Users size={16} />}
+                />
+                <RouteButton
+                  url="/admin/reviews"
+                  name="Avaliações"
+                  icon={<MessageSquare size={16} />}
+                />
               </SidebarGroupContent>
             </SidebarGroup>
 
             {/* Grupo: Sistema */}
-            <SidebarGroup>
+            <SidebarGroup className="flex flex-col gap-0">
               <SidebarGroupLabel>Sistema</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className={cn("rounded-sm", hoverStyles)}
-                    >
-                      <Link href="/profile">
-                        <UserCircle />
-                        <span>Meu Perfil</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className={cn("rounded-sm", hoverStyles)}
-                    >
-                      <Link href="/login">
-                        <LogOut />
-                        <span>Sair</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
+              <SidebarGroupContent className="flex flex-col gap-0">
+                <RouteButton
+                  url="/profile"
+                  name="Meu Perfil"
+                  icon={<UserCircle size={16} />}
+                />
+                <RouteButton
+                  url="/login"
+                  name="Sair"
+                  icon={<LogOut size={16} />}
+                />
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
@@ -170,5 +116,31 @@ export async function AppSidebar() {
         </SidebarFooter>
       </div>
     </Sidebar>
+  );
+}
+
+interface RouteButtonProps {
+  name: string;
+  url: string;
+  icon?: React.ReactNode;
+}
+
+function RouteButton({ name, url, icon }: RouteButtonProps) {
+  const hoverStyles =
+    "hover:bg-foreground hover:text-background transition-all duration-200";
+
+  return (
+    <Link href={url} className="w-full">
+      <Button
+        variant="ghost"
+        className={cn(
+          "w-full justify-start gap-2 text-sm h-9 px-2 rounded-sm",
+          hoverStyles
+        )}
+      >
+        {icon}
+        <span className="font-medium">{name}</span>
+      </Button>
+    </Link>
   );
 }
