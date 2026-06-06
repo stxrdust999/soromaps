@@ -46,6 +46,7 @@ function base64UrlToUint8Array(base64Url: string): Uint8Array {
 export interface SessionPayload {
   id: number;
   userName: string;
+  userEmail: string;
   exp?: number;
 }
 

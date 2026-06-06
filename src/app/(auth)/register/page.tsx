@@ -18,10 +18,12 @@ export default function RegisterPage() {
   const router = useRouter();
 
   const [username, setUsername] = React.useState("");
+  const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
   const userData = {
     userName: username,
+    email: email,
     password: password,
   };
 
@@ -71,7 +73,7 @@ export default function RegisterPage() {
               Já faz parte da comunidade?{" "}
             </span>
             <Link
-              className="h-auto hover:no-underline w-auto text-xs font-semibold p-0 text-foreground hover:text-blue-600 border border-transparent items-center self-center"
+              className="h-auto hover:no-underline w-auto text-xs font-semibold p-0 text-blue-900 hover:text-blue-600 border border-transparent items-center self-center"
               href="/login"
             >
               Faça login
@@ -98,6 +100,19 @@ export default function RegisterPage() {
                 disabled={isPending}
                 className="shadow-none text-md h-11 border-zinc-200 focus-visible:ring-1 focus-visible:ring-zinc-400"
                 placeholder="Digite seu nome de usuário..."
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                E-mail
+              </span>
+              <Input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={isPending}
+                className="shadow-none text-md h-11 border-zinc-200 focus-visible:ring-1 focus-visible:ring-zinc-400"
+                placeholder="Digite seu e-mail..."
               />
             </div>
 

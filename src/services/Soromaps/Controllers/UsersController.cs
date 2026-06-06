@@ -43,7 +43,7 @@ namespace Soromaps.Controllers
             var user = new User
             {
                 UserName = dto.UserName,
-                Email = dto.Email
+                Email = dto.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow

@@ -23,15 +23,19 @@ export async function POST(request: Request) {
       const errorMsg = await response.text();
       return NextResponse.json(
         { error: errorMsg || "Credenciais inválidas" },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
-    // Since Option B is set, C# returns { id, userName }
+    // C# returns { id, userName }
     const user = await response.json();
 
     // Create signed JWT
-    const token = await createSession({ id: user.id, userName: user.userName });
+    const token = await createSession({
+      id: user.id,
+      userEmail: user.userEmail,
+      userName: user.userName,
+    });
 
     // Set secure cookie
     const cookieStore = await cookies();
@@ -46,6 +50,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, user });
   } catch (error) {
     console.error("Login API Error:", error);
-    return NextResponse.json({ error: "Erro interno de autenticação" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erro interno de autenticação" },
+      { status: 500 },
+    );
   }
 }

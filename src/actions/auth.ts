@@ -1,9 +1,9 @@
 "use server";
 
-import { type LoginSchema, loginSchema } from "@/validations/auth";
 import { createSession } from "@/lib/session";
-import { cookies } from "next/headers";
+import { type LoginSchema, loginSchema } from "@/validations/auth";
 import { type CreateUserSchema, createUserSchema } from "@/validations/users";
+import { cookies } from "next/headers";
 
 /**
  * Realiza o login do usuário criando um cookie de sessão direto no servidor
@@ -30,7 +30,11 @@ export async function loginAction(data: LoginSchema) {
 
     const user = await response.json();
 
-    const token = await createSession({ id: user.id, userName: user.userName });
+    const token = await createSession({
+      id: user.id,
+      userEmail: user.userEmail,
+      userName: user.userName,
+    });
 
     const cookieStore = await cookies();
     cookieStore.set("session", token, {
@@ -73,7 +77,11 @@ export async function registerAction(data: CreateUserSchema) {
 
     const user = await response.json();
 
-    const token = await createSession({ id: user.id, userName: user.userName });
+    const token = await createSession({
+      id: user.id,
+      userEmail: user.userEmail,
+      userName: user.userName,
+    });
 
     const cookieStore = await cookies();
     cookieStore.set("session", token, {

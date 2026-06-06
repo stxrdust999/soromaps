@@ -16,6 +16,7 @@ import { logoutAction } from "@/actions/auth";
 
 interface SidebarUserSectionProps {
   userName?: string;
+  email?: string;
   initials?: string;
   className?: string;
   hasChevron?: boolean;
@@ -23,6 +24,7 @@ interface SidebarUserSectionProps {
 
 export function SidebarUserSection({
   userName,
+  email,
   initials,
   className,
 }: SidebarUserSectionProps) {
@@ -39,6 +41,7 @@ export function SidebarUserSection({
       <PopoverTrigger>
         <SidebarUserInfoSection
           userName={userName}
+          email={email}
           initials={initials}
           className={className}
           hasChevron
@@ -90,6 +93,7 @@ export function SidebarUserSection({
 function SidebarUserInfoSection({
   className,
   userName,
+  email,
   initials,
   hasChevron = false,
 }: SidebarUserSectionProps) {
@@ -107,9 +111,7 @@ function SidebarUserInfoSection({
         <span className="truncate font-semibold text-foreground">
           {userName}
         </span>
-        {/* <span className="truncate text-xs text-muted-foreground">
-          usuario@email.com
-        </span> */}
+        <span className="truncate text-xs text-muted-foreground">{email}</span>
       </div>
 
       {hasChevron && (

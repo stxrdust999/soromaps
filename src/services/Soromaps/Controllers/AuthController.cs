@@ -32,7 +32,7 @@ namespace Soromaps.Controllers
                 return Unauthorized("Senha incorreta");
             }
 
-            return Ok(new { id = user.Id, userName = user.UserName });
+            return Ok(new { id = user.Id, userName = user.UserName, userEmail = user.Email });
         }
     }
 }

@@ -27,6 +27,7 @@ export async function AppSidebar() {
   const session = await getSession();
 
   const name = session?.userName;
+  const email = session?.userEmail;
   const initials = name?.charAt(0).toUpperCase() ?? "U";
 
   return (
@@ -112,7 +113,11 @@ export async function AppSidebar() {
         </div>
 
         <SidebarFooter>
-          <SidebarUserSection userName={name} initials={initials} />
+          <SidebarUserSection
+            userName={name}
+            email={email}
+            initials={initials}
+          />
         </SidebarFooter>
       </div>
     </Sidebar>
@@ -135,7 +140,7 @@ function RouteButton({ name, url, icon }: RouteButtonProps) {
         variant="ghost"
         className={cn(
           "w-full justify-start gap-2 text-sm h-9 px-2 rounded-sm",
-          hoverStyles
+          hoverStyles,
         )}
       >
         {icon}
