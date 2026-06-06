@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import LocationMarker from "./_components/marker";
 import DraggableDraftMarker from "./_components/drag-marker";
 import CreateMarkerControls from "./_components/create-marker-controls";
+import FeedTrendingSection from "./_components/feed/feed-trending-section";
+import FeedNewInMapSection from "./_components/feed/feed-new-in-map-section";
 
 interface Location {
   id: number;
@@ -96,12 +98,18 @@ export default function HomePage() {
       });
 
       if (response.ok) {
-        const novoMarker = await response.json();
-        setLocations((prev) => [...prev, novoMarker]);
+        try {
+          const fetchRes = await fetch("http://localhost:5068/api/markers");
+          if (fetchRes.ok) {
+            const dados = await fetchRes.json();
+            setLocations(Array.isArray(dados) ? dados : [dados]);
+          }
+        } catch (fetchError) {
+          console.error("Erro ao buscar marcadores atualizados", fetchError);
+        }
+
         setIsCreating(false);
-        alert("Ponto salvo com sucesso no banco!");
-      } else {
-        alert("Erro ao salvar o ponto na API.");
+        alert("salvo c sucesso");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
@@ -162,14 +170,14 @@ export default function HomePage() {
           <DrawerContent
             container={container}
             className={cn(
-              "absolute z-50 transition-all duration-500 ease-in-out border-t shadow-none h-full",
+              "absolute z-50 transition-all duration-500 ease-in-out border-t  shadow-none h-full",
               isFullyExpanded
                 ? "rounded-t-none border-t-0"
                 : "rounded-t-[32px]",
             )}
             aria-describedby={undefined}
           >
-            <div className="mx-auto mt-4 h-1.5 w-12 shrink-0 rounded-full bg-zinc-300" />
+            <div className="mx-auto mt-4 h-1.5 w-12 shrink-0 rounded-full bg-black " />
 
             <DrawerHeader className="pb-2">
               <div className="flex flex-col gap-2 px-4">
@@ -210,14 +218,11 @@ export default function HomePage() {
                 />
               </div>
             </DrawerHeader>
-
             {/* Área de Conteúdo */}
-            <section className="overflow-y-auto px-8 py-4">
-              <div className="flex flex-col gap-2">
-                <span className="text-xl font-semibold tracking-tight">
-                  Últimas Avaliações
-                </span>
-              </div>
+            <section className="overflow-y-auto px-8 py-4 flex flex-col gap-4">
+              <FeedTrendingSection />
+
+              <FeedNewInMapSection />
             </section>
           </DrawerContent>
         </Drawer>
