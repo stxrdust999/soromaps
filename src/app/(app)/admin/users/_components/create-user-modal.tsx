@@ -8,7 +8,6 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/actions/users/create-user";
 import type { CreateUserSchema } from "@/validations/users";
-import { toast } from "sonner";
 import { responseToast } from "@/lib/toaster";
 
 export default function CreateUserModal() {

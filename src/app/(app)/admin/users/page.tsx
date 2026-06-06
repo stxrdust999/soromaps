@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { getUsers } from "@/actions/users/get-users";
 import { Button } from "@/components/ui/button";
-import { SaveIcon, UserPlusIcon } from "lucide-react";
+import { SaveIcon, TrashIcon, UserPlusIcon } from "lucide-react";
 import { UsersTableSkeleton } from "@/components/skeletons/users-table-skeleton";
 import {
   Dialog,
@@ -10,76 +10,72 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/blocks/password-input";
 import { Separator } from "@/components/ui/separator";
 import { UsersTable } from "./table";
 import PageTitle from "@/components/blocks/page-section";
-import CreateUserModal from "./_components/create-user-modal";
 
 export default function ManageUsersPage() {
   const usersPromise = getUsers();
 
-  // const testeDialog = (
-  //   <Dialog>
-  //     <DialogTrigger asChild>{newUserAction}</DialogTrigger>
+  const testeDialog = (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant={"destructive"} className="flex flex-row gap-3">
+          <span>Excluir usuário</span>
+          <UserPlusIcon size={4} />
+        </Button>
+      </DialogTrigger>
 
-  //     <DialogContent
-  //       showCloseButton={false}
-  //       className="py-6 px-0 border border-black/20"
-  //     >
-  //       <div className="flex flex-col gap-4">
-  //         {/* titulo e sub */}
-  //         <div className="flex flex-col gap-1  px-6">
-  //           <DialogTitle className="font-semibold text-lg">
-  //             Criar usuário
-  //           </DialogTitle>
-  //           <span className="font-light text-sm text-muted-foreground">
-  //             Preencha os campos abaixo para criar um novo usuário.
-  //           </span>
-  //         </div>
+      <DialogContent
+        showCloseButton={false}
+        className="py-6 px-0 border border-black/20"
+      >
+        <div className="flex flex-col gap-4">
+          {/* titulo e sub */}
+          <div className="flex flex-col gap-1  px-6">
+            <DialogTitle className="font-semibold text-lg">
+              Excluir usuário
+            </DialogTitle>
+          </div>
 
-  //         <Separator className="bg-black/20" />
+          <Separator className="bg-black/20" />
 
-  //         {/* conteudo */}
-  //         <div className="flex flex-col gap-4  px-6">
-  //           {/* input com label */}
-  //           <div className="flex flex-col gap-1">
-  //             <span className="font-semibold text-md">Nome</span>
-  //             <Input className="shadow-none" placeholder="Digite um nome..." />
-  //           </div>
-  //           {/* input com label */}
-  //           <div className="flex flex-col gap-1">
-  //             <span className="font-semibold text-md">Senha</span>
-  //             <PasswordInput
-  //               className="shadow-none"
-  //               placeholder="Digite uma senha..."
-  //               type="password"
-  //             />
-  //           </div>
-  //         </div>
+          {/* conteudo */}
+          <div className="flex flex-col gap-4 px-6">
+            <div className="flex flex-col gap-0.5">
+              <span>Tem certeza que deseja excluir esse usuário?</span>
+              <span>
+                Esta ação é <span className="font-semibold">irreversível</span>!
+              </span>
+            </div>
+            {/* input com label */}
+            <div className="flex flex-col gap-1">
+              <Input className="shadow-none" placeholder="Ex.: Usuário 1" />
+            </div>
+          </div>
 
-  //         <Separator className="bg-black/20" />
+          <Separator className="bg-black/20" />
 
-  //         <div className="flex flex-row justify-end gap-3 w-full  px-6">
-  //           <Button variant={"secondary"} className="flex flex-row gap-2">
-  //             <span>Cancelar</span>
-  //           </Button>
-  //           <Button className="flex flex-row gap-2.5">
-  //             <span>Salvar</span>
-  //             <SaveIcon size={4} />
-  //           </Button>
-  //         </div>
-  //       </div>
-  //     </DialogContent>
-  //   </Dialog>
-  // );
+          <div className="flex flex-row justify-end gap-3 w-full  px-6">
+            <Button variant={"secondary"} className="flex flex-row gap-2">
+              <span>Cancelar</span>
+            </Button>
+            <Button className="flex flex-row gap-2.5 bg-red-500 items-center hover:bg-red-600">
+              <span>Excluir</span>
+              <TrashIcon size={4} />
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 
   return (
     <div>
       <PageTitle
         title="Gerenciar Usuários"
         description="Gerencie os usuários do sistema"
-        actions={<CreateUserModal />}
+        actions={testeDialog}
       />
       <div className="p-8">
         <Suspense fallback={<UsersTableSkeleton />}>
