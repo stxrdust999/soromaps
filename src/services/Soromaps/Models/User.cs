@@ -8,10 +8,13 @@ namespace Soromaps.Models
             [Column("id")]
             public int Id { get; set; }
         
-            [Column("userName")]
+            [Column("user_name")]
             public string UserName { get; set; }
+        
+            [Column("user_email")]
+            public string Email { get; set; }
 
-            [Column("userPassword")]
+            [Column("user_password")]
             public string Password { get; set; }
 
             [Column("created_at")]

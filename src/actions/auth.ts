@@ -3,7 +3,7 @@
 import { type LoginSchema, loginSchema } from "@/validations/auth";
 import { createSession } from "@/lib/session";
 import { cookies } from "next/headers";
-import { CreateUserSchema, createUserSchema } from "@/validations/users";
+import { type CreateUserSchema, createUserSchema } from "@/validations/users";
 
 /**
  * Realiza o login do usuário criando um cookie de sessão direto no servidor
