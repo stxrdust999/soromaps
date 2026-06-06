@@ -729,6 +729,13 @@ type MapControlsProps = {
   className?: string;
   /** Callback with user coordinates when located */
   onLocate?: (coords: { longitude: number; latitude: number }) => void;
+  /** Custom controls */
+  customControls?: {
+    reactNode: React.ReactNode;
+    onClick: () => void;
+    label: string;
+    disabled?: boolean;
+  }[];
 };
 
 const positionClasses = {

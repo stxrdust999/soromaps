@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Map as MapComponent, MapControls } from "@/components/ui/map";
 import {
   Drawer,
@@ -12,8 +13,6 @@ import { cn } from "@/lib/utils";
 import { BookImageIcon, Map as MapIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LocationMarker from "./_components/marker";
-import DraggableDraftMarker from "./_components/drag-marker";
-import CreateMarkerControls from "./_components/create-marker-controls";
 import FeedTrendingSection from "./_components/feed/feed-trending-section";
 import FeedNewInMapSection from "./_components/feed/feed-new-in-map-section";
 
@@ -25,6 +24,7 @@ interface Location {
 }
 
 export default function HomePage() {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [snap, setSnap] = useState<number | string | null>(0.3);
@@ -37,8 +37,6 @@ export default function HomePage() {
   });
 
   const [locations, setLocations] = useState<Location[]>([]);
-  const [isCreating, setIsCreating] = useState(false);
-  const [draftCoords, setDraftCoords] = useState({ lat: 0, lng: 0 });
 
   const handleUpdateLocation = (updatedLocation: Location) => {
     setLocations((prevLocations) =>
@@ -76,46 +74,6 @@ export default function HomePage() {
 
   const isFullyExpanded = snap === 1;
 
-  const handleStartCreating = () => {
-    setIsCreating(true);
-    setDraftCoords({
-      lat: viewport.center[1],
-      lng: viewport.center[0],
-    });
-    setSnap(0.3);
-  };
-
-  const handleSaveMarker = async () => {
-    try {
-      const response = await fetch("http://localhost:5068/api/markers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nome: "Novo Ponto",
-          lat: draftCoords.lat,
-          lng: draftCoords.lng,
-        }),
-      });
-
-      if (response.ok) {
-        try {
-          const fetchRes = await fetch("http://localhost:5068/api/markers");
-          if (fetchRes.ok) {
-            const dados = await fetchRes.json();
-            setLocations(Array.isArray(dados) ? dados : [dados]);
-          }
-        } catch (fetchError) {
-          console.error("Erro ao buscar marcadores atualizados", fetchError);
-        }
-
-        setIsCreating(false);
-        alert("salvo c sucesso");
-      }
-    } catch (error) {
-      console.error("Erro na requisição:", error);
-    }
-  };
-
   if (!mounted) {
     return <div className="h-screen w-full bg-background" />;
   }
@@ -147,12 +105,7 @@ export default function HomePage() {
               />
             ))}
 
-            {/* Renderização do pino de criação (Lógica extraída) */}
-            <DraggableDraftMarker
-              isCreating={isCreating}
-              draftCoords={draftCoords}
-              setDraftCoords={setDraftCoords}
-            />
+            {/* O pino de criação foi movido para a tela dedicada /places/new */}
           </MapComponent>
         )}
       </div>
@@ -209,13 +162,12 @@ export default function HomePage() {
                   )}
                 </div>
 
-                {/* Controles de Criação de Marcador (Lógica extraída) */}
-                <CreateMarkerControls
-                  isCreating={isCreating}
-                  onStartCreating={handleStartCreating}
-                  onCancel={() => setIsCreating(false)}
-                  onSave={handleSaveMarker}
-                />
+                <Button
+                  onClick={() => router.push("/places/new")}
+                  className="w-full mt-2"
+                >
+                  + Adicionar Novo Local
+                </Button>
               </div>
             </DrawerHeader>
             {/* Área de Conteúdo */}

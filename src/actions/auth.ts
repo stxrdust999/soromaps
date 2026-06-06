@@ -79,7 +79,7 @@ export async function registerAction(data: CreateUserSchema) {
 
     const token = await createSession({
       id: user.id,
-      userEmail: user.userEmail,
+      userEmail: user.email,
       userName: user.userName,
     });
 

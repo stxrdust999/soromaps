@@ -53,6 +53,7 @@ export function SidebarUserSection({
         <SidebarUserInfoSection
           className="p-3"
           userName={userName}
+          email={email}
           initials={initials}
         />
 
