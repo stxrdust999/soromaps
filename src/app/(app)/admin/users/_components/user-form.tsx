@@ -12,6 +12,7 @@ import { useState } from "react";
 interface UserFormProps {
   user?: {
     userName: string;
+    email: string;
     userPassword: string;
   };
   isEditing?: boolean;
@@ -30,6 +31,7 @@ export default function UserForm({
   isEditing = false,
 }: UserFormProps) {
   const [username, setUsername] = useState(user?.userName || "");
+  const [email, setEmail] = useState(user?.email || "");
 
   const [userPassword, setUserPassword] = useState("");
 
@@ -40,7 +42,8 @@ export default function UserForm({
 
   const handleSave = () => {
     onSubmit({
-      username: username,
+      userName: username,
+      email: email,
       password: userPassword,
     });
   };
@@ -69,6 +72,19 @@ export default function UserForm({
             placeholder="Digite um nome..."
           />
         </div>
+
+        {/* input com label */}
+        <div className="flex flex-col gap-1">
+          <span className="font-semibold text-md">Email</span>
+          <Input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="shadow-none"
+            placeholder="Digite um email..."
+            type="email"
+          />
+        </div>
+
         {/* input com label */}
         <div className="flex flex-col gap-1">
           <span className="font-semibold text-md">Senha</span>

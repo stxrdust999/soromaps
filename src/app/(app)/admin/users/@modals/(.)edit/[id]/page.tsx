@@ -3,13 +3,15 @@ import { DialogContent } from "@/components/ui/dialog";
 import UserForm from "../../../_components/user-form";
 
 interface EditUserModalPageProps {
-  userId: string;
+  params: Promise<{ id: string }>;
 }
 
-export default function EditUserModalPage({ userId }: EditUserModalPageProps) {
+export default async function EditUserModalPage({ params }: EditUserModalPageProps) {
+  const { id } = await params;
+
   return (
     <div>
-      <Dialog>
+      <Dialog open>
         <DialogContent
           showCloseButton={false}
           className="py-6 px-0 border border-black/20"
