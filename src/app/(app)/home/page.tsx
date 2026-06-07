@@ -29,7 +29,7 @@ export default function HomePage() {
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [snap, setSnap] = useState<number | string | null>(0.3);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
   const [viewport, setViewport] = useState({
     center: [-47.44623758514884, -23.47205863818757] as [number, number],

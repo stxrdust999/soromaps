@@ -31,7 +31,7 @@ export default function LocationMarker({
   const [state, setState] = useState<PopupState>("view");
   const [newName, setNewName] = useState(location.nome);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
   //funcao pra editar o ponto
   const handleSave = async () => {
