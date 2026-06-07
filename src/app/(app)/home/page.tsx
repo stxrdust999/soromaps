@@ -29,6 +29,8 @@ export default function HomePage() {
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [snap, setSnap] = useState<number | string | null>(0.3);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const [viewport, setViewport] = useState({
     center: [-47.44623758514884, -23.47205863818757] as [number, number],
     zoom: 15.5,
@@ -59,7 +61,7 @@ export default function HomePage() {
     // Verifica se o zoom é 14 ou maior
     if (viewport.zoom >= 14) {
       // Faz o GET para a rota que retorna a lista de markers
-      fetch("http://localhost:5068/api/markers")
+      fetch(`${API_URL}/api/markers`)
         .then((response) => response.json())
         .then((dados) => {
           setLocations(Array.isArray(dados) ? dados : [dados]);
@@ -70,7 +72,7 @@ export default function HomePage() {
       // Isso melhora a performance e evita um mapa poluído de longe
       setLocations([]);
     }
-  }, [viewport.zoom]); // <--- A dependência chave: o React roda esse bloco sempre que o zoom mudar
+  }, [viewport.zoom, API_URL]); // <--- A dependência chave: o React roda esse bloco sempre que o zoom mudar
 
   const isFullyExpanded = snap === 1;
 

@@ -10,7 +10,7 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   try {
     const { userName, password } = await request.json();
-    const API_URL = process.env.API_URL || "http://localhost:5068";
+    const API_URL = process.env.API_URL;
 
     // Call ASP.NET C# Auth Login endpoint
     const response = await fetch(`${API_URL}/api/auth/login`, {

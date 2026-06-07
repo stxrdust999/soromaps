@@ -10,6 +10,8 @@ import { Card } from "@/components/ui/card";
 export default function NewPlacePage() {
   const router = useRouter();
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const [viewport, setViewport] = useState({
     center: [-47.44623758514884, -23.47205863818757] as [number, number],
     zoom: 15.5,
@@ -27,7 +29,7 @@ export default function NewPlacePage() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const response = await fetch("http://localhost:5068/api/markers", {
+      const response = await fetch(`${API_URL}/api/markers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

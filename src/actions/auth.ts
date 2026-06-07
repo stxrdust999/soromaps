@@ -15,7 +15,7 @@ export async function loginAction(data: LoginSchema) {
   if (!validation.success) return { error: "Formulário inválido." };
 
   try {
-    const API_URL = process.env.API_URL || "http://localhost:5068";
+    const API_URL = process.env.API_URL;
 
     const response = await fetch(`${API_URL}/api/auth/Login`, {
       method: "POST",
@@ -62,7 +62,7 @@ export async function registerAction(data: CreateUserSchema) {
   if (!validation.success) return { error: "Formulário inválido." };
 
   try {
-    const API_URL = process.env.API_URL || "http://localhost:5068";
+    const API_URL = process.env.API_URL;
 
     const response = await fetch(`${API_URL}/api/users`, {
       method: "POST",

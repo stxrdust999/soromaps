@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        // Encaminha chamadas de markers para a API remota
+        source: "/api/markers/:path*",
+        destination: `${process.env.API_URL}/api/markers/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

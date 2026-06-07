@@ -1,7 +1,7 @@
 import type User from "@/types/user";
 import { type CreateUserSchema, createUserSchema } from "@/validations/users";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.API_URL;
 
 export async function createUser(data: CreateUserSchema): Promise<User> {
   const result = createUserSchema.safeParse(data);

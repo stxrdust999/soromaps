@@ -31,21 +31,20 @@ export default function LocationMarker({
   const [state, setState] = useState<PopupState>("view");
   const [newName, setNewName] = useState(location.nome);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   //funcao pra editar o ponto
   const handleSave = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5068/api/markers/${location.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            nome: newName,
-            lat: location.lat,
-            lng: location.lng,
-          }),
-        },
-      );
+      const response = await fetch(`${API_URL}/api/markers/${location.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome: newName,
+          lat: location.lat,
+          lng: location.lng,
+        }),
+      });
 
       if (response.ok) {
         onUpdate({ ...location, nome: newName });
@@ -61,10 +60,9 @@ export default function LocationMarker({
   //funcao pra deletar o ponto
   const handleDelete = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5068/api/markers/${location.id}`,
-        { method: "DELETE" },
-      );
+      const response = await fetch(`${API_URL}/api/markers/${location.id}`, {
+        method: "DELETE",
+      });
 
       if (response.ok) {
         onDelete(location.id);
