@@ -1,4 +1,5 @@
 import {
+  Building2,
   LogOut,
   MapIcon,
   MessageSquare,
@@ -79,6 +80,11 @@ export async function AppSidebar() {
                   url="/admin/businesses"
                   name="Gerenciar Comércios"
                   icon={<Store size={16} />}
+                />
+                <RouteButton
+                  url="/business"
+                  name="Painel do Negócio"
+                  icon={<Building2 size={16} />}
                 />
                 <RouteButton
                   url="/admin/users"

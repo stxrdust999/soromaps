@@ -1,7 +1,7 @@
 import { decryptSession } from "@/lib/session";
 import { type NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_ROUTES = ["/home", "/admin", "/places", "/profile"];
+const PROTECTED_ROUTES = ["/home", "/admin", "/business", "/places", "/profile"];
 const AUTH_ROUTES = ["/login", "/register"];
 
 export async function middleware(request: NextRequest) {
@@ -36,6 +36,7 @@ export const config = {
   matcher: [
     "/home/:path*",
     "/admin/:path*",
+    "/business/:path*",
     "/places/:path*",
     "/profile/:path*",
     "/login",
