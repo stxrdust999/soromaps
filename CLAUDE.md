@@ -1,7 +1,7 @@
 # 🤖 CLAUDE.md — Soromaps
 
 > Registro vivo do projeto. Atualizado no momento em que decisões são tomadas.
-> Última atualização: 2026-07-29
+> Última atualização: 2026-07-30
 
 ---
 
@@ -212,6 +212,38 @@ regressão de dois majors.
 exportados foram para `/docs/archive/diagramas-originais/`.
 **Motivo:** PNG não gera diff legível — ajuste de cardinalidade vira blob novo.
 Mermaid entra no code review como texto.
+
+### 2026-07-30 — Rotas reorganizadas por tipo de usuário (admin/business/explorer)
+**Decisão:** dentro de `src/app/(app)/`, `admin/` e `business/` continuam como
+pastas reais (prefixo de URL próprio, `/admin/*` e `/business/*`); as rotas de
+usuário comum (`/home`, `/places`, `/profile`) — que não têm prefixo em
+comum — foram agrupadas no route group `(explorer)`. Sidebar e layout
+(`(app)/layout.tsx`) continuam únicos e compartilhados entre os três tipos.
+**Motivo:** o nome `(explorer)` (em vez de `(users)`) evita o vocabulário de
+"papel de acesso" no nome da pasta, combinando com o texto já usado nas telas
+("Explorar Sorocaba", "Explorar Lugares"). Na prática isso é redundante como
+proteção — route group (pasta entre parênteses) nunca aparece na URL,
+independente do nome escolhido — mas mantém a nomenclatura limpa mesmo para
+quem só olha o código-fonte. `admin`/`business` não precisam de route group
+porque o prefixo de URL real já cumpre o papel de agrupar por pasta.
+`/business` é rota nova (stub); `middleware.ts` ganhou `/business` em
+`PROTECTED_ROUTES` e no `matcher`. **Fora de escopo:** layout/sidebar
+distintos por tipo e checagem de role/permissão — `/admin` continua acessível
+por qualquer sessão válida, item de backlog já registrado e não afetado por
+esta reorganização.
+
+### 2026-07-30 — `globals.css` em `src/styles/`, favicon em `public/`
+**Decisão:** `globals.css` saiu de `src/app/` para `src/styles/globals.css`
+(importado em `src/app/layout.tsx` via `@/styles/globals.css`); o favicon
+saiu de `src/app/favicon.ico` para `public/favicon.ico`.
+**Motivo:** alinhar com o scaffold Dara/Stardust — `src/styles/` já existia
+reservado para isso, e favicon é asset estático, não arquivo de rota.
+**Custo aceito:** o favicon deixa de usar a convenção de Metadata File do App
+Router (que gera a tag `<link rel="icon">` automaticamente a partir de
+`app/favicon.ico`) — o navegador continua buscando `/favicon.ico` direto,
+só sem o `<link>` automático. `components.json` (`tailwind.css`) também foi
+atualizado para o novo caminho, senão o CLI do shadcn volta a escrever no
+lugar antigo.
 
 ---
 
