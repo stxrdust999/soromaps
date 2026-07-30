@@ -6,4 +6,3 @@ export interface Review {
   rating: number;
   createdAt?: any;
 }
-

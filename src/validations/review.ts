@@ -6,4 +6,3 @@ export const reviewFormSchema = z.object({
   content: z.string().min(1, "Escreva uma avaliação"),
   rating: z.number().min(1, "Avalie o local").max(5),
 });
-

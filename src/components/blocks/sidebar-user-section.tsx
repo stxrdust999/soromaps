@@ -1,18 +1,18 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import {
   ChevronRightIcon,
   LogOutIcon,
   PencilIcon,
   UserCircleIcon,
 } from "lucide-react";
-import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
 import { useRouter } from "next/navigation";
 import { logoutAction } from "@/actions/auth";
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Separator } from "../ui/separator";
 
 interface SidebarUserSectionProps {
   userName?: string;

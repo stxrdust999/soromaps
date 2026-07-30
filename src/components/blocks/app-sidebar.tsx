@@ -1,4 +1,15 @@
 import {
+  LogOut,
+  MapIcon,
+  MessageSquare,
+  Search,
+  Store,
+  UserCircle,
+  Users,
+} from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -8,20 +19,9 @@ import {
   SidebarHeader,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
-import {
-  MapIcon,
-  Search,
-  Store,
-  Users,
-  MessageSquare,
-  UserCircle,
-  LogOut,
-} from "lucide-react";
-import Link from "next/link";
-import { SidebarUserSection } from "./sidebar-user-section";
 import { getSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
+import { SidebarUserSection } from "./sidebar-user-section";
 
 export async function AppSidebar() {
   const session = await getSession();
