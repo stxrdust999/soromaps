@@ -87,7 +87,7 @@ builder.Services.AddCors(options =>
 
 | Camada | Pasta | Papel |
 |---|---|---|
-| Rotas | `src/app` | App Router: route groups `(app)` e `(auth)`, rotas interceptadas `@modals` |
+| Rotas | `src/app` | App Router: route groups `(app)`, `(auth)` e `(explorer)`, rotas interceptadas `@modals` |
 | Server Actions | `src/actions` | Mutações e chamadas server-side (`auth.ts`, `users/*`) |
 | Sessão | `src/lib/session.ts` | Assina e valida o JWT HS256 com Web Crypto |
 | Guarda de rota | `src/middleware.ts` | Roda no Edge; redireciona por presença de sessão |

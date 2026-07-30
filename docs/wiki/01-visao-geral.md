@@ -81,7 +81,7 @@ Muito ativa em redes sociais, escreve resenhas no Letterboxd, sai nos fins de se
 **Decisão:** lançar restrito a Sorocaba em vez de plataforma genérica de qualquer cidade.
 **Motivo:** a dor central é confiança em avaliação *local*; escopo restrito viabiliza densidade de conteúdo mesmo com base pequena de usuários. Alternativa descartada: multi-cidade desde o início, com custo de aquisição inviável para um TCC.
 
-O código carrega essa decisão de forma literal: o viewport inicial do mapa é fixo em Sorocaba (`-23.472, -47.446`) em [`src/app/(app)/home/page.tsx`](../../src/app/(app)/home/page.tsx).
+O código carrega essa decisão de forma literal: o viewport inicial do mapa é fixo em Sorocaba (`-23.472, -47.446`) em [`src/app/(app)/(explorer)/home/page.tsx`](../../src/app/(app)/(explorer)/home/page.tsx).
 
 ---
 

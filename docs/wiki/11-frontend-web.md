@@ -23,23 +23,28 @@ flowchart TD
     AUTH --> LOGIN["/login"]
     AUTH --> REG["/register"]
 
-    APP --> HOME["/home<br/>mapa + feed"]
-    APP --> PLACES["/places"]
-    PLACES --> NEW["/places/new<br/>criar ponto"]
-    APP --> PROF["/profile"]
     APP --> ADM["/admin"]
     ADM --> ADMU["/admin/users"]
     ADM --> ADMB["/admin/businesses"]
     ADM --> ADMR["/admin/reviews"]
-    ADMU --> MOD["@modals<br/>(.)edit/[id] · (.)delete/[id]"]
+    ADMU --> MOD["@modals<br/>create · update/[id] · delete/[id]"]
+
+    APP --> BIZ["/business<br/>stub"]
+
+    APP --> EXP["(explorer)"]
+    EXP --> HOME["/home<br/>mapa + feed"]
+    EXP --> PLACES["/places"]
+    PLACES --> NEW["/places/new<br/>criar ponto"]
+    EXP --> PROF["/profile"]
 ```
 
 | Route group | Papel |
 |---|---|
 | `(auth)` | Telas públicas de login e cadastro. Sessão ativa aqui redireciona para `/home` |
-| `(app)` | Área autenticada, com sidebar compartilhada no `layout.tsx` |
+| `(app)` | Área autenticada, com sidebar e `@modals` compartilhados no `layout.tsx` — envolve os três tipos abaixo |
+| `(explorer)` | Rotas do usuário comum (`/home`, `/places`, `/profile`) — agrupadas só por não terem prefixo de URL em comum |
 
-Route group não aparece na URL — serve para compartilhar layout sem prefixo de rota.
+`admin/` e `business/` não precisam de route group próprio: já são pastas reais com prefixo de URL (`/admin/*`, `/business/*`), o que já as agrupa. Route group (pasta entre parênteses) nunca aparece na URL — serve para compartilhar layout, ou só organizar por pasta, sem adicionar segmento de rota.
 
 ### Rotas interceptadas em `/admin/users`
 
@@ -222,7 +227,7 @@ Centro inicial fixo em Sorocaba: `[-47.44623758514884, -23.47205863818757]`, zoo
 | Item | Escolha |
 |---|---|
 | Design system | shadcn/ui sobre Radix (`components.json` na raiz) |
-| Estilo | Tailwind CSS 4 via `@tailwindcss/postcss`, tokens em `src/app/globals.css` |
+| Estilo | Tailwind CSS 4 via `@tailwindcss/postcss`, tokens em `src/styles/globals.css` |
 | Ícones | `lucide-react` |
 | Toasts | `sonner`, com wrapper em `src/lib/toaster.ts` |
 | Drawer | `vaul`, com snap points — é o painel deslizante sobre o mapa em `/home` |

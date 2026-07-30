@@ -52,7 +52,7 @@ flowchart LR
 
 | Elemento do protótipo | No app hoje |
 |---|---|
-| Mapa em tela cheia como tela principal | ✅ [`/home`](../../src/app/(app)/home/page.tsx) |
+| Mapa em tela cheia como tela principal | ✅ [`/home`](../../src/app/(app)/(explorer)/home/page.tsx) |
 | Painel deslizante sobre o mapa | ✅ Drawer com snap points (`vaul`) |
 | Feed de tendências e novidades | 🟡 Componentes existem, dados ainda mockados |
 | Perfil do usuário | 🟡 Rota existe, conteúdo mínimo |

@@ -77,9 +77,9 @@ Cria com `BCrypt.HashPassword(dto.Password)` e `CreatedAt`/`UpdatedAt` em `DateT
 
 | Origem | Chamada |
 |---|---|
-| [`/home`](../../src/app/(app)/home/page.tsx) | `GET /api/markers` sempre que `viewport.zoom >= 14` |
-| [`/places/new`](../../src/app/(app)/places/new/page.tsx) | `POST /api/markers` ao confirmar o local |
-| [popup do marcador](../../src/app/(app)/home/_components/marker.tsx) | `PUT` e `DELETE /api/markers/{id}` |
+| [`/home`](../../src/app/(app)/(explorer)/home/page.tsx) | `GET /api/markers` sempre que `viewport.zoom >= 14` |
+| [`/places/new`](../../src/app/(app)/(explorer)/places/new/page.tsx) | `POST /api/markers` ao confirmar o local |
+| [popup do marcador](../../src/app/(app)/(explorer)/home/_components/marker.tsx) | `PUT` e `DELETE /api/markers/{id}` |
 
 > A listagem devolve **todos** os marcadores do banco a cada mudança de zoom; o filtro por proximidade é feito no cliente. Com volume real, isso vira o primeiro gargalo — o caminho natural é receber os limites do viewport (bounding box) por query string.
 
