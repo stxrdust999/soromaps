@@ -1,7 +1,7 @@
 # 🤖 CLAUDE.md — Soromaps
 
 > Registro vivo do projeto. Atualizado no momento em que decisões são tomadas.
-> Última atualização: 2026-07-28
+> Última atualização: 2026-07-29
 
 ---
 
@@ -22,13 +22,15 @@ estabelecimentos menores.
 |---|---|
 | Frontend | Next.js 16 (App Router) + React 19 + TypeScript |
 | UI | Tailwind CSS 4 + shadcn/ui (Radix), lucide-react, sonner, vaul |
+| Tabelas | TanStack Table 8 (via hook global `useTableConfig`) |
+| Formulários | React Hook Form + Zod (`@hookform/resolvers`) |
 | Mapas | MapLibre GL + basemaps CARTO (`positron` / `dark-matter`) |
 | Backend | ASP.NET Core 10 (`net10.0`) + EF Core — repo `../soromaps_api` |
-| Banco de Dados | PostgreSQL (Npgsql) |
+| Banco de Dados | PostgreSQL (Npgsql) — **Supabase** em produção |
 | Hash de senha | BCrypt.Net-Next |
 | Lint/format | Biome 2 |
 | Mobile | Expo (React Native) — **não iniciado** |
-| Nuvem | **não provisionada** |
+| Nuvem | **Vercel** (front) + **Azure App Service** (API) + **Supabase** (banco) |
 
 Stack projetada no TCC (Node.js + Express + TypeScript, SQL Server, Mapbox,
 AWS) está preservada em `/docs` e comparada em
@@ -42,6 +44,7 @@ AWS) está preservada em `/docs` e comparada em
 - Commits: Conventional Commits
 - Diagramas: Mermaid como fonte de verdade; exports originais em `/docs/archive`
 - Docs numerados `NN-tema.md` em `/docs`; wiki numerada em `/docs/wiki`
+- Módulos de produto pendentes em `/docs/todo/{user,business,admin}/` — um `.md` por módulo, índice com status em `docs/todo/README.md`; concluiu módulo → atualiza status na mesma entrega
 - Estrutura de pastas: padrão Dara (Stardust)
 - Material obsoleto vai para `/docs/archive` em subpasta por contexto, nunca é apagado
 
@@ -105,6 +108,105 @@ Sobrescrever a modelagem original destruiria o entregável do TCC; deixar só el
 faria a documentação mentir sobre o sistema. Manter as duas com a diferença
 explícita resolve os dois lados.
 
+### 2026-07-29 — Padrão interno de telas de listagem adotado em `/admin/users`
+**Decisão:** adotar o padrão de telas do time (documentado em
+`~/Desktop/standards`) na tela de usuários, portando junto a infraestrutura
+reutilizável: hook global `useTableConfig`, peças em `src/components/table/`,
+`SheetFilterDialog` e os utilitários de `src/utils/{formatters,sorts,table}`.
+**Motivo:** a tela anterior era HTML de tabela escrito à mão, sem ordenação,
+filtro, paginação ou visibilidade de coluna — e com um bug que renderizava
+`userName` nas três colunas de dados. Portar a biblioteca inteira custa mais
+agora, mas a próxima listagem (comércios, avaliações, marcadores) passa a ser
+só `columns.tsx` + `table.tsx`. **Regra que vem junto:** nenhuma tela chama
+`useReactTable` diretamente; comportamento novo entra no hook global.
+Fora de escopo por ora: `fetcher`/proxy/env validado, e o Orval (a API não
+publica Swagger consumível).
+
+### 2026-07-29 — Leitura em `src/http`, escrita em `src/actions`
+**Decisão:** separar o cliente HTTP de leitura — que devolve o envelope
+discriminado `{ data, status, headers }` e aceita `RequestInit` para o
+chamador declarar `next: { tags: [...] }` — das mutações, que ficam em Server
+Actions com `"use server"`, validação Zod e retorno `FormState`.
+**Motivo:** são contratos diferentes. Leitura precisa ser componível e
+cacheável; escrita precisa validar, invalidar cache e devolver algo que o
+componente transforme em toast. Misturar os dois foi o que produziu o
+`router.refresh()` da versão anterior. **Consequência:** erro de leitura é um
+status (`status === 200 ? data : []`), não uma exceção — não há `try/catch` na
+leitura.
+
+### 2026-07-29 — `updateTag` em vez de `revalidateTag`
+**Decisão:** as Server Actions invalidam cache com `updateTag(tag)`.
+**Motivo:** no Next 16 o `revalidateTag` passou a exigir um segundo argumento
+de perfil de cache, e é o `updateTag` que dá semântica de
+*read-your-own-writes* dentro de uma Server Action — a leitura seguinte já
+enxerga a escrita. É o que faz a tabela chegar atualizada quando o modal
+fecha, sem `router.refresh()`.
+
+### 2026-07-29 — Modais no slot paralelo global `(app)/@modals`
+**Decisão:** mover os modais de `admin/users/@modals` para
+`src/app/(app)/@modals/`, com nomenclatura `create` / `update/[id]` /
+`delete/[id]` e rotas espelho com `redirect()`.
+**Motivo:** um slot só serve todas as rotas autenticadas, então a próxima tela
+não precisa criar um layout novo. Modal é rota, não estado: ganha URL
+compartilhável, botão voltar funcionando e busca de dados no servidor. Custo
+aceito: três arquivos por modal e uma rota espelho que só existe para acesso
+direto e F5 não darem 404.
+
+### 2026-07-29 — `ui/form.tsx` escrito à mão
+**Decisão:** reconstruir a API `Form`/`FormField`/`FormItem`/`FormControl`/
+`FormMessage` sobre o React Hook Form em vez de instalar do registry.
+**Motivo:** o style `radix-vega` do shadcn não distribui mais o `form` — foi
+substituído pelo `field`, agnóstico de biblioteca de formulário. Como o padrão
+de telas depende da API clássica, ela foi reimplementada sobre `Label` e o
+`Slot` do Radix.
+
+### 2026-07-29 — Deploy: Vercel + Azure + Supabase
+**Decisão:** front na Vercel (deploy automático no push), API em Azure App
+Service (publish manual) e PostgreSQL gerenciado no Supabase.
+**Motivo:** cada camada foi para onde tem melhor tier gratuito e menos
+configuração — Next.js na Vercel é deploy sem configuração alguma, ASP.NET
+Core no Azure é o caminho de menor atrito, e Postgres gerenciado evita
+administrar servidor de banco. Substitui a AWS do desenho original, que nunca
+chegou a ser provisionada. **Custo:** três painéis para configurar e três
+lugares onde uma variável de ambiente pode faltar.
+Schema criado à mão no SQL Editor do Supabase — segue sem migrations, agora
+com o agravante de haver **dois** schemas mantidos manualmente (local e
+Supabase) sem nada que os compare.
+
+### 2026-07-29 — URL da API como segredo (e o que isso quebrou)
+**Decisão:** não definir `NEXT_PUBLIC_API_URL` em produção.
+**Motivo:** `NEXT_PUBLIC_` significa público — o valor é gravado em texto puro
+no JavaScript que qualquer visitante baixa. Como a API ainda não tem
+autenticação, publicar a URL entregaria um CRUD de usuários aberto a quem
+abrisse o DevTools.
+**Consequência que se materializou:** `/home`, `/places/new` e o popup do
+marcador leem essa variável no cliente e caem no fallback `""`, então o
+`fetch` vira caminho relativo e dá 404 na Vercel — e, mesmo que não desse, o
+CORS do `Program.cs` só conhece `http://localhost:3000`. **O mapa não carrega
+marcadores em produção.** Login, cadastro e o CRUD de usuários seguem
+funcionando, porque passam pelo servidor.
+**Correção definida:** rota `/api/proxy/[...path]` no Next repassando
+server-side — resolve o 404, dispensa o CORS e mantém a URL fora do bundle.
+É o item 1 do backlog. Detalhes em `docs/wiki/14-deploy.md`.
+
+### 2026-07-29 — Vulnerabilidades de pacote: 15 → 0
+**Decisão:** remover as cinco dependências sem nenhum import em `src/`
+(`firebase`, `hono`, `@hono/node-server`, `leaflet`, `react-leaflet`), mover
+`shadcn` para `devDependencies`, atualizar o Next para 16.2.12, e apertar os
+overrides de `postcss` (`^8.5.25`) e `sharp` (`^0.35.3`).
+**Motivo:** as órfãs carregavam 9 avisos, incluindo a única `critical`
+(`websocket-driver`, via firebase). O Next 16.2.12 corrige um *bypass de
+middleware/proxy no App Router* — relevante porque o `middleware.ts` é a
+guarda de rota do projeto. O `sharp` só é corrigido na 0.35, e o Next
+16.2.12 ainda declara `^0.34.5` (a 0.35 só é dependência oficial a partir da
+canary `16.3.0`); o override antecipa a correção, validado com `npm run
+build` nas quatro telas que usam `next/image`.
+**Ponto de atenção:** por sair do range oficialmente testado pelo Next, este
+override merece reconferência a cada bump de versão do Next.
+**Nunca rodar `npm audit fix --force` aqui:** antes deste ajuste, a
+"correção" que ele propunha para o `sharp` era instalar `next@14.2.35`, uma
+regressão de dois majors.
+
 ### 2026-07-28 — Mermaid como fonte de verdade dos diagramas
 **Decisão:** todo diagrama vive em Mermaid dentro do Markdown; os PNGs
 exportados foram para `/docs/archive/diagramas-originais/`.
@@ -154,8 +256,16 @@ geolocalização tem persistência.
 - [x] CRUD de usuários (API + tela `/admin/users` com rotas interceptadas)
 - [x] CRUD de marcadores (API + criação em `/places/new` + editar/excluir no popup)
 - [x] Mapa MapLibre com tema sincronizado e carregamento por zoom
+- [x] Biblioteca de tabela reutilizável (`useTableConfig` + `src/components/table/*`)
+- [x] `/admin/users` no padrão de listagem: ordenação, busca por coluna, sheet de filtro, visibilidade de colunas, seleção e paginação
+- [x] Camada `src/http` (leitura com envelope + cache tags) e `src/actions/users.ts` (escrita com `FormState`)
+- [x] Slot de modal global `(app)/@modals` com rotas espelho
+- [x] Deploy: front na Vercel, API no Azure App Service, banco no Supabase
 
-### 🔴 Próximos passos — segurança (antes de qualquer deploy)
+### 🔥 Próximo passo — quebrado em produção
+- [ ] Rota `/api/proxy/[...path]` + migrar as chamadas de markers — hoje o mapa **não carrega marcadores em produção** (sem `NEXT_PUBLIC_API_URL` o fetch vira caminho relativo e dá 404; e o CORS só conhece localhost). Ver `docs/wiki/14-deploy.md`
+
+### 🔴 Próximos passos — segurança (a API já está publicada na internet)
 - [ ] Registrar autenticação na API (`AddAuthentication` + `[Authorize]`) — hoje **todo endpoint é público**
 - [ ] Parar de devolver `user_password` nas respostas de `/api/users` (DTO de saída)
 - [ ] `UNIQUE` em `user_name` e `user_email`
@@ -163,11 +273,16 @@ geolocalização tem persistência.
 - [ ] Papel/role de administrador, checado no middleware e na API
 
 ### 🟠 Próximos passos — fundação
-- [ ] EF Core Migrations (schema hoje é manual)
+- [ ] EF Core Migrations — hoje o schema é mantido à mão em dois lugares (local e Supabase), sem nada que os compare
 - [ ] FK ligando `markers` ao usuário criador
 - [ ] Padronizar nomenclatura de tabelas/colunas (`tbUsuario` × `markers`)
 - [ ] Origem de CORS configurável (hoje `http://localhost:3000` fixo em `Program.cs`)
-- [ ] `.env.example` nos dois repos
+- [ ] Versionar o `.env.example` (a regra `.env*` do `.gitignore` o captura) e criar um no repo da API
+- [ ] `.gitignore` no repo da API — `bin/` e `obj/` estão versionados
+- [ ] Pipeline de deploy da API (hoje é publish manual pelo Visual Studio)
+- [ ] `PUT /api/users/{id}` aceitar atualização parcial — hoje re-hasheia a senha sempre, por isso o formulário de edição a exige
+- [ ] Levar markers para `src/http` + Server Action (ainda usam `fetch` no cliente)
+- [ ] `src/lib/fetcher.ts` + `/api/proxy` + env validado com `server-only`
 
 ### 🟡 Próximos passos — produto
 - [ ] `Categoria` + `Analise` (RF-07, RF-11, RF-12)
@@ -179,8 +294,8 @@ geolocalização tem persistência.
 - [ ] App mobile Expo
 
 ### 🟢 Próximos passos — limpeza
-- [ ] Remover deps não importadas (`firebase`, `hono`, `@hono/node-server`, `leaflet`, `react-leaflet`) e mover `shadcn` para `devDependencies`
 - [ ] Apagar Route Handlers órfãos (`src/app/api/auth/{login,logout}`) e o `WeatherForecastController`
 - [ ] Limpar regras obsoletas do `.gitignore` (`/src/services/Soromaps`)
-- [ ] Corrigir `src/types/user.ts` (`id: number`, sem `password`)
 - [ ] Remover `registerSchema` de `src/validations/auth.ts` (sem uso) ou passar a usá-lo no cadastro
+- [ ] Aplicar o padrão de listagem em `/admin/businesses` e `/admin/reviews` (hoje stubs)
+- [ ] Reconferir o override de `sharp` a cada bump do Next (ver decisão abaixo)
