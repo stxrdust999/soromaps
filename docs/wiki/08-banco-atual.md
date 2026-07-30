@@ -2,7 +2,9 @@
 
 # 🐘 08. Banco atual
 
-PostgreSQL, acessado via EF Core com o provider `Npgsql.EntityFrameworkCore.PostgreSQL`. **Duas tabelas**, ambas mapeadas por Data Annotations nos models de `soromaps_api/Models`.
+PostgreSQL gerenciado no **Supabase**, acessado via EF Core com o provider `Npgsql.EntityFrameworkCore.PostgreSQL`. **Duas tabelas**, ambas mapeadas por Data Annotations nos models de `soromaps_api/Models`.
+
+A connection string vive nas Application Settings do Azure App Service (`ConnectionStrings__DefaultConnection`) e nunca entra no repositório — ver [14 — Deploy](./14-deploy.md).
 
 ```mermaid
 erDiagram
@@ -87,13 +89,14 @@ Sem `status` não há moderação de ponto; sem `UsuarioDono` não dá para sabe
 
 ## ⚠️ Sem migrations
 
-O projeto **não tem pasta `Migrations/`** nem o pacote `Microsoft.EntityFrameworkCore.Design`. O schema é criado à mão no banco e o EF Core só o consome.
+O projeto **não tem pasta `Migrations/`** nem o pacote `Microsoft.EntityFrameworkCore.Design`. O schema foi criado **manualmente no SQL Editor do Supabase**, e o EF Core só o consome.
 
 Implicações:
 
 - Não existe forma reproduzível de subir o banco do zero — quem clona o repo precisa do DDL por fora.
 - Mudança de model não gera diff versionado.
 - O modelo lógico do TCC não tem caminho automático para virar schema.
+- Ambiente local e Supabase podem divergir sem ninguém perceber: são dois schemas mantidos à mão, sem nada que os compare.
 
 Primeiro passo para resolver:
 

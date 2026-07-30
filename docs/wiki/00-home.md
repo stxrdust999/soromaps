@@ -33,12 +33,13 @@ O que existe rodando hoje, extraído do código dos dois repositórios.
 
 | Página                                                      | Conteúdo                                                          |
 | ----------------------------------------------------------- | ----------------------------------------------------------------- |
-| [07 — Arquitetura atual](./07-arquitetura-atual.md)         | Dois repos, Next.js 16 + ASP.NET Core 10 + PostgreSQL + MapLibre  |
+| [07 — Arquitetura atual](./07-arquitetura-atual.md)         | Dois repos, Next.js 16 + ASP.NET Core 10 + Supabase + MapLibre    |
 | [08 — Banco atual](./08-banco-atual.md)                     | As duas tabelas reais (`tbUsuario`, `markers`) e o que falta      |
 | [09 — Endpoints da API](./09-api-endpoints.md)              | Catálogo completo de rotas, payloads e respostas                  |
 | [10 — Autenticação e sessão](./10-autenticacao-e-sessao.md) | Fluxo de login, cookie HS256, middleware — e os riscos conhecidos |
 | [11 — Frontend web](./11-frontend-web.md)                   | App Router, Server Actions, mapa, organização de pastas           |
 | [13 — Ambiente e setup](./13-ambiente-e-setup.md)           | Como rodar web + API, variáveis de ambiente, portas               |
+| [14 — Deploy e infraestrutura](./14-deploy.md)              | Vercel + Azure + Supabase, variáveis de produção e o defeito conhecido do mapa |
 
 ---
 
@@ -56,6 +57,7 @@ O que existe rodando hoje, extraído do código dos dois repositórios.
 - **Vai mexer no banco ou na API?** [12](./12-gap-modelo-vs-implementacao.md) primeiro, depois [08](./08-banco-atual.md) e [09](./09-api-endpoints.md).
 - **Vai apresentar/documentar o TCC?** Trilha 1 inteira, na ordem.
 - **Vai mexer em login?** [10](./10-autenticacao-e-sessao.md) — inclusive a seção de riscos.
+- **Vai publicar ou mexer em produção?** [14](./14-deploy.md) — inclui o defeito que hoje derruba o mapa em produção.
 
 ---
 
@@ -64,6 +66,7 @@ O que existe rodando hoje, extraído do código dos dois repositórios.
 | Onde                                    | O quê                                                                                    |
 | --------------------------------------- | ---------------------------------------------------------------------------------------- |
 | [`/docs`](../)                          | Docs numerados de referência (visão geral, requisitos, arquitetura, database, protótipo) |
+| [`/docs/todo`](../todo/README.md)       | Módulos de produto pendentes por área (usuário, estabelecimento, admin)                  |
 | [`/docs/archive`](../archive/README.md) | Exports originais dos diagramas e material histórico                                     |
 | [`/CLAUDE.md`](../../CLAUDE.md)         | Registro vivo: decisões arquiteturais com data e estado atual do roadmap                 |
 | [`/README.md`](../../README.md)         | Porta de entrada pública do repositório                                                  |

@@ -59,7 +59,7 @@ Cria com `BCrypt.HashPassword(dto.Password)` e `CreatedAt`/`UpdatedAt` em `DateT
 
 **`PUT /api/users/{id}`** atualiza nome, e-mail e senha de uma vez. Como o `UserDTO` não tem campos opcionais, atualização parcial não é possível — mandar o objeto sem `password` regrava o hash de uma string vazia.
 
-**Consumido por:** [`src/actions/users/*`](../../src/actions/users/get-users.ts) e o formulário de cadastro via [`registerAction`](../../src/actions/auth.ts).
+**Consumido por:** [`src/http/users/users.ts`](../../src/http/users/users.ts) na leitura, [`src/actions/users.ts`](../../src/actions/users.ts) na escrita, e o cadastro público via [`registerAction`](../../src/actions/auth.ts).
 
 ---
 

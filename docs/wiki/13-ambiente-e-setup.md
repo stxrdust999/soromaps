@@ -1,6 +1,6 @@
-> ⚙️ **Trilha: implementado.** Do zero até os dois serviços rodando local.
+> ⚙️ **Trilha: implementado.** Do zero até os dois serviços rodando **local**. Para os ambientes publicados (Vercel, Azure, Supabase), ver [14 — Deploy](./14-deploy.md).
 
-# 🛠️ 13. Ambiente e setup
+# 🛠️ 13. Ambiente e setup local
 
 Três peças precisam estar de pé: **PostgreSQL**, **API .NET** e **web Next.js**.
 
@@ -125,13 +125,15 @@ SESSION_SECRET=troque-por-uma-string-longa-e-aleatoria
 
 | Variável | Onde é lida | Se faltar |
 |---|---|---|
-| `API_URL` | `src/actions/*`, `src/app/api/auth/*` | `fetch` monta `undefined/api/...` e falha |
+| `API_URL` | `src/http/*`, `src/actions/*` | `fetch` monta `undefined/api/...` e falha |
 | `NEXT_PUBLIC_API_URL` | `/home`, `/places/new`, popup do marcador | Cai no fallback `""` — as chamadas viram caminho relativo e batem no próprio Next.js, retornando 404 |
 | `SESSION_SECRET` | `src/lib/session.ts` | Erro explícito: `SESSION_SECRET must be defined in your environment variables` |
 
-As duas primeiras apontam para o mesmo lugar em desenvolvimento; em produção podem divergir (rede interna × domínio público).
+As duas primeiras apontam para o mesmo lugar em desenvolvimento.
 
-> ⚠️ Ainda não existe `.env.example` em nenhum dos repos — item 10 do backlog. Até lá, esta página é a referência.
+> 🔴 **Em produção a segunda não existe.** `NEXT_PUBLIC_API_URL` foi deliberadamente deixada de fora da Vercel, porque tudo com esse prefixo é gravado em texto puro no bundle e a URL da API é tratada como segredo. É exatamente o cenário da terceira linha da tabela — e é por isso que o mapa não carrega marcadores em produção hoje. Ver [14 — Deploy](./14-deploy.md#-estado-de-produção).
+
+> 📄 Existe um `.env.example` na raiz do repo web, mas ele **não é versionado**: a regra `.env*` do `.gitignore` também o captura. Quem clona o repositório não o recebe — corrigir exige uma exceção `!.env.example`.
 
 ---
 
@@ -165,9 +167,11 @@ Depois: abrir `http://localhost:3000/login`, entrar com `teste` / `Senha123` e c
 | `SESSION_SECRET must be defined` | Falta a variável no `.env.local` |
 | Login sempre "Usuário não encontrado" | Usuário criado direto no banco com senha em texto puro — o hash precisa vir do `POST /api/users` |
 | `relation "tbUsuario" does not exist` | Tabela criada sem aspas e rebaixada para minúsculo |
+| Funciona local mas não em produção | Quase sempre variável de ambiente ausente na Vercel, ou o defeito conhecido do mapa — ver [14](./14-deploy.md#-estado-de-produção) |
+| Erro de *prepared statement* ao apontar para o Supabase | Connection string usando o pooler (porta 6543, PgBouncer em modo transaction). Usar a conexão direta (5432) |
 
 ---
 
-## ⬅️ Voltar
+## ➡️ Próxima página
 
-[00 — Home](./00-home.md)
+[14 — Deploy e infraestrutura](./14-deploy.md) — os ambientes publicados.

@@ -2,6 +2,7 @@
 
 > Plataforma interativa para descobrir, avaliar e compartilhar experiências em estabelecimentos locais de Sorocaba — geolocalização + gamificação + rede social.
 
+🌐 [**Aplicação publicada**](https://soromaps-sigma.vercel.app)
 👉 [**Esboço do Projeto (Figma)**](https://www.figma.com/make/QeH6cpMMMLzWpcahXSmB4E/Plataforma-Interativa-Sorocaba?node-id=0-1&p=f&t=4B6XvFunslTZ5fr7-0)
 🎥 [**Vídeo da Apresentação Final**](https://youtu.be/ikABfE7xs0U?si=GWaXctGDIQR5dzzm)
 
@@ -38,10 +39,10 @@
 | Frontend | Next.js 16 (App Router) + React 19 + TypeScript |
 | UI | Tailwind CSS 4 + shadcn/ui |
 | Backend | ASP.NET Core 10 + EF Core — repo separado (`soromaps_api`) |
-| Banco de Dados | PostgreSQL |
+| Banco de Dados | PostgreSQL (Supabase) |
 | Mapas | MapLibre GL + basemaps CARTO |
 | Mobile | Expo (React Native) — não iniciado |
-| Nuvem | não provisionada |
+| Nuvem | Vercel (front) + Azure App Service (API) + Supabase (banco) |
 
 > A stack originalmente projetada no TCC (Node.js + Express, SQL Server, Mapbox, AWS) está registrada em [`/docs`](./docs) e comparada com a atual em [Gap modelo × implementação](./docs/wiki/12-gap-modelo-vs-implementacao.md).
 
@@ -82,6 +83,18 @@ E preencha a connection string do PostgreSQL em `appsettings.Development.json` n
 
 ---
 
+## ☁️ Produção
+
+| Camada | Provedor | Deploy |
+|---|---|---|
+| Front | Vercel — [soromaps-sigma.vercel.app](https://soromaps-sigma.vercel.app) | automático no push |
+| API | Azure App Service | manual |
+| Banco | Supabase (PostgreSQL) | schema criado à mão |
+
+> 🔴 **Defeito conhecido:** o mapa não carrega marcadores em produção. Login, cadastro e o CRUD de usuários funcionam. Diagnóstico e correção em [Deploy e infraestrutura](./docs/wiki/14-deploy.md#-estado-de-produção).
+
+---
+
 ## 📖 Documentação
 
 **Wiki** — [`/docs/wiki`](./docs/wiki/00-home.md): duas trilhas, o projetado no TCC e o implementado hoje, mais a página de gap entre elas. É o melhor ponto de partida.
@@ -95,6 +108,10 @@ E preencha a connection string do PostgreSQL em `appsettings.Development.json` n
 | [03 — Arquitetura](./docs/03-arquitetura.md) | Stack real, topologia de dois repos e fluxo de sequência |
 | [04 — Database](./docs/04-database.md) | Modelo projetado (10 tabelas) + estado implementado (2 tabelas) |
 | [05 — Protótipo](./docs/05-prototipo.md) | Protótipos Lovable/Figma e vídeos de apresentação |
+
+Páginas da wiki mais consultadas: [Deploy e infraestrutura](./docs/wiki/14-deploy.md), [Ambiente e setup](./docs/wiki/13-ambiente-e-setup.md) e [Gap modelo × implementação](./docs/wiki/12-gap-modelo-vs-implementacao.md).
+
+**Roadmap de módulos** em [`/docs/todo`](./docs/todo/README.md) — o que ainda vai existir, por área (usuário, estabelecimento, admin).
 
 Material histórico (exports originais dos diagramas) em [`/docs/archive`](./docs/archive/README.md).
 

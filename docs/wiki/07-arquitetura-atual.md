@@ -2,12 +2,15 @@
 
 # ⚙️ 07. Arquitetura atual
 
-Dois repositórios independentes, com contrato HTTP entre eles:
+Dois repositórios independentes, com contrato HTTP entre eles, e três provedores em produção:
 
-| Repo | Papel | Stack | Porta padrão |
-|---|---|---|---|
-| `soromaps_web` | App web + camada de sessão | Next.js 16, React 19, TypeScript, Tailwind 4 | `3000` |
-| `soromaps_api` | API REST + acesso a dados | ASP.NET Core 10 (`net10.0`), EF Core, Npgsql | definida no `launchSettings.json` |
+| Repo | Papel | Stack | Local | Produção |
+|---|---|---|---|---|
+| `soromaps_web` | App web + camada de sessão | Next.js 16, React 19, TypeScript, Tailwind 4 | `:3000` | **Vercel** |
+| `soromaps_api` | API REST + acesso a dados | ASP.NET Core 10 (`net10.0`), EF Core, Npgsql | `:5068` | **Azure App Service** |
+| — | Persistência | PostgreSQL | instância local | **Supabase** |
+
+Detalhe de cada ambiente, variáveis e o estado atual de produção em [14 — Deploy](./14-deploy.md).
 
 A separação foi feita no commit inicial da API: *"transferido do projeto soromaps_web pra melhor separação de responsabilidades"*. O backend antes vivia em `src/services/Soromaps` dentro do repo web — sobraram entradas desse caminho no [`.gitignore`](../../.gitignore).
 
@@ -34,7 +37,7 @@ flowchart TB
         CTX["AppDbContext<br/>EF Core"]
     end
 
-    PG[("🐘 PostgreSQL")]
+    PG[("🐘 PostgreSQL<br/>Supabase em produção")]
     CARTO["🗺️ Basemaps CARTO"]
 
     BROWSER --> MW
@@ -42,7 +45,7 @@ flowchart TB
     RSC --> SA
     SA -->|"API_URL (privada)"| AUTH
     SA -->|"API_URL (privada)"| USERS
-    CC -->|"NEXT_PUBLIC_API_URL + CORS"| MARK
+    CC -.->|"NEXT_PUBLIC_API_URL + CORS<br/>❌ quebrado em produção"| MARK
     CC --> CARTO
     AUTH --> CTX
     USERS --> CTX
@@ -56,14 +59,14 @@ flowchart TB
 
 Essa é a característica arquitetural menos óbvia do projeto e a que mais confunde quem chega:
 
-| Caminho | Quem usa | Variável | Exposto no browser? |
-|---|---|---|---|
-| **Server-side** | Server Actions e funções em `src/actions/` | `API_URL` | Não |
-| **Client-side** | Páginas `"use client"` (`/home`, `/places/new`, popup do marcador) | `NEXT_PUBLIC_API_URL` | Sim |
+| Caminho | Quem usa | Variável | Exposto no browser? | Produção |
+|---|---|---|---|---|
+| **Server-side** | Server Actions, `src/http/*` | `API_URL` | Não | ✅ funciona |
+| **Client-side** | Páginas `"use client"` (`/home`, `/places/new`, popup do marcador) | `NEXT_PUBLIC_API_URL` | Sim | ❌ quebrado |
 
 Consequências práticas:
 
-- **Auth e CRUD de usuário** passam pelo servidor Next.js — a URL da API fica privada e o cookie é setado no mesmo request.
+- **Auth e CRUD de usuário** passam pelo servidor Next.js — a URL da API fica privada e o cookie é setado no mesmo request. Funciona em produção.
 - **Markers** são chamados direto do navegador. Por isso `Program.cs` precisa da política de CORS:
 
 ```csharp
@@ -76,7 +79,7 @@ builder.Services.AddCors(options =>
 });
 ```
 
-> ⚠️ A origem está **fixa em `http://localhost:3000`**. Em deploy, o domínio real precisa entrar aqui (idealmente via configuração, não hard-coded) ou toda chamada client-side de markers quebra.
+> 🔴 **Isso já aconteceu.** A origem segue fixa em `http://localhost:3000`, e a API está publicada no Azure com o front na Vercel — as chamadas client-side de markers estão quebradas em produção. Há um segundo defeito empilhado antes desse (o `fetch` vira caminho relativo por falta de `NEXT_PUBLIC_API_URL`). Diagnóstico completo e a correção proposta em [14 — Deploy](./14-deploy.md#-estado-de-produção).
 
 ---
 
@@ -127,7 +130,8 @@ Os controllers acessam o `AppDbContext` diretamente — não há camada de servi
 
 ### Fetch client-side para markers
 **Decisão:** `/home` e `/places/new` chamam a API direto do navegador em vez de usar Server Actions.
-**Motivo:** o mapa é interativo — recarrega marcadores conforme o zoom muda (`viewport.zoom >= 14`), o que casa com `useEffect` no cliente. **Custo:** obriga CORS e expõe a URL da API. Migrar para Server Action + revalidação é possível, mas exigiria repensar o carregamento por zoom.
+**Motivo:** o mapa é interativo — recarrega marcadores conforme o zoom muda (`viewport.zoom >= 14`), o que casa com `useEffect` no cliente. **Custo:** obriga CORS e expõe a URL da API.
+**Custo que se materializou:** quando a URL da API virou segredo (sem `NEXT_PUBLIC_API_URL` em produção), essas chamadas pararam de funcionar. A correção é a rota de proxy descrita em [14 — Deploy](./14-deploy.md#a-correção-rota-de-proxy), que mantém o carregamento por zoom intacto e ainda dispensa o CORS.
 
 ---
 

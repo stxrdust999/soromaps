@@ -1,17 +1,20 @@
 # 🏗️ 03. Arquitetura — Soromaps
 
-> Como o sistema está montado hoje: dois repositórios, Next.js 16 no cliente, ASP.NET Core 10 na API, PostgreSQL na persistência e MapLibre no mapa. A arquitetura desenhada no TCC (Node.js + Express + SQL Server + Mapbox) está preservada ao final do documento.
+> Como o sistema está montado hoje: dois repositórios, Next.js 16 na Vercel, ASP.NET Core 10 no Azure, PostgreSQL no Supabase e MapLibre no mapa. A arquitetura desenhada no TCC (Node.js + Express + SQL Server + Mapbox) está preservada ao final do documento.
 
 ---
 
 ## 📋 Visão geral
 
-O Soromaps hoje são **dois repositórios independentes**:
+O Soromaps hoje são **dois repositórios independentes**, publicados em três provedores:
 
-| Repo | Papel | Stack |
-|---|---|---|
-| `soromaps_web` | Aplicação web + camada de sessão | Next.js 16 (App Router), React 19, TypeScript, Tailwind 4, shadcn/ui |
-| `soromaps_api` | API REST + acesso a dados | ASP.NET Core 10 (`net10.0`), EF Core, Npgsql, BCrypt |
+| Repo | Papel | Stack | Produção |
+|---|---|---|---|
+| `soromaps_web` | Aplicação web + camada de sessão | Next.js 16 (App Router), React 19, TypeScript, Tailwind 4, shadcn/ui | **Vercel** |
+| `soromaps_api` | API REST + acesso a dados | ASP.NET Core 10 (`net10.0`), EF Core, Npgsql, BCrypt | **Azure App Service** |
+| — | Persistência | PostgreSQL | **Supabase** |
+
+Detalhamento dos ambientes, variáveis de produção e o estado atual do deploy em [`wiki/14-deploy.md`](./wiki/14-deploy.md).
 
 A separação aconteceu no commit inicial da API (`a210a31 — transferido do projeto soromaps_web pra melhor separação de responsabilidades`). Antes disso, o backend .NET vivia dentro de `src/services/Soromaps` do repo web — resquícios desse caminho ainda aparecem no `.gitignore`.
 
@@ -28,7 +31,7 @@ flowchart TB
         EF["🔗 AppDbContext<br/>EF Core + Npgsql"]
     end
 
-    PG[("🐘 PostgreSQL")]
+    PG[("🐘 PostgreSQL<br/>Supabase")]
     CARTO["🗺️ Basemaps CARTO<br/>(estilo MapLibre)"]
 
     RSC -->|"fetch com API_URL<br/>(server-side)"| CTRL
@@ -44,6 +47,8 @@ flowchart TB
 - **Server-side** (Server Actions e funções em `src/actions/`) usa `process.env.API_URL` — variável privada, nunca exposta ao browser.
 - **Client-side** (páginas `"use client"` como `/home` e `/places/new`) usa `process.env.NEXT_PUBLIC_API_URL` e bate direto na API pelo navegador — por isso a política de CORS `AllowFrontend` em `Program.cs` libera `http://localhost:3000`.
 
+> 🔴 Esse segundo caminho **está quebrado em produção**: a variável pública não é definida na Vercel (a URL da API virou segredo) e o CORS não conhece o domínio publicado. Diagnóstico e correção em [`wiki/14-deploy.md`](./wiki/14-deploy.md#-estado-de-produção).
+
 ---
 
 ## 🧱 Stack real
@@ -57,7 +62,7 @@ flowchart TB
 | API | ASP.NET Core 10, controllers `[ApiController]` | `soromaps_api/Controllers` |
 | ORM | EF Core + `Npgsql.EntityFrameworkCore.PostgreSQL` | `soromaps_api/Data/AppDbContext.cs` |
 | Hash de senha | `BCrypt.Net-Next` | `UsersController` / `AuthController` |
-| Banco | PostgreSQL | connection string `DefaultConnection` |
+| Banco | PostgreSQL (Supabase em produção) | connection string `DefaultConnection` |
 | Lint/format | Biome 2 | `biome.json` |
 
 > 📄 Detalhamento por camada na wiki: [arquitetura atual](./wiki/07-arquitetura-atual.md), [endpoints](./wiki/09-api-endpoints.md), [autenticação](./wiki/10-autenticacao-e-sessao.md), [frontend](./wiki/11-frontend-web.md).
