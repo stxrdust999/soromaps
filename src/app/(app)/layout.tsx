@@ -1,20 +1,28 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/blocks/app-sidebar";
-import { Toaster } from "@/components/ui/sonner";
+import type { ReactNode } from "react";
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+import { AppSidebar } from "@/components/blocks/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+
+interface AppLayoutProps {
+  children: ReactNode;
+
+  /**
+   * `@modals` parallel slot, rendered alongside `children` rather than in
+   * its place — keeps the listing mounted behind the modal, with table
+   * state and scroll position intact.
+   */
+  modals: ReactNode;
+}
+
+export default function AppLayout({ children, modals }: AppLayoutProps) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="w-full relative flex flex-col min-h-screen overflow-hidden [transform:translateZ(0)]">
-        {/* Botão flutuante para a sidebar */}
-        <div className="absolute top-4 left-4 z-50">
-          {/* <SidebarTrigger className="bg-black text-white rounded-md shadow-lg hover:bg-zinc-800" /> */}
-        </div>
-
-        {/* Conteúdo da página */}
+      <main className="relative flex min-h-screen w-full flex-col overflow-hidden transform-[translateZ(0)]">
         <div className="flex-1">{children}</div>
       </main>
+
+      {modals}
     </SidebarProvider>
   );
 }
