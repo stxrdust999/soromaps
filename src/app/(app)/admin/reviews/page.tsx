@@ -1,5 +1,5 @@
-import FeedNewInMapSection from "../../home/_components/feed/feed-new-in-map-section";
-import FeedTrendingSection from "../../home/_components/feed/feed-trending-section";
+import FeedNewInMapSection from "../../(explorer)/home/_components/feed/feed-new-in-map-section";
+import FeedTrendingSection from "../../(explorer)/home/_components/feed/feed-trending-section";
 
 export default function Page() {
   return (
