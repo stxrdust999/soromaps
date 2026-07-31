@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { SiteFooter } from "@/components/blocks/site-footer";
 import { Map as MapComponent, MapControls } from "@/components/ui/map";
 import {
   Drawer,
@@ -177,6 +178,8 @@ export default function HomePage() {
               <FeedTrendingSection />
 
               <FeedNewInMapSection />
+
+              {isFullyExpanded && <SiteFooter />}
             </section>
           </DrawerContent>
         </Drawer>
