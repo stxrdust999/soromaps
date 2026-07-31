@@ -26,12 +26,16 @@ export function PageSection({
   className,
 }: PageSectionProps) {
   return (
-    <section className={cn("flex flex-1 flex-col gap-6 p-8", className)}>
+    <section
+      className={cn("flex flex-1 flex-col gap-10 py-10 px-8", className)}
+    >
       <header className="flex flex-row items-end justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+        <div className="space-y-0">
+          <h1 className="text-2xl font-medium tracking-tight">{title}</h1>
           {description && (
-            <p className="text-muted-foreground text-sm">{description}</p>
+            <p className="text-muted-foreground text-sm font-regular">
+              {description}
+            </p>
           )}
         </div>
 

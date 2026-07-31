@@ -40,21 +40,27 @@ export function ColumnVisibilityFilter<TData>({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button type="button" variant="outline" size="sm">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="flex flex-row gap-2 border py-4.25"
+        >
           <Settings2Icon className="size-4" />
           Colunas
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuLabel>Exibir colunas</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+      <DropdownMenuContent align="end" className="w-42 shadow-lg">
+        {/* <DropdownMenuLabel>Exibir colunas</DropdownMenuLabel>
+        <DropdownMenuSeparator /> */}
 
         {columns.map((column) => (
           <DropdownMenuCheckboxItem
             key={column.id}
             checked={column.getIsVisible()}
             onCheckedChange={(value) => column.toggleVisibility(!!value)}
+            className="py-2"
           >
             {column.columnDef.meta?.visibilityDisplayName}
           </DropdownMenuCheckboxItem>

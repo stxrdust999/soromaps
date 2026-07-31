@@ -52,7 +52,11 @@ export function ColumnSortFilter<TData, TValue>({
           type="button"
           variant="ghost"
           size="sm"
-          className={cn("-ml-3 h-8 data-[state=open]:bg-muted", className)}
+          className={cn(
+            "group/sort -ml-2.5 h-8 px-2.5 font-medium text-muted-foreground data-[state=open]:bg-muted",
+            sorted && "text-foreground",
+            className,
+          )}
         >
           <span>{title}</span>
           {sorted === "desc" ? (
@@ -60,7 +64,7 @@ export function ColumnSortFilter<TData, TValue>({
           ) : sorted === "asc" ? (
             <ArrowUpIcon className="size-4" />
           ) : (
-            <ChevronsUpDownIcon className="size-4 opacity-50" />
+            <ChevronsUpDownIcon className="size-4 opacity-0 transition-opacity group-hover/sort:opacity-50" />
           )}
         </Button>
       </DropdownMenuTrigger>

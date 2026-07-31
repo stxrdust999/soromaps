@@ -22,7 +22,13 @@ export function FilterResetButton({
   label = "Limpar filtros",
 }: FilterResetButtonProps) {
   return (
-    <Button type="button" variant="ghost" size="sm" onClick={action}>
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      onClick={action}
+      className="flex flex-row gap-2 border py-4.25"
+    >
       {label}
       <XIcon className="size-4" />
     </Button>

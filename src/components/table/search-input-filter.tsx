@@ -43,13 +43,18 @@ export function SearchInputFilter<TData, TValue>({
   }
 
   return (
-    <div className={cn("relative w-full max-w-72", className)}>
+    <div
+      className={cn(
+        "relative w-full max-w-72 overflow-hidden rounded-md",
+        className,
+      )}
+    >
       <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         value={value}
         onChange={(event) => handleChange(event.target.value)}
         placeholder={placeholder}
-        className="pl-9"
+        className="pl-9 focus-visible:border-primary"
       />
     </div>
   );

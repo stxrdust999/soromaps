@@ -1,6 +1,6 @@
 "use client";
 
-import { ListFilterIcon } from "lucide-react";
+import { ListFilterPlusIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -51,8 +51,13 @@ export function SheetFilterDialog({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>
-        <Button type="button" variant="outline" size="sm">
-          <ListFilterIcon className="size-4" />
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="flex flex-row gap-2 border py-4.25"
+        >
+          <ListFilterPlusIcon className="size-4" />
           {triggerLabel}
         </Button>
       </SheetTrigger>
