@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 
 import { PageSection } from "@/components/blocks/page-section";
+import { SiteFooter } from "@/components/blocks/site-footer";
 import { TableSkeletonState } from "@/components/table/table-skeleton-state";
 import { USERS_LIST_TAG } from "@/constants/users";
 import { getUsers } from "@/http/users/users";
 
-import { UserPageAction } from "./_components/page-action";
 import { UsersTable } from "./_components/table";
 
 /**
@@ -24,14 +24,15 @@ export default function ManageUsersPage() {
   return (
     <main className="flex flex-1 flex-col">
       <PageSection
-        title="Gerenciar Usuários"
+        title="Gerenciamento de Usuários"
         description="Visualize, pesquise e gerencie os usuários cadastrados na plataforma."
-        actions={<UserPageAction />}
       >
         <Suspense fallback={<TableSkeletonState />}>
           <UsersTable promises={promises} />
         </Suspense>
       </PageSection>
+
+      <SiteFooter />
     </main>
   );
 }

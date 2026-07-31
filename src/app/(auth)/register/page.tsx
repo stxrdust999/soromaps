@@ -98,7 +98,7 @@ export default function RegisterPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 disabled={isPending}
-                className="shadow-none text-md h-11 border-zinc-200 focus-visible:ring-1 focus-visible:ring-zinc-400"
+                className="shadow-none text-md h-11 border-zinc-200 focus-visible:border-zinc-400"
                 placeholder="Digite seu nome de usuário..."
               />
             </div>
@@ -111,7 +111,7 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isPending}
-                className="shadow-none text-md h-11 border-zinc-200 focus-visible:ring-1 focus-visible:ring-zinc-400"
+                className="shadow-none text-md h-11 border-zinc-200 focus-visible:border-zinc-400"
                 placeholder="Digite seu e-mail..."
               />
             </div>
@@ -124,7 +124,7 @@ export default function RegisterPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isPending}
-                className="shadow-none text-md h-11 border-zinc-200 focus-visible:ring-1 focus-visible:ring-zinc-400"
+                className="shadow-none text-md h-11 border-zinc-200 focus-visible:border-zinc-400"
                 placeholder="Digite sua senha..."
               />
             </div>

@@ -7,9 +7,6 @@ import { cn } from "@/lib/utils";
 
 interface RowCommonProps<TData> {
   row: Row<TData>;
-
-  /** Row index within the page — drives the zebra striping. */
-  index: number;
 }
 
 /**
@@ -17,14 +14,11 @@ interface RowCommonProps<TData> {
  * the "Colunas" dropdown needs no logic here. `data-state="selected"` is the
  * styling hook for selection; the color comes from shadcn's `TableRow`.
  *
- * @param props Row instance and its index in the page.
+ * @param props Row instance.
  */
-export function RowCommon<TData>({ row, index }: RowCommonProps<TData>) {
+export function RowCommon<TData>({ row }: RowCommonProps<TData>) {
   return (
-    <TableRow
-      data-state={row.getIsSelected() && "selected"}
-      className={cn(index % 2 === 1 && "bg-muted/30")}
-    >
+    <TableRow data-state={row.getIsSelected() && "selected"}>
       {row.getVisibleCells().map((cell) => (
         <TableCell
           key={cell.id}

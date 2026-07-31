@@ -30,34 +30,55 @@ export function UserListRowAction({ row }: UserListRowActionProps) {
   const id = row.original.id;
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button type="button" variant="ghost" size="icon">
-          <EllipsisVerticalIcon className="size-4" />
-          <span className="sr-only">Abrir ações</span>
-        </Button>
-      </DropdownMenuTrigger>
+    <div className="flex items-center gap-1">
+      {/* edit - shortcut */}
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon-sm"
+        className="text-muted-foreground"
+        asChild
+      >
+        <Link href={`/admin/users/update/${id}`}>
+          <PencilIcon className="size-4" />
+          <span className="sr-only">Editar</span>
+        </Link>
+      </Button>
 
-      <DropdownMenuContent align="end">
-        <DropdownMenuGroup>
-          <DropdownMenuLabel>Opções</DropdownMenuLabel>
-          <DropdownMenuSeparator />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            className="text-muted-foreground"
+          >
+            <EllipsisVerticalIcon className="size-4" />
+            <span className="sr-only">Abrir ações</span>
+          </Button>
+        </DropdownMenuTrigger>
 
-          <DropdownMenuItem asChild>
-            <Link href={`/admin/users/update/${id}`}>
-              <PencilIcon className="size-4" />
-              Editar
-            </Link>
-          </DropdownMenuItem>
+        <DropdownMenuContent align="end">
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Opções</DropdownMenuLabel>
+            <DropdownMenuSeparator />
 
-          <DropdownMenuItem variant="destructive" asChild>
-            <Link href={`/admin/users/delete/${id}`}>
-              <Trash2Icon className="size-4" />
-              Excluir
-            </Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+            <DropdownMenuItem asChild>
+              <Link href={`/admin/users/update/${id}`}>
+                <PencilIcon className="size-4" />
+                Editar
+              </Link>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem variant="destructive" asChild>
+              <Link href={`/admin/users/delete/${id}`}>
+                <Trash2Icon className="size-4" />
+                Excluir
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

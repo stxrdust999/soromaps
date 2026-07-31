@@ -3,6 +3,7 @@
 import type { ColumnDef, VisibilityState } from "@tanstack/react-table";
 
 import { ColumnSortFilter } from "@/components/table/column-sort-filter";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { UserResource } from "@/types/user";
 import { formatISODateTime } from "@/utils/formatters/format-date";
@@ -26,8 +27,8 @@ const userColumnsNames = {
 
 /** Initial column visibility — timestamps start hidden. */
 const defaultColumnVisibility: VisibilityState = {
-  createdAt: false,
-  updatedAt: false,
+  // createdAt: false,
+  // updatedAt: false,
 };
 
 /**
@@ -47,6 +48,7 @@ const columns: ColumnDef<UserResource>[] = [
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Selecionar todas as linhas"
+        className="border border-black/35"
       />
     ),
 
@@ -55,6 +57,7 @@ const columns: ColumnDef<UserResource>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Selecionar linha"
+        className="border border-black/35"
       />
     ),
 
@@ -62,8 +65,8 @@ const columns: ColumnDef<UserResource>[] = [
     enableHiding: false,
 
     meta: {
-      headerClassName: "w-12",
-      cellClassName: "w-12",
+      headerClassName: "w-12 pr-0",
+      cellClassName: "w-12 pr-0",
     },
   },
 
@@ -71,14 +74,30 @@ const columns: ColumnDef<UserResource>[] = [
   {
     accessorKey: "userName",
     header: ({ column }) => (
-      <ColumnSortFilter column={column} title={userColumnsNames.userName} />
+      <ColumnSortFilter
+        column={column}
+        title={userColumnsNames.userName}
+        className="w-full justify-between text-foreground"
+      />
+    ),
+
+    cell: ({ row }) => (
+      <div className="flex items-center gap-3">
+        <Avatar size="sm">
+          <AvatarFallback>
+            {row.original.userName.charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+
+        <span className="truncate">{row.original.userName}</span>
+      </div>
     ),
 
     sortingFn: textSortingFn((user) => user.userName),
 
     meta: {
-      headerClassName: "min-w-48",
-      cellClassName: "min-w-48 truncate font-medium",
+      headerClassName: "min-w-56",
+      cellClassName: "min-w-56 font-medium",
     },
   },
 
@@ -86,7 +105,11 @@ const columns: ColumnDef<UserResource>[] = [
   {
     accessorKey: "email",
     header: ({ column }) => (
-      <ColumnSortFilter column={column} title={userColumnsNames.email} />
+      <ColumnSortFilter
+        column={column}
+        title={userColumnsNames.email}
+        className="w-full justify-between text-foreground"
+      />
     ),
 
     sortingFn: textSortingFn((user) => user.email),
@@ -101,7 +124,11 @@ const columns: ColumnDef<UserResource>[] = [
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
-      <ColumnSortFilter column={column} title={userColumnsNames.createdAt} />
+      <ColumnSortFilter
+        column={column}
+        title={userColumnsNames.createdAt}
+        className="w-full justify-between text-foreground"
+      />
     ),
 
     cell: ({ row }) => formatISODateTime(row.original.createdAt),
@@ -120,7 +147,11 @@ const columns: ColumnDef<UserResource>[] = [
   {
     accessorKey: "updatedAt",
     header: ({ column }) => (
-      <ColumnSortFilter column={column} title={userColumnsNames.updatedAt} />
+      <ColumnSortFilter
+        column={column}
+        title={userColumnsNames.updatedAt}
+        className="w-full justify-between text-foreground"
+      />
     ),
 
     cell: ({ row }) => formatISODateTime(row.original.updatedAt),
@@ -138,14 +169,15 @@ const columns: ColumnDef<UserResource>[] = [
   /* actions - column */
   {
     id: "actions",
+    header: () => userColumnsNames.actions,
     cell: ({ row }) => <UserListRowAction row={row} />,
 
     enableSorting: false,
     enableHiding: false,
 
     meta: {
-      headerClassName: "w-16",
-      cellClassName: "w-16 pr-4 pl-2 text-right",
+      headerClassName: "w-24",
+      cellClassName: "w-24 pr-4 pl-2",
     },
   },
 ];

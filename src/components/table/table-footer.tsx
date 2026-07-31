@@ -54,25 +54,22 @@ export function TableFooter<TData>({
         className,
       )}
     >
-      {/* seleção - contador */}
-      {!hiddenSelectedRows && (
-        <span className="text-muted-foreground text-sm">
-          {selectedRows} de {totalRows} linha(s) selecionadas.
-        </span>
-      )}
-
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
+      <div className="flex flex-row gap-6 items-center">
         {/* linhas por página - seletor */}
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-3 md:flex">
           <span className="text-sm font-medium">Linhas por página</span>
           <Select
             value={String(table.getState().pagination.pageSize)}
             onValueChange={(value) => table.setPageSize(Number(value))}
           >
-            <SelectTrigger className="h-8 w-18">
+            <SelectTrigger
+              darkenOnOpen
+              className="flex flex-row gap-4 border py-4.25"
+            >
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+
+            <SelectContent position="popper" side="top">
               {rowsPerPage.map((size) => (
                 <SelectItem key={size} value={String(size)}>
                   {size}
@@ -82,6 +79,15 @@ export function TableFooter<TData>({
           </Select>
         </div>
 
+        {/* seleção - contador */}
+        {!hiddenSelectedRows && (
+          <span className="text-muted-foreground text-sm">
+            {selectedRows} de {totalRows} linha(s) selecionadas.
+          </span>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
         {/* paginação - informação */}
         <span className="text-sm font-medium">
           Página {pageCount === 0 ? 0 : pageIndex + 1} de {pageCount}

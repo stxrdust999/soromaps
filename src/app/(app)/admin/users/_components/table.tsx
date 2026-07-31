@@ -39,13 +39,14 @@ export function UsersTable({ promises }: UsersTableProps) {
     data: users,
     columns: columnDef,
     defaultVisibility,
+    defaultSorting: [{ id: "userName", desc: false }],
   });
 
   return (
     <section className="space-y-4">
       <UserListTableToolbar table={config.table} promises={promises} />
 
-      <div className="rounded-md border bg-background">
+      <div className="bg-background">
         <Table>
           <TableHeader>
             <TableHeaderTemplate header={config.header} />
@@ -53,9 +54,7 @@ export function UsersTable({ promises }: UsersTableProps) {
 
           <TableBody>
             {config.rows.length ? (
-              config.rows.map((row, index) => (
-                <RowCommon key={row.id} index={index} row={row} />
-              ))
+              config.rows.map((row) => <RowCommon key={row.id} row={row} />)
             ) : (
               <TableEmptyState
                 columns={columnDef}
@@ -66,7 +65,7 @@ export function UsersTable({ promises }: UsersTableProps) {
         </Table>
       </div>
 
-      <TableFooter table={config.table} />
+      <TableFooter table={config.table} hiddenSelectedRows />
     </section>
   );
 }

@@ -39,6 +39,15 @@ export default function RootLayout({
         inter.variable,
       )}
     >
+      <head>
+        <link
+          rel="icon"
+          href="/logo/logoipsum-emblem.svg"
+          type="image/svg+xml"
+          sizes="32x32"
+        />
+      </head>
+
       <body className="min-h-full">
         <TooltipProvider>{children}</TooltipProvider>
 
