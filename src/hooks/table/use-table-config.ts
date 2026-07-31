@@ -68,6 +68,7 @@ export function useTableConfig<TData, TValue>({
   defaultRowSelection = {},
   perPage = 10,
 
+  initialState,
   ...options
 }: UseTableConfigProps<TData, TValue>) {
   const initialVisibility = useMemo(() => {
@@ -95,6 +96,19 @@ export function useTableConfig<TData, TValue>({
       columnVisibility,
       rowSelection,
       pagination,
+    },
+
+    /**
+     * `initialState.sorting` is what `table.resetSorting()` resets back to —
+     * without it, the reset button would clear a `defaultSorting` down to
+     * "no sort" instead of restoring it. Set once at table creation
+     * (`useReactTable` composes it inside a lazy `useState` initializer), so
+     * changing `defaultSorting` after mount has no effect — same lifecycle
+     * `defaultVisibility` already has above.
+     */
+    initialState: {
+      sorting: defaultSorting,
+      ...initialState,
     },
 
     getCoreRowModel: getCoreRowModel(),
