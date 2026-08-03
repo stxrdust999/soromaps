@@ -24,7 +24,7 @@ interface UsersTableProps {
  * toolbar, body and footer without knowing columns, cell formatting or
  * pagination internals; those live in sibling or shared components.
  *
- * @param props Data promises passed down to toolbar and filter form.
+ * @param props Data promises consumed by the table body.
  */
 export function UsersTable({ promises }: UsersTableProps) {
   const usersResponse = use(promises.usersPromise);
@@ -44,7 +44,7 @@ export function UsersTable({ promises }: UsersTableProps) {
 
   return (
     <section className="space-y-4">
-      <UserListTableToolbar table={config.table} promises={promises} />
+      <UserListTableToolbar table={config.table} />
 
       <div className="bg-background">
         <Table>

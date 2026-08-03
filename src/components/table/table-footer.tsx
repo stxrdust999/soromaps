@@ -64,7 +64,7 @@ export function TableFooter<TData>({
           >
             <SelectTrigger
               darkenOnOpen
-              className="flex flex-row gap-4 border py-4.25"
+              className="flex flex-row gap-4 border-border bg-background py-4.25 shadow-xs hover:bg-muted hover:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50"
             >
               <SelectValue />
             </SelectTrigger>

@@ -6,6 +6,7 @@ interface PageSectionProps {
   title: string;
   description?: string;
   actions?: ReactNode;
+  subitems?: ReactNode;
   children?: ReactNode;
 
   className?: string;
@@ -22,6 +23,7 @@ export function PageSection({
   title,
   description,
   actions,
+  subitems,
   children,
   className,
 }: PageSectionProps) {
@@ -29,18 +31,22 @@ export function PageSection({
     <section
       className={cn("flex flex-1 flex-col gap-10 py-10 px-8", className)}
     >
-      <header className="flex flex-row items-end justify-between gap-4">
-        <div className="space-y-0">
-          <h1 className="text-2xl font-medium tracking-tight">{title}</h1>
-          {description && (
-            <p className="text-muted-foreground text-sm font-regular">
-              {description}
-            </p>
-          )}
-        </div>
+      <div className="flex flex-col gap-1">
+        <header className="flex flex-row items-end justify-between gap-4">
+          <div className="space-y-0">
+            {description && (
+              <p className="text-muted-foreground text-sm font-regular">
+                {description}
+              </p>
+            )}
+            <h1 className="text-3xl font-medium tracking-tight">{title}</h1>
+          </div>
 
-        {actions && <div className="shrink-0">{actions}</div>}
-      </header>
+          {actions && <div className="shrink-0">{actions}</div>}
+        </header>
+
+        {subitems}
+      </div>
 
       {children}
     </section>

@@ -7,6 +7,36 @@ import { USERS_LIST_TAG } from "@/constants/users";
 import { getUsers } from "@/http/users/users";
 
 import { UsersTable } from "./_components/table";
+import { Badge } from "@/components/ui/badge";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarImage,
+} from "@/components/ui/avatar";
+import { ShieldUser, ShieldUserIcon, StoreIcon, UsersIcon } from "lucide-react";
+
+interface InformationBadgeProps {
+  icon: React.ReactNode;
+  value: string;
+  label: string;
+}
+
+function InformationBadge({ icon, value, label }: InformationBadgeProps) {
+  return (
+    <Badge
+      variant="default"
+      className="px-3 py-4 items-center flex flex-row gap-2 bg-black"
+    >
+      {icon}
+
+      <div className="flex flex-row gap-1 items-center">
+        <span className="text-xs text-white font-semibold">{value}</span>
+        <span className="text-xs text-white/75">{label}</span>
+      </div>
+    </Badge>
+  );
+}
 
 /**
  * Server Component — data orchestration only: fires promises without
@@ -21,13 +51,64 @@ export default function ManageUsersPage() {
 
   const promises = { usersPromise };
 
+  const subitem = (
+    <div className="flex flex-row gap-2 items-center mt-1">
+      <Badge
+        variant="default"
+        className="bg-black px-2 py-4 flex flex-row gap-2"
+      >
+        <AvatarGroup>
+          <Avatar className="size-4">
+            <AvatarImage
+              src="https://github.com/maxleiter.png"
+              alt="@maxleiter"
+            />
+            <AvatarFallback>LR</AvatarFallback>
+          </Avatar>
+          <Avatar className="size-4">
+            <AvatarImage
+              src="https://github.com/evilrabbit.png"
+              alt="@evilrabbit"
+            />
+            <AvatarFallback>ER</AvatarFallback>
+          </Avatar>
+          <Avatar className="size-4">
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+        </AvatarGroup>
+
+        <span className="text-xs text-white">184 Usuários Cadastrados</span>
+      </Badge>
+
+      <InformationBadge
+        icon={<UsersIcon size={16} />}
+        value="144"
+        label="exploradores"
+      />
+
+      <InformationBadge
+        icon={<ShieldUserIcon size={16} />}
+        value="5"
+        label="administradores"
+      />
+
+      <InformationBadge
+        icon={<StoreIcon size={14} />}
+        value="35"
+        label="comércios"
+      />
+    </div>
+  );
+
   return (
     <main className="flex flex-1 flex-col">
       <PageSection
         title="Gerenciamento de Usuários"
-        description="Visualize, pesquise e gerencie os usuários cadastrados na plataforma."
+        description="Gerencie os usuários cadastrados na plataforma."
+        subitems={subitem}
       >
-        <Suspense fallback={<TableSkeletonState />}>
+        <Suspense fallback={<TableSkeletonState columns={6} />}>
           <UsersTable promises={promises} />
         </Suspense>
       </PageSection>

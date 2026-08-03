@@ -19,7 +19,7 @@ export default function AppLayout({ children, modals }: AppLayoutProps) {
     <SidebarProvider>
       <AppSidebar />
       <main className="relative flex min-h-screen w-full flex-col overflow-hidden transform-[translateZ(0)]">
-        <div className="flex-1">{children}</div>
+        <div className="flex flex-1 flex-col">{children}</div>
       </main>
 
       {modals}

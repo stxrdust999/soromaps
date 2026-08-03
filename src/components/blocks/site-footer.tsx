@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 
 export function SiteFooter() {
   return (
-    <footer className="px-8 py-8 bg-black">
+    <footer className="mt-auto px-8 py-8 bg-black">
       <div className="flex flex-col gap-4">
         {/* logo & social media */}
         <div className="flex flex-row justify-between items-center">

@@ -1,7 +1,7 @@
 # 🤖 CLAUDE.md — Soromaps
 
 > Registro vivo do projeto. Atualizado no momento em que decisões são tomadas.
-> Última atualização: 2026-07-30
+> Última atualização: 2026-08-02
 
 ---
 
@@ -47,6 +47,25 @@ AWS) está preservada em `/docs` e comparada em
 - Módulos de produto pendentes em `/docs/todo/{user,business,admin}/` — um `.md` por módulo, índice com status em `docs/todo/README.md`; concluiu módulo → atualiza status na mesma entrega
 - Estrutura de pastas: padrão Dara (Stardust)
 - Material obsoleto vai para `/docs/archive` em subpasta por contexto, nunca é apagado
+
+### Comentários no código
+
+O código deve falar por si; comentário existe para o que ele não consegue dizer.
+
+- **JSDoc** vai no símbolo exportado (componente, hook, função de `http`/
+  `actions`): uma a três linhas com o que é e a restrição que o tipo não
+  expressa — ex.: "precisa rodar dentro de `<Map>`".
+- **JSDoc em campo** só quando há informação não-inferível: default não-óbvio,
+  unidade, faixa válida, efeito colateral. Campo com nome autoexplicativo não
+  recebe comentário. Se ele *precisa* de um, geralmente o nome está errado.
+- **`//` inline** responde *por quê*, nunca *o quê*.
+  Bom: `// moveend, não move: move dispara a cada frame durante o gesto`.
+  Ruim: `// Faz o GET para a rota que retorna a lista de markers`.
+- **Dívida** vira `// TODO:` de uma linha apontando o backlog, não um parágrafo.
+- **Fora:** rótulo de bloco de JSX (`{/* titulo */}`, `{/* 1. CAMADA DO MAPA */}`)
+  — se um bloco precisa de rótulo, ele quer virar componente — e comentário que
+  repete a linha seguinte.
+- Comentário desatualizado se apaga, não se contorna.
 
 ---
 
@@ -206,6 +225,41 @@ override merece reconferência a cada bump de versão do Next.
 **Nunca rodar `npm audit fix --force` aqui:** antes deste ajuste, a
 "correção" que ele propunha para o `sharp` era instalar `next@14.2.35`, uma
 regressão de dois majors.
+
+### 2026-08-02 — `MapDrawerLayout`: a home vira casca reutilizável
+**Decisão:** extrair de `/home` o padrão "mapa ao fundo + painel arrastável que
+sobe até virar a página" para `src/components/blocks/map-drawer-layout/`, com
+`map` como slot das camadas do mapa e `children` livre. A página voltou a ser
+Server Component; o feed deixou de ser client.
+**Motivo:** o arquivo acumulava layout, estado do drawer, busca de markers e
+conteúdo do feed em ~190 linhas de client component. Três consequências reais:
+o mapa era **desmontado** ao expandir (`{!isFullyExpanded && <Map/>}`),
+recarregando estilo CARTO e tiles ao recolher; o `useEffect` dependia de
+`viewport.zoom`, que muda a cada frame do evento `move`, disparando dezenas de
+`GET /api/markers` por gesto de zoom; e o viewport em state re-renderizava
+drawer e feed a 60fps durante o pan.
+**O que mudou junto:**
+- **Viewport deixou de ser state React.** O `<Map>` roda em modo não-controlado
+  e as camadas leem a instância via `useMap()`. `src/hooks/use-markers.ts`
+  assina `moveend` e guarda só o boolean `zoom >= minZoom`, então o fetch
+  depende de um booleano e não de um float — uma requisição por cruzamento de
+  limiar, com `AbortController`.
+- **`overlay` no `DrawerContent`** (`src/components/ui/drawer.tsx`, default
+  `true`): o `DrawerOverlay` era renderizado sempre, deixando o mapa sob um
+  `bg-black/10 backdrop-blur-xs` permanente — indesejado num drawer
+  `modal={false}` que nunca fecha.
+- **`noPortal` no lugar do `container` state**, já que o `main` de
+  `(app)/layout.tsx` tem `transform-[translateZ(0)]` e serve de containing
+  block para o `fixed` do vaul.
+**Vive em `components/blocks/` mesmo com um consumidor só**, contrariando a
+regra "uma rota → `_components/`": foi extraído justamente para ser reusado, e
+`/places/new` deve ser aposentada migrando a criação de local para dentro dele
+(`collapse()` do contexto desce o painel e libera o mapa).
+**Limite conhecido:** o vaul lê `document.body` durante o render, então não
+sobrevive ao SSR — foi por isso que a versão anterior tinha o gate `mounted`
+devolvendo tela vazia. O layout mantém o gate, mas renderiza no lugar um
+esqueleto com a moldura do painel recolhido, então a primeira pintura já tem a
+casca em vez de fundo vazio.
 
 ### 2026-07-28 — Mermaid como fonte de verdade dos diagramas
 **Decisão:** todo diagrama vive em Mermaid dentro do Markdown; os PNGs

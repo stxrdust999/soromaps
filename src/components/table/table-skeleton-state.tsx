@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { DEFAULT_PAGE_SIZE } from "@/constants/table";
 
 interface TableSkeletonStateProps {
   rows?: number;
@@ -33,7 +34,7 @@ function skeletonKeys(prefix: string, length: number): string[] {
  * @param props How many placeholder rows and columns to render.
  */
 export function TableSkeletonState({
-  rows = 5,
+  rows = DEFAULT_PAGE_SIZE,
   columns = 5,
 }: TableSkeletonStateProps) {
   return (
