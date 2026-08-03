@@ -50,14 +50,17 @@ function DrawerContent({
   children,
   container,
   noPortal = false,
+  overlay = true,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content> & {
   container?: HTMLElement | null;
   noPortal?: boolean;
+  /** Default: `true`. Desligue em drawer persistente, que não deve cobrir o que está atrás. */
+  overlay?: boolean;
 }) {
   const content = (
     <>
-      <DrawerOverlay />
+      {overlay && <DrawerOverlay />}
       <DrawerPrimitive.Content
         data-slot="drawer-content"
         className={cn(
