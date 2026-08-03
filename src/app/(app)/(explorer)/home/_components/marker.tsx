@@ -7,48 +7,41 @@ import {
 } from "@/components/ui/map";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-interface Location {
-  id: number;
-  nome: string;
-  lat: number;
-  lng: number;
-}
+import type { MarkerResource } from "@/types/marker";
 
 interface LocationMarkerProps {
-  location: Location;
-  onUpdate: (updatedLocation: Location) => void;
+  marker: MarkerResource;
+  onUpdate: (marker: MarkerResource) => void;
   onDelete: (id: number) => void;
 }
-//estados do popup do mapa
+
 type PopupState = "view" | "edit" | "delete";
 
 export default function LocationMarker({
-  location,
+  marker,
   onUpdate,
   onDelete,
 }: LocationMarkerProps) {
   const [state, setState] = useState<PopupState>("view");
-  const [newName, setNewName] = useState(location.nome);
+  const [newName, setNewName] = useState(marker.nome);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
-  //funcao pra editar o ponto
   const handleSave = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/markers/${location.id}`, {
+      const response = await fetch(`${API_URL}/api/markers/${marker.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nome: newName,
-          lat: location.lat,
-          lng: location.lng,
+          lat: marker.lat,
+          lng: marker.lng,
         }),
       });
 
       if (response.ok) {
-        onUpdate({ ...location, nome: newName });
-        setState("view"); // Volta para o modo de leitura
+        onUpdate({ ...marker, nome: newName });
+        setState("view");
       } else {
         alert("Erro ao atualizar o ponto na API.");
       }
@@ -57,15 +50,14 @@ export default function LocationMarker({
     }
   };
 
-  //funcao pra deletar o ponto
   const handleDelete = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/markers/${location.id}`, {
+      const response = await fetch(`${API_URL}/api/markers/${marker.id}`, {
         method: "DELETE",
       });
 
       if (response.ok) {
-        onDelete(location.id);
+        onDelete(marker.id);
       } else {
         alert("Erro ao excluir o ponto na API.");
         setState("view");
@@ -76,7 +68,6 @@ export default function LocationMarker({
     }
   };
 
-  // switch pra cada estado do pupup, se editar, vai ficar de tal jeito
   const renderPopupContent = () => {
     switch (state) {
       case "edit":
@@ -96,7 +87,7 @@ export default function LocationMarker({
                 className="w-1/2"
                 onClick={() => {
                   setState("view");
-                  setNewName(location.nome);
+                  setNewName(marker.nome);
                 }}
               >
                 Cancelar
@@ -142,7 +133,7 @@ export default function LocationMarker({
       default:
         return (
           <>
-            <p className="text-sm font-bold truncate">{location.nome}</p>
+            <p className="text-sm font-bold truncate">{marker.nome}</p>
             <p className="text-xs text-muted-foreground">Ponto de interesse</p>
             <div className="flex gap-2 mt-2">
               <Button
@@ -168,12 +159,12 @@ export default function LocationMarker({
   };
 
   return (
-    <MapMarker longitude={location.lng} latitude={location.lat}>
+    <MapMarker longitude={marker.lng} latitude={marker.lat}>
       <MarkerContent>
         <div className="bg-primary size-4 rounded-full border-2 border-white shadow-lg cursor-pointer" />
       </MarkerContent>
 
-      <MarkerTooltip>{location.nome}</MarkerTooltip>
+      <MarkerTooltip>{marker.nome}</MarkerTooltip>
 
       <MarkerPopup>
         <div className="p-2 w-48 space-y-2">{renderPopupContent()}</div>
