@@ -5,22 +5,18 @@ import Image from "next/image";
 export default function FeedNewInMapSection() {
   return (
     <section>
-      {/* titulo */}
       <div className="flex items-center gap-1 w-fit mb-4">
         <SparklesIcon size={20} className="text-blue-500" />
         <span className="font-semibold text-sm">Novos no mapa</span>
       </div>
 
-      {/* conteudo */}
       <div className="border-1 border-border flex rounded-xl overflow-hidden items-center gap-0">
-        {/* // ! NUMERO DO CARD ! */}
         <div className="relative h-24 w-24 m-0 flex items-center justify-center">
           <span className="font-bold text-2xl text-muted-foreground/50 ">
             1
           </span>
         </div>
 
-        {/* // ! IMAGEM DO CARD ! */}
         <div className="relative h-24 w-24 mr-4 ml-0 my-4">
           <Image
             src={`https://picsum.photos/seed/14/400/300`}
@@ -31,9 +27,7 @@ export default function FeedNewInMapSection() {
           />
         </div>
 
-        {/* // ! INFORMAÇÕES GERAIS ! */}
         <div className="flex flex-col gap-1.5">
-          {/* titulo do card */}
           <div className=" flex items-center flex-row gap-2 ">
             <span className="text-sm font-semibold">Cabocafé</span>
 
@@ -42,14 +36,12 @@ export default function FeedNewInMapSection() {
             </Badge>
           </div>
 
-          {/* localização do card */}
           <div className=" flex items-center flex-row gap-1 items-center">
             <MapPinIcon size={12} className="text-muted-foreground" />
 
             <span className="text-xs text-muted-foreground">Santa Rosália</span>
           </div>
 
-          {/* informações gerais */}
           <div className=" flex flex-row gap-2 items-center">
             <Badge>Café</Badge>
 
