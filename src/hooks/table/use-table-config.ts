@@ -19,6 +19,7 @@ import {
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 
+import { DEFAULT_PAGE_SIZE } from "@/constants/table";
 import { getMetaVisibilityState } from "@/utils/table/get-meta-visibility-state";
 
 interface UseTableConfigProps<TData, TValue>
@@ -66,7 +67,7 @@ export function useTableConfig<TData, TValue>({
   defaultVisibility,
   defaultSorting = [],
   defaultRowSelection = {},
-  perPage = 10,
+  perPage = DEFAULT_PAGE_SIZE,
 
   initialState,
   ...options
