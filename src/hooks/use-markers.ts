@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useMap } from "@/components/ui/map";
 import type { MarkerResource } from "@/types/marker";
@@ -51,15 +51,5 @@ export function useMarkers({ minZoom = 14 }: { minZoom?: number } = {}) {
     return () => controller.abort();
   }, [isAboveMinZoom]);
 
-  const updateMarker = useCallback((updated: MarkerResource) => {
-    setMarkers((current) =>
-      current.map((marker) => (marker.id === updated.id ? updated : marker)),
-    );
-  }, []);
-
-  const removeMarker = useCallback((id: number) => {
-    setMarkers((current) => current.filter((marker) => marker.id !== id));
-  }, []);
-
-  return { markers, updateMarker, removeMarker };
+  return { markers };
 }
