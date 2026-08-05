@@ -30,6 +30,7 @@ O recorte por bairro é deliberado: em ranking geral só os 10 mais ativos apare
 - `/users/[id]` público: nome, desde quando, contadores, conquistas em destaque
 - Seguir/deixar de seguir com update otimista
 - Ranking simples por contagem de avaliações (quando `Analise` existir)
+- **Selo de explorador verificado** no perfil e ao lado do nome onde ele aparece (comentário em destaque na página do ponto, ranking, feed). É o mesmo problema da dor nº 2 — verificação é o que faz "quem avaliou" virar argumento de confiança. Critério em aberto: nº de visitas, avaliações aprovadas ou verificação manual pelo admin
 
 ## Fora do escopo inicial
 

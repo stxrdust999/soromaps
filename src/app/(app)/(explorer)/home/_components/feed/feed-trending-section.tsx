@@ -1,6 +1,8 @@
-import { Badge } from "@/components/ui/badge";
 import { FlameIcon, NavigationIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
+
+import { Badge } from "@/components/ui/badge";
+import { markerDetailsMocks } from "@/mocks/markers";
 
 export default function FeedTrendingSection() {
   return (
@@ -11,15 +13,15 @@ export default function FeedTrendingSection() {
       </div>
 
       <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none">
-        {[6, 7, 3, 8, 9, 10, 11].map((i) => (
+        {markerDetailsMocks.map((place) => (
           <div
-            key={i}
+            key={place.nome}
             className="flex flex-col gap-0 border border-border rounded-2xl overflow-hidden w-56 flex-none bg-card shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="relative h-36 w-full bg-muted">
               <Image
-                src={`https://picsum.photos/seed/${i + 10}/400/300`}
-                alt="Foto do Local"
+                src={place.fotoUrl}
+                alt={`Foto de ${place.nome}`}
                 fill
                 className="object-cover"
                 sizes="174px"
@@ -34,7 +36,7 @@ export default function FeedTrendingSection() {
               </Badge>
 
               <Badge variant="secondary" className="absolute bottom-2 left-2">
-                Parque
+                {place.categoria}
               </Badge>
 
               <Badge
@@ -45,26 +47,28 @@ export default function FeedTrendingSection() {
                   className="text-yellow-500 fill-yellow-500"
                   size={12}
                 />
-                <span>4.8</span>
+                <span>{place.nota}</span>
               </Badge>
             </div>
 
             <div className="flex flex-col gap-3 p-3">
               <div className="flex flex-col gap-0.5">
-                <span className="font-semibold text-sm">Parque das Águas</span>
+                <span className="font-semibold text-sm">{place.nome}</span>
                 <span className="text-xs text-muted-foreground">
-                  Jardim Abaeté
+                  {place.bairro}
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1.5">
                   <NavigationIcon size={12} className="text-blue-500" />
-                  <span className="text-xs text-muted-foreground">1.2km</span>
+                  <span className="text-xs text-muted-foreground">
+                    {place.distancia}km
+                  </span>
                 </div>
                 <div className="rounded-full bg-muted-foreground/30 w-1 h-1" />
                 <span className="text-xs text-muted-foreground">
-                  12 Avaliações
+                  {place.totalAvaliacoes} Avaliações
                 </span>
               </div>
             </div>

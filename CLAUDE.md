@@ -1,7 +1,7 @@
 # 🤖 CLAUDE.md — Soromaps
 
 > Registro vivo do projeto. Atualizado no momento em que decisões são tomadas.
-> Última atualização: 2026-08-02
+> Última atualização: 2026-08-03
 
 ---
 
@@ -45,6 +45,7 @@ AWS) está preservada em `/docs` e comparada em
 - Diagramas: Mermaid como fonte de verdade; exports originais em `/docs/archive`
 - Docs numerados `NN-tema.md` em `/docs`; wiki numerada em `/docs/wiki`
 - Módulos de produto pendentes em `/docs/todo/{user,business,admin}/` — um `.md` por módulo, índice com status em `docs/todo/README.md`; concluiu módulo → atualiza status na mesma entrega
+- Spec técnico escrito antes da implementação vai para `/docs/propostas`, com bloco de status no topo; implementou → conteúdo migra para `/docs/wiki` e a proposta vai para `/docs/archive`
 - Estrutura de pastas: padrão Dara (Stardust)
 - Material obsoleto vai para `/docs/archive` em subpasta por contexto, nunca é apagado
 
@@ -261,6 +262,59 @@ devolvendo tela vazia. O layout mantém o gate, mas renderiza no lugar um
 esqueleto com a moldura do painel recolhido, então a primeira pintura já tem a
 casca em vez de fundo vazio.
 
+### 2026-08-03 — CRUD de pontos no padrão do projeto, criação em dois estágios
+**Decisão:** markers passam a seguir a mesma trilha de `/admin/users` —
+`src/validations/markers.ts` (Zod), `src/http/markers/markers.ts` (leitura com
+envelope discriminado por `status`), `src/actions/markers.ts` (Server Actions
+com `FormState` + `updateTag`). A criação continua em rota própria
+(`/places/new`), agora em **dois estágios dentro do mesmo card flutuante**:
+`picking` posiciona o pin, `form` coleta os dados, e "Trocar de lugar" volta
+sem perder o preenchido.
+**Motivo:** as três telas de marker eram `fetch` cru no cliente com `alert()`
+de erro, e a criação gravava o nome hardcoded `"Novo Ponto"` porque não havia
+campo de nome. Sobre o layout: card flutuante em vez de `Dialog` porque o
+mapa **não pode** escurecer — ver a posição escolhida enquanto se preenche o
+formulário é o que comunica que dá para voltar e mudar. E rota própria em vez
+de painel dentro do `MapDrawerLayout` (o que a decisão de 2026-08-02 previa)
+porque criar é responsabilidade diferente de navegar; aninhar traria de volta
+a mistura de estado que aquele refactor acabou de resolver.
+**Conversão `FormData` → número mora na action** (`toMarkerInput`), não no
+schema: `z.coerce.number()` deixa o tipo de entrada `unknown` e quebra o
+`zodResolver` do React Hook Form.
+**O formulário coleta 8 campos, a API recebe 3.** Foto, descrição, categoria,
+wifi, petfriendly, melhor horário e segredo local são validados no navegador e
+descartados — o schema da API ainda é `nome`/`lat`/`lng`. É deliberado: o time
+aprovou o conceito em 2026-08-03 e queria ver o fluxo inteiro antes de mexer
+no banco. O spec técnico está em
+`docs/propostas/2026-08-03-expansao-modelo-ponto.md`, com o DER em `.dbml`.
+**Continua em aberto, e nada aqui mudou isso:** a API segue sem autenticação,
+`markers` segue sem dono, e `use-markers.ts` segue buscando do cliente com
+`NEXT_PUBLIC_API_URL` — esse último depende do `/api/proxy`, item 1 do
+backlog.
+
+### 2026-08-03 — Marcador em três camadas, detalhe em `/places/[id]`
+**Decisão:** separar a visualização de um ponto em tooltip (hover, uma linha),
+popup (clique, card de display + "Ver detalhes") e página cheia
+`/places/[id]`, que é onde moram editar e excluir. O popup deixou de ter
+formulário.
+**Motivo:** `MarkerTooltip` é `pointer-events-none` e some no `mouseleave`
+(`src/components/ui/map.tsx`) — nada dentro dele é clicável, nunca, e no touch
+ele nem aparece. Tooltip rico seria uma tela que metade dos usuários não vê e
+ninguém consegue usar. Editar dentro de um popup de 208px já era apertado com
+um campo só; com os 8 campos do modelo proposto, inviável.
+**Rota normal, não `@modals`:** o slot paralelo existe para abrir modal por
+cima de uma listagem (`/admin/users`); aqui se quer página de verdade, então
+não há interceptação nem rota espelho.
+**Nasce com a visão de administrador**, sem gate: hoje qualquer sessão válida
+já editava e excluía pelo popup, então isso não regride nada. Quando existir
+papel de usuário, entram o gate e o fluxo de sugestão do explorador — item do
+backlog de segurança.
+**Dados fictícios centralizados em `src/mocks/markers.ts`**, escolhidos de
+forma determinística pelo id (`id % lista.length`), para o mesmo ponto não
+trocar de foto a cada render. A página avisa explicitamente quais campos são
+exemplo. As seções do feed, que tinham picsum e nomes hardcoded inline,
+passaram a ler dessa mesma fonte.
+
 ### 2026-07-28 — Mermaid como fonte de verdade dos diagramas
 **Decisão:** todo diagrama vive em Mermaid dentro do Markdown; os PNGs
 exportados foram para `/docs/archive/diagramas-originais/`.
@@ -345,6 +399,8 @@ geolocalização tem persistência.
 - [x] Biblioteca de tabela reutilizável (`useTableConfig` + `src/components/table/*`)
 - [x] `/admin/users` no padrão de listagem: ordenação, busca por coluna, sheet de filtro, visibilidade de colunas, seleção e paginação
 - [x] Camada `src/http` (leitura com envelope + cache tags) e `src/actions/users.ts` (escrita com `FormState`)
+- [x] Markers no mesmo padrão: `validations` + `http` + Server Actions, criação em dois estágios e edição/exclusão sem `fetch` cru no cliente
+- [x] Página de detalhe do ponto (`/places/[id]`) com editar/excluir; marcador do mapa virou só display
 - [x] Slot de modal global `(app)/@modals` com rotas espelho
 - [x] Deploy: front na Vercel, API no Azure App Service, banco no Supabase
 
@@ -356,7 +412,7 @@ geolocalização tem persistência.
 - [ ] Parar de devolver `user_password` nas respostas de `/api/users` (DTO de saída)
 - [ ] `UNIQUE` em `user_name` e `user_email`
 - [ ] Resposta genérica no login (hoje diferencia "usuário não encontrado" de "senha incorreta")
-- [ ] Papel/role de administrador, checado no middleware e na API
+- [ ] Papel/role de administrador, checado no middleware e na API — destrava o gate de `/places/[id]`, que hoje mostra editar/excluir para qualquer sessão
 
 ### 🟠 Próximos passos — fundação
 - [ ] EF Core Migrations — hoje o schema é mantido à mão em dois lugares (local e Supabase), sem nada que os compare
@@ -367,12 +423,14 @@ geolocalização tem persistência.
 - [ ] `.gitignore` no repo da API — `bin/` e `obj/` estão versionados
 - [ ] Pipeline de deploy da API (hoje é publish manual pelo Visual Studio)
 - [ ] `PUT /api/users/{id}` aceitar atualização parcial — hoje re-hasheia a senha sempre, por isso o formulário de edição a exige
-- [ ] Levar markers para `src/http` + Server Action (ainda usam `fetch` no cliente)
+- [ ] Levar `use-markers.ts` para `src/http` — é a última chamada de marker no cliente, e depende do `/api/proxy`
 - [ ] `src/lib/fetcher.ts` + `/api/proxy` + env validado com `server-only`
 
 ### 🟡 Próximos passos — produto
+- [ ] Expandir o modelo de Ponto (foto, sobre, categoria, wifi, petfriendly, melhor horário, segredo local) — conceito aprovado, spec pronto em `docs/propostas/2026-08-03-expansao-modelo-ponto.md`; até lá o formulário coleta e descarta esses campos
 - [ ] `Categoria` + `Analise` (RF-07, RF-11, RF-12)
 - [ ] `Comentario` (RF-09)
+- [ ] Selo de **explorador verificado** — usuário cuja contribuição foi validada; a página do ponto já reserva espaço para o comentário dele. Falta definir o critério (nº de visitas? avaliações aprovadas? verificação manual pelo admin?), a coluna em `tbUsuario` e onde o selo aparece
 - [ ] Upload de fotos (RF-08)
 - [ ] `Segue` (RF-13)
 - [ ] Gamificação: `Conquista` + `GanhaConquista`

@@ -1,173 +1,96 @@
-import { useState } from "react";
+"use client";
+
+import { ArrowRightIcon, DogIcon, StarIcon, WifiIcon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   MapMarker,
   MarkerContent,
   MarkerPopup,
   MarkerTooltip,
 } from "@/components/ui/map";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { getMarkerDetailsMock } from "@/mocks/markers";
 import type { MarkerResource } from "@/types/marker";
 
 interface LocationMarkerProps {
   marker: MarkerResource;
-  onUpdate: (marker: MarkerResource) => void;
-  onDelete: (id: number) => void;
 }
 
-type PopupState = "view" | "edit" | "delete";
-
-export default function LocationMarker({
-  marker,
-  onUpdate,
-  onDelete,
-}: LocationMarkerProps) {
-  const [state, setState] = useState<PopupState>("view");
-  const [newName, setNewName] = useState(marker.nome);
-
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
-
-  const handleSave = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/markers/${marker.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nome: newName,
-          lat: marker.lat,
-          lng: marker.lng,
-        }),
-      });
-
-      if (response.ok) {
-        onUpdate({ ...marker, nome: newName });
-        setState("view");
-      } else {
-        alert("Erro ao atualizar o ponto na API.");
-      }
-    } catch (error) {
-      console.error("Erro na requisição PUT:", error);
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/markers/${marker.id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        onDelete(marker.id);
-      } else {
-        alert("Erro ao excluir o ponto na API.");
-        setState("view");
-      }
-    } catch (error) {
-      console.error("Erro na requisição DELETE:", error);
-      setState("view");
-    }
-  };
-
-  const renderPopupContent = () => {
-    switch (state) {
-      case "edit":
-        return (
-          <>
-            <Input
-              type="text"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              className="w-full text-sm border rounded p-1 text-black bg-white"
-              autoFocus
-            />
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant="destructive"
-                className="w-1/2"
-                onClick={() => {
-                  setState("view");
-                  setNewName(marker.nome);
-                }}
-              >
-                Cancelar
-              </Button>
-              <Button size="sm" className="w-1/2" onClick={handleSave}>
-                Salvar
-              </Button>
-            </div>
-          </>
-        );
-
-      case "delete":
-        return (
-          <>
-            <p className="text-sm font-bold text-center text-red-500">
-              Excluir ponto?
-            </p>
-            <p className="text-xs text-center text-muted-foreground mb-2">
-              Isso não pode ser desfeito.
-            </p>
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                className="w-1/2"
-                onClick={() => setState("view")}
-              >
-                Não
-              </Button>
-              <Button
-                size="sm"
-                variant="destructive"
-                className="w-1/2"
-                onClick={handleDelete}
-              >
-                Sim
-              </Button>
-            </div>
-          </>
-        );
-
-      case "view":
-      default:
-        return (
-          <>
-            <p className="text-sm font-bold truncate">{marker.nome}</p>
-            <p className="text-xs text-muted-foreground">Ponto de interesse</p>
-            <div className="flex gap-2 mt-2">
-              <Button
-                size="sm"
-                variant="outline"
-                className="w-1/2"
-                onClick={() => setState("edit")}
-              >
-                Editar
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="w-1/2 text-red-500 hover:text-red-600 hover:bg-red-50"
-                onClick={() => setState("delete")}
-              >
-                Excluir
-              </Button>
-            </div>
-          </>
-        );
-    }
-  };
+/**
+ * Marcador de um local no mapa. Só exibe: editar e excluir moram em
+ * `/places/[id]`.
+ *
+ * O tooltip (hover) é uma isca de uma linha porque o `MarkerTooltip` é
+ * `pointer-events-none` e some no `mouseleave` — nada dentro dele é clicável,
+ * e no touch ele nunca aparece. O que precisa de clique fica no popup.
+ */
+export default function LocationMarker({ marker }: LocationMarkerProps) {
+  const details = getMarkerDetailsMock(marker.id);
 
   return (
     <MapMarker longitude={marker.lng} latitude={marker.lat}>
       <MarkerContent>
-        <div className="bg-primary size-4 rounded-full border-2 border-white shadow-lg cursor-pointer" />
+        <div className="size-4 cursor-pointer rounded-full border-2 border-white bg-primary shadow-lg" />
       </MarkerContent>
 
-      <MarkerTooltip>{marker.nome}</MarkerTooltip>
+      <MarkerTooltip>
+        {marker.nome} · {details.categoria}
+      </MarkerTooltip>
 
-      <MarkerPopup>
-        <div className="p-2 w-48 space-y-2">{renderPopupContent()}</div>
+      <MarkerPopup className="p-0">
+        <div className="w-56">
+          <div className="relative h-28 w-full overflow-hidden rounded-t-md bg-muted">
+            <Image
+              src={details.fotoUrl}
+              alt={`Foto de ${marker.nome}`}
+              fill
+              sizes="224px"
+              className="object-cover"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2 p-3">
+            <div className="flex flex-col gap-0.5">
+              <span className="truncate font-semibold text-sm">
+                {marker.nome}
+              </span>
+              <span className="text-muted-foreground text-xs">
+                {details.bairro}
+              </span>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-1">
+              <Badge variant="secondary">{details.categoria}</Badge>
+
+              <Badge variant="secondary">
+                <StarIcon className="size-3 fill-yellow-500 text-yellow-500" />
+                {details.nota}
+              </Badge>
+
+              {details.temWifi && (
+                <Badge variant="secondary">
+                  <WifiIcon className="size-3" />
+                </Badge>
+              )}
+
+              {details.petFriendly && (
+                <Badge variant="secondary">
+                  <DogIcon className="size-3" />
+                </Badge>
+              )}
+            </div>
+
+            <Button asChild size="sm" className="w-full">
+              <Link href={`/places/${marker.id}`}>
+                Ver detalhes
+                <ArrowRightIcon className="size-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
       </MarkerPopup>
     </MapMarker>
   );
