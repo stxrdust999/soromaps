@@ -82,19 +82,19 @@ export default function ManageUsersPage() {
       </Badge>
 
       <InformationBadge
-        icon={<UsersIcon size={16} />}
+        icon={<UsersIcon size={16} className="text-white/75" />}
         value="144"
         label="exploradores"
       />
 
       <InformationBadge
-        icon={<ShieldUserIcon size={16} />}
+        icon={<ShieldUserIcon size={16} className="text-white/75" />}
         value="5"
         label="administradores"
       />
 
       <InformationBadge
-        icon={<StoreIcon size={14} />}
+        icon={<StoreIcon size={14} className="text-white/75" />}
         value="35"
         label="comércios"
       />
