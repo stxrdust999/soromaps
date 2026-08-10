@@ -1,14 +1,10 @@
-import FeedNewInMapSection from "../../(explorer)/home/_components/feed/feed-new-in-map-section";
-import FeedTrendingSection from "../../(explorer)/home/_components/feed/feed-trending-section";
-
 export default function Page() {
   return (
     <div className="p-8">
-      <span className="text-2xl font-bold tracking-tight">Avaliações</span>
-
-      <FeedTrendingSection />
-
-      <FeedNewInMapSection />
+      <h1 className="text-2xl font-bold">Avaliações</h1>
+      <p className="text-muted-foreground text-sm">
+        Todas as avaliações da plataforma, com remoção do que violar as regras.
+      </p>
     </div>
   );
 }
