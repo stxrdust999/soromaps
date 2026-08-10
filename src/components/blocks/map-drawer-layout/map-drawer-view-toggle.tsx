@@ -25,7 +25,7 @@ export function MapDrawerViewToggle({
 
   return (
     <Button
-      variant="ghost"
+      variant="outline"
       size="sm"
       onClick={isExpanded ? collapse : expand}
       className={cn(
