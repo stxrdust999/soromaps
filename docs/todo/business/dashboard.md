@@ -1,6 +1,6 @@
 # 📈 Painel do negócio
 
-> Área: estabelecimento · Rota: `/business` · Status: 💤 não iniciado
+> Área: estabelecimento · Rota: `/business/dashboard` · Status: 💤 não iniciado
 
 ## Ideia
 
@@ -22,7 +22,7 @@ Este módulo é o que transforma o Soromaps de "app de avaliações" em **plataf
 | FK `UsuarioDono` em `markers` (qual ponto é meu?) | ❌ |
 | `Analise` (a matéria-prima de tudo) | ❌ |
 | `Visita` (métrica de tráfego) | ❌ |
-| Guarda de rota por tipo (`/business` só pra estabelecimento) | ❌ — o middleware hoje só checa sessão |
+| Guarda de rota por tipo (`/business/*` só pra estabelecimento) | ❌ — o middleware hoje só checa sessão |
 
 É o módulo com mais dependências do sistema — e por isso o melhor **teste de integração conceitual**: quando ele funcionar, o modelo de dados inteiro funcionou.
 

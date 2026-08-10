@@ -21,41 +21,53 @@ Regra: concluiu um módulo → atualiza o status aqui e no `.md` dele, **na mesm
 
 | Módulo | Rota | Status | Depende de |
 |---|---|---|---|
-| [Descobrir](./user/explore.md) | `/explore` | 💤 | Nada bloqueia (melhora com `Categoria`/`Analise`) |
+| [Explorar lugares](./user/places.md) | `/places` | 🟡 | Tela pronta sobre `src/mocks/markers.ts` — falta o modelo real do ponto |
+| [Descobrir](./user/explore.md) | `/discover` | 💤 | `Visita` + `tags` no ponto — o módulo mais bloqueado |
+| [Perfil](./user/profile.md) | `/profile` | 💤 | Nada bloqueia o básico (contadores precisam de `Visita`/`Analise`) |
 | [Favoritos](./user/favorites.md) | `/favorites` | 💤 | `Favorita` |
 | [Minhas visitas](./user/visits.md) | `/visits` | 💤 | `Visita` |
 | [Conquistas](./user/achievements.md) | `/achievements` | 💤 | `Conquista` + `GanhaConquista` |
 | [Feed](./user/feed.md) | `/feed` | 💤 | `Segue` + `Analise` |
-| [Comunidade](./user/community.md) | `/users` | 💤 | Nada bloqueia (ranking precisa de `Analise`/`Visita`) |
+| [Comunidade](./user/community.md) | `/community` | 💤 | Nada bloqueia (ranking precisa de `Analise`/`Visita`) |
 | [Estatísticas](./user/stats.md) | `/stats` | 💤 | `Visita` |
-| [Notificações](./user/notifications.md) | `/notifications` | 💤 | Entidade nova `Notificacao` |
-| [Configurações](./user/settings.md) | `/settings` | 💤 | `PATCH` parcial de usuário na API |
-| [Sobre](./user/about.md) | `/about` | 💤 | Nada |
+| [Notificações](./user/notifications.md) | `/notifications` | 💤 | Entidade nova `Notificacao` — ⚠️ sem rota nem item de sidebar |
+| [Configurações](./user/settings.md) | `/settings` | 💤 | `PATCH` parcial de usuário na API — ⚠️ sem rota nem item de sidebar |
+| [Sobre](./user/about.md) | `/about` | 💤 | Nada — ⚠️ sem rota nem item de sidebar |
+
+> ⚠️ Os três marcados foram escritos antes de a navegação fechar no Figma e **não existem** como rota nem na sidebar. Precisam entrar em algum grupo de `src/constants/navigation.ts` ou serem movidos para `/docs/archive`.
 
 ## 🏪 Estabelecimento (`business/`)
 
 | Módulo | Rota | Status | Depende de |
 |---|---|---|---|
-| [Painel do negócio](./business/dashboard.md) | `/business` | 💤 | `tipoUsuario` + `Analise` + `Visita` |
+| [Painel do negócio](./business/dashboard.md) | `/business/dashboard` | 💤 | `tipoUsuario` + `Analise` + `Visita` |
 | [Responder avaliações](./business/reviews.md) | `/business/reviews` | 💤 | `Analise` + `Comentario` |
 | [Meu ponto](./business/place.md) | `/business/place` | 💤 | `tipoUsuario` + FK `UsuarioDono` em markers |
+| [Visitas](./business/visits.md) | `/business/visits` | 💤 | `Visita` + FK `UsuarioDono` em markers |
+| [Moderação](./business/moderation.md) | `/business/moderation` | 💤 | `Comentario` + coluna `status` |
 
 ## 🛡️ Admin (`admin/`)
 
 | Módulo | Rota | Status | Depende de |
 |---|---|---|---|
-| [Dashboard](./admin/dashboard.md) | `/admin` | 💤 | Nada bloqueia |
-| [Categorias](./admin/categories.md) | `/admin/categories` | 💤 | Tabela `Categoria` (CRUD simples) |
-| [Moderação](./admin/moderation.md) | `/admin/moderation` | 💤 | Coluna `status` em markers |
+| [Dashboard](./admin/dashboard.md) | `/admin/dashboard` | 🟡 | Tela pronta sobre `src/mocks/admin-dashboard.ts` — falta `GET /api/admin/stats` |
+| [Categorias](./admin/categories.md) | `/admin/categories` | 🟡 | Tela pronta sobre `src/mocks/admin-categories.ts` — falta a tabela `Categoria` |
+| [Moderação](./admin/moderation.md) | `/admin/moderation` | 🟡 | Tela pronta sobre `src/mocks/admin-moderation.ts` — falta coluna `status` em markers |
 | [Conquistas (catálogo)](./admin/achievements.md) | `/admin/achievements` | 💤 | Tabela `Conquista` |
-| [Denúncias](./admin/reports.md) | `/admin/reports` | 💤 | Entidade nova `Denuncia` |
+| [Denúncias e feedback](./admin/reports.md) | `/admin/reports` | 💤 | Entidades novas `Denuncia` e `Feedback` |
+| [Comércios](./admin/businesses.md) | `/admin/businesses` | 💤 | `tipoUsuario` + FK `UsuarioDono` em markers |
+| [Avaliações](./admin/reviews.md) | `/admin/reviews` | 💤 | `Analise` + `Comentario` |
+
+> `/admin/users` não aparece aqui porque já está entregue — este índice rastreia pendência, não o que existe.
 
 ---
 
 ## 🚦 Ordem sugerida
 
-1. **[Categorias](./admin/categories.md)** — destrava categoria em todo o resto e é o caso de uso perfeito pra reusar o padrão de tabela
-2. **[Descobrir](./user/explore.md)** — funciona parcialmente com os dados de hoje
+1. **Expansão do modelo de Ponto** ([proposta](../propostas/2026-08-03-expansao-modelo-ponto.md)) — é o que tira [Explorar lugares](./user/places.md) do parcial. Única tela pronta esperando só o dado chegar; enquanto isso, foto, categoria, tags e nota são fixos em `src/mocks/markers.ts`
+2. **[Categorias](./admin/categories.md)** — destrava categoria como entidade (hoje é constante no front) e é o caso de uso perfeito pra reusar o padrão de tabela
 3. **[Painel do negócio](./business/dashboard.md)** — o módulo que mais justifica o produto (persona do Augusto) e ainda não tem nenhuma tela
+
+> [Descobrir](./user/explore.md) saiu desta lista: com a redefinição de escopo, ele depende de `Visita` e das tags no ponto, então é o módulo mais bloqueado — não o mais próximo.
 
 > ⚠️ Nada disso antes da prioridade 0/1 do [backlog técnico](../wiki/12-gap-modelo-vs-implementacao.md): proxy dos markers e autenticação na API. Módulo novo sobre API pública aberta só aumenta a superfície.

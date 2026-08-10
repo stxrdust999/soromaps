@@ -315,6 +315,43 @@ trocar de foto a cada render. A página avisa explicitamente quais campos são
 exemplo. As seções do feed, que tinham picsum e nomes hardcoded inline,
 passaram a ler dessa mesma fonte.
 
+### 2026-08-09 — Telas de admin construídas sobre mock, antes do schema
+**Decisão:** `/admin/dashboard`, `/admin/moderation` e `/admin/categories`
+foram implementadas inteiras — layout, interação, estados vazios — lendo de
+`src/mocks/admin-{dashboard,moderation,categories}.ts`, sem nenhuma chamada à
+API. As três ficam 🟡 no `docs/todo/README.md` até existir dado real.
+**Motivo:** as duas dependem de coisas que o banco não tem (`status` em
+`markers`, tabela de decisão, agregado `GET /api/admin/stats`), e esperar o
+schema deixaria o produto sem tela para revisar. É a mesma aposta do formulário
+de ponto de 2026-08-03: ver o fluxo inteiro antes de mexer no banco. **Custo
+aceito:** dois arquivos de mock que precisam morrer na migração, e o risco de
+alguém confundir tela pronta com módulo entregue — daí o 🟡 e o aviso no topo
+de cada mock.
+**O que veio junto e vale além destas telas:**
+- **`--success` e `--warning` no `globals.css`**, com variantes no `Badge`. São
+  cores **de estado**, nunca de marca: aprovado/atrasado precisam de semáforo,
+  o resto do produto continua azul.
+- **`PageBreadcrumb`** (`src/components/blocks/`) — primeira trilha do projeto;
+  as demais telas de admin devem adotar.
+- **`ui/chart.tsx` + Recharts** entraram para o dashboard; a paleta
+  `--chart-1..5` já existia.
+- **Nada de `Math.random()`/`Date.now()` em mock.** Série temporal é ruído
+  determinístico sobre data-âncora fixa, e "há N dias" é `number` formatado por
+  `formatWaitingDays`. Valor aleatório ou relativo a `now` renderiza diferente
+  no servidor e no cliente e quebra a hidratação.
+- **Mestre-detalhe em vez de tabela + modal na moderação**, e mini-mapa em SVG
+  em vez de MapLibre — detalhe e justificativa em
+  `docs/todo/admin/moderation.md`.
+- **A aposta do padrão de listagem (decisão de 2026-07-29) se pagou em
+  `/admin/categories`:** busca, ordenação, visibilidade de coluna, paginação e
+  sheet de filtro vieram prontos de `useTableConfig` e `src/components/table/*`
+  sem tocar em nada compartilhado. O que custou foi só o domínio — pin,
+  colisão de cor, reatribuição na exclusão.
+- **Diálogo local em vez do slot `@modals` onde o dado é mock.** Rota
+  interceptada precisa de um servidor como fonte da verdade; com o catálogo em
+  `useState`, a rota leria o mock original e salvaria no vazio. Migra junto com
+  a API.
+
 ### 2026-07-28 — Mermaid como fonte de verdade dos diagramas
 **Decisão:** todo diagrama vive em Mermaid dentro do Markdown; os PNGs
 exportados foram para `/docs/archive/diagramas-originais/`.
@@ -401,6 +438,9 @@ geolocalização tem persistência.
 - [x] Camada `src/http` (leitura com envelope + cache tags) e `src/actions/users.ts` (escrita com `FormState`)
 - [x] Markers no mesmo padrão: `validations` + `http` + Server Actions, criação em dois estágios e edição/exclusão sem `fetch` cru no cliente
 - [x] Página de detalhe do ponto (`/places/[id]`) com editar/excluir; marcador do mapa virou só display
+- [x] Dashboard admin (`/admin/dashboard`): filas de atenção, quatro cards de número e dois gráficos Recharts — **inteiro sobre `src/mocks/admin-dashboard.ts`**, sem chamada à API
+- [x] Moderação de pontos (`/admin/moderation`): fila mestre-detalhe com filtros, ação em lote, atalhos de teclado, rejeição com motivo, comparação de duplicata e aba de histórico — **inteiro sobre `src/mocks/admin-moderation.ts`**
+- [x] Categorias (`/admin/categories`) no padrão de listagem, reusando `useTableConfig` + `src/components/table/*` + `SheetFilterDialog`: pin renderizado, alerta de colisão de cor, formulário com preview ao vivo e exclusão com reatribuição — **inteiro sobre `src/mocks/admin-categories.ts`**
 - [x] Slot de modal global `(app)/@modals` com rotas espelho
 - [x] Deploy: front na Vercel, API no Azure App Service, banco no Supabase
 
@@ -434,6 +474,7 @@ geolocalização tem persistência.
 - [ ] Upload de fotos (RF-08)
 - [ ] `Segue` (RF-13)
 - [ ] Gamificação: `Conquista` + `GanhaConquista`
+- [ ] `GET /api/admin/stats` — endpoint agregado que tira o dashboard admin do mock (evita N chamadas de lista só para contar)
 - [ ] Paginação e filtro por bounding box em `/api/markers`
 - [ ] App mobile Expo
 
