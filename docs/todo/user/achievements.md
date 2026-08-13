@@ -32,5 +32,9 @@ Modelagem já definida no TCC: `Conquista` é catálogo, `GanhaConquista` é a N
 
 ## Fora do escopo inicial
 
-- Pontuação/nível (colunas `pontuacao`/`nivel` do modelo conceitual — fase 2)
+- **Pontuação/nível — descartado, não adiado.** Decisão de 2026-08-12 no
+  `CLAUDE.md`: conquista é estado idempotente, XP é acumulador e exigiria
+  ledger + curva + balanceamento por conquista. No lugar do nível entra um
+  título derivado de `COUNT(GanhaConquista)`:
+  `0–2 Novato · 3–6 Explorador · 7–12 Guia local · 13+ Veterano`
 - Conquistas sazonais/por tempo limitado

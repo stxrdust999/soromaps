@@ -53,9 +53,9 @@ Regra: concluiu um módulo → atualiza o status aqui e no `.md` dele, **na mesm
 | [Dashboard](./admin/dashboard.md) | `/admin/dashboard` | 🟡 | Tela pronta sobre `src/mocks/admin-dashboard.ts` — falta `GET /api/admin/stats` |
 | [Categorias](./admin/categories.md) | `/admin/categories` | 🟡 | Tela pronta sobre `src/mocks/admin-categories.ts` — falta a tabela `Categoria` |
 | [Moderação](./admin/moderation.md) | `/admin/moderation` | 🟡 | Tela pronta sobre `src/mocks/admin-moderation.ts` — falta coluna `status` em markers |
-| [Conquistas (catálogo)](./admin/achievements.md) | `/admin/achievements` | 💤 | Tabela `Conquista` |
+| [Conquistas (catálogo)](./admin/achievements.md) | `/admin/achievements` | 🟡 | Tela pronta sobre `src/mocks/admin-achievements.ts` — falta a tabela `Conquista` |
 | [Denúncias e feedback](./admin/reports.md) | `/admin/reports` | 💤 | Entidades novas `Denuncia` e `Feedback` |
-| [Comércios](./admin/businesses.md) | `/admin/businesses` | 💤 | `tipoUsuario` + FK `UsuarioDono` em markers |
+| [Comércios](./admin/businesses.md) | `/admin/businesses` | 🟡 | Tela pronta sobre `src/mocks/admin-businesses.ts` — falta `tipoUsuario` + FK `UsuarioDono` |
 | [Avaliações](./admin/reviews.md) | `/admin/reviews` | 💤 | `Analise` + `Comentario` |
 
 > `/admin/users` não aparece aqui porque já está entregue — este índice rastreia pendência, não o que existe.
