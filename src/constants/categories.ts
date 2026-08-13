@@ -82,6 +82,20 @@ export const CATEGORY_ICON_KEYS = Object.keys(CATEGORY_ICONS) as [
 ];
 
 /**
+ * Categorias que descrevem um negócio com dono.
+ *
+ * Existe para `/admin/businesses`: parque, mirante e trilha são espaço
+ * público, e pedido de posse sobre eles é bandeira vermelha, não fluxo normal.
+ */
+export const COMMERCIAL_CATEGORIES = [
+  "Gastronomia",
+  "Bar",
+  "Cafeteria",
+  "Compras",
+  "Cultura",
+];
+
+/**
  * Paleta pré-aprovada. São doze matizes bem separados em vez de uma escala do
  * tema: no mapa a cor é o que identifica a categoria, então ela precisa de
  * contraste entre pares, não harmonia com a interface.
