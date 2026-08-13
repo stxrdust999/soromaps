@@ -1,11 +1,13 @@
-export default function Page() {
+import { PageBreadcrumb } from "@/components/blocks/page-breadcrumb";
+
+import { AchievementsWorkspace } from "./_components/achievements-workspace";
+
+export default function AdminAchievementsPage() {
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">Conquistas</h1>
-      <p className="text-muted-foreground text-sm">
-        Catálogo de badges: critério de desbloqueio, pontuação e arte de cada
-        conquista.
-      </p>
-    </div>
+    <>
+      <PageBreadcrumb items={[{ label: "Admin" }, { label: "Conquistas" }]} />
+
+      <AchievementsWorkspace />
+    </>
   );
 }
