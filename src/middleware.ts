@@ -1,19 +1,34 @@
-import { decryptSession } from "@/lib/session";
 import { type NextRequest, NextResponse } from "next/server";
+import { decryptSession } from "@/lib/session";
 
-const PROTECTED_ROUTES = ["/home", "/admin", "/business", "/places", "/profile"];
+const PROTECTED_ROUTES = [
+  "/home",
+  "/admin",
+  "/business",
+  "/places",
+  "/profile",
+  "/feed",
+  "/discover",
+  "/community",
+  "/visits",
+  "/stats",
+  "/favorites",
+  "/achievements",
+];
 const AUTH_ROUTES = ["/login", "/register"];
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  
+
   // Extract custom session cookie
   const cookie = request.cookies.get("session")?.value;
-  
+
   // decryptSession is secure and fully compatible with Edge middleware
   const session = cookie ? await decryptSession(cookie) : null;
 
-  const isProtectedRoute = PROTECTED_ROUTES.some((route) => path.startsWith(route));
+  const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
+    path.startsWith(route),
+  );
   const isAuthRoute = AUTH_ROUTES.some((route) => path.startsWith(route));
 
   // 1. Guard Protection: Redirect unauthenticated user to login screen
@@ -39,6 +54,13 @@ export const config = {
     "/business/:path*",
     "/places/:path*",
     "/profile/:path*",
+    "/feed/:path*",
+    "/discover/:path*",
+    "/community/:path*",
+    "/visits/:path*",
+    "/stats/:path*",
+    "/favorites/:path*",
+    "/achievements/:path*",
     "/login",
     "/register",
   ],

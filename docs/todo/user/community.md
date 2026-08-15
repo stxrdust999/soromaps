@@ -1,6 +1,6 @@
 # 👥 Comunidade
 
-> Área: usuário público · Rota: `/users` · Status: 💤 não iniciado
+> Área: usuário público · Rota: `/community` · Status: 💤 não iniciado
 
 ## Ideia
 
@@ -19,15 +19,15 @@ O recorte por bairro é deliberado: em ranking geral só os 10 mais ativos apare
 | O quê | Situação |
 |---|---|
 | Busca de usuários | 🟢 `GET /api/users` existe (precisa de filtro por nome no server p/ escalar) |
-| Perfil público (`/users/[id]`) | ❌ rota não existe; `/profile` atual é placeholder |
+| Perfil público (`/community/[id]`) | ❌ rota não existe; `/profile` atual é placeholder |
 | `Segue` | ❌ não existe |
 | `Analise`/`Visita` (conteúdo do perfil e critério do ranking) | ❌ |
 | Privacidade: API não devolver e-mail/hash em perfil público | 🔴 DTO de saída — item de segurança do backlog |
 
 ## Escopo inicial
 
-- `/users` com busca + cards de usuário
-- `/users/[id]` público: nome, desde quando, contadores, conquistas em destaque
+- `/community` com busca + cards de usuário
+- `/community/[id]` público: nome, desde quando, contadores, conquistas em destaque
 - Seguir/deixar de seguir com update otimista
 - Ranking simples por contagem de avaliações (quando `Analise` existir)
 - **Selo de explorador verificado** no perfil e ao lado do nome onde ele aparece (comentário em destaque na página do ponto, ranking, feed). É o mesmo problema da dor nº 2 — verificação é o que faz "quem avaliou" virar argumento de confiança. Critério em aberto: nº de visitas, avaliações aprovadas ou verificação manual pelo admin

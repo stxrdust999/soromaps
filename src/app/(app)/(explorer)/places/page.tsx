@@ -1,10 +1,11 @@
-export default function Page() {
-  return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">Explorar Lugares</h1>
-      <p className="text-muted-foreground text-sm">
-        Lista e busca de todos os comércios de Sorocaba.
-      </p>
-    </div>
-  );
+import { MARKERS_LIST_TAG } from "@/constants/markers";
+import { getMarkers } from "@/http/markers/markers";
+
+import { PlacesExplorer } from "./_components/places-explorer";
+
+export default async function PlacesPage() {
+  const response = await getMarkers({ next: { tags: [MARKERS_LIST_TAG] } });
+  const markers = response.status === 200 ? response.data : [];
+
+  return <PlacesExplorer markers={markers} />;
 }

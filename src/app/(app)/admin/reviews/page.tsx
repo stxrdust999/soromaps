@@ -1,14 +1,13 @@
-import FeedNewInMapSection from "../../(explorer)/home/_components/feed/feed-new-in-map-section";
-import FeedTrendingSection from "../../(explorer)/home/_components/feed/feed-trending-section";
+import { PageBreadcrumb } from "@/components/blocks/page-breadcrumb";
 
-export default function Page() {
+import { ReviewsWorkspace } from "./_components/reviews-workspace";
+
+export default function AdminReviewsPage() {
   return (
-    <div className="p-8">
-      <span className="text-2xl font-bold tracking-tight">Avaliações</span>
+    <>
+      <PageBreadcrumb items={[{ label: "Admin" }, { label: "Avaliações" }]} />
 
-      <FeedTrendingSection />
-
-      <FeedNewInMapSection />
-    </div>
+      <ReviewsWorkspace />
+    </>
   );
 }

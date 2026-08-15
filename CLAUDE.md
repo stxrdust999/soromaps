@@ -315,6 +315,90 @@ trocar de foto a cada render. A página avisa explicitamente quais campos são
 exemplo. As seções do feed, que tinham picsum e nomes hardcoded inline,
 passaram a ler dessa mesma fonte.
 
+### 2026-08-09 — Telas de admin construídas sobre mock, antes do schema
+**Decisão:** as sete telas de admin que faltavam — `dashboard`, `moderation`,
+`categories`, `businesses`, `achievements`, `reports` e `reviews` — foram
+implementadas inteiras (layout, interação, estados vazios) lendo de
+`src/mocks/admin-*.ts`, sem nenhuma chamada à API. Todas ficam 🟡 no
+`docs/todo/README.md` até existir dado real. Com isso a área de admin está
+completa em superfície: sete telas 🟡 mais `/admin/users`, a única ✅.
+**Motivo:** as duas dependem de coisas que o banco não tem (`status` em
+`markers`, tabela de decisão, agregado `GET /api/admin/stats`), e esperar o
+schema deixaria o produto sem tela para revisar. É a mesma aposta do formulário
+de ponto de 2026-08-03: ver o fluxo inteiro antes de mexer no banco. **Custo
+aceito:** dois arquivos de mock que precisam morrer na migração, e o risco de
+alguém confundir tela pronta com módulo entregue — daí o 🟡 e o aviso no topo
+de cada mock.
+**O que veio junto e vale além destas telas:**
+- **`--success` e `--warning` no `globals.css`**, com variantes no `Badge`. São
+  cores **de estado**, nunca de marca: aprovado/atrasado precisam de semáforo,
+  o resto do produto continua azul.
+- **`PageBreadcrumb`** (`src/components/blocks/`) — primeira trilha do projeto;
+  as demais telas de admin devem adotar.
+- **`ui/chart.tsx` + Recharts** entraram para o dashboard; a paleta
+  `--chart-1..5` já existia.
+- **Nada de `Math.random()`/`Date.now()` em mock.** Série temporal é ruído
+  determinístico sobre data-âncora fixa, e "há N dias" é `number` formatado por
+  `formatWaitingDays`. Valor aleatório ou relativo a `now` renderiza diferente
+  no servidor e no cliente e quebra a hidratação.
+- **Mestre-detalhe em vez de tabela + modal na moderação**, e mini-mapa em SVG
+  em vez de MapLibre — detalhe e justificativa em
+  `docs/todo/admin/moderation.md`.
+- **A aposta do padrão de listagem (decisão de 2026-07-29) se pagou em
+  `/admin/categories`:** busca, ordenação, visibilidade de coluna, paginação e
+  sheet de filtro vieram prontos de `useTableConfig` e `src/components/table/*`
+  sem tocar em nada compartilhado. O que custou foi só o domínio — pin,
+  colisão de cor, reatribuição na exclusão.
+- **Diálogo local em vez do slot `@modals` onde o dado é mock.** Rota
+  interceptada precisa de um servidor como fonte da verdade; com o catálogo em
+  `useState`, a rota leria o mock original e salvaria no vazio. Migra junto com
+  a API.
+- **A promessa de "uma remoção só" foi cumprida antes da API.**
+  `docs/todo/admin/reviews.md` avisava que `/admin/reviews` e `/admin/reports`
+  removem o mesmo conteúdo por caminhos diferentes e que duas implementações
+  divergiriam no primeiro ajuste de regra. Então `REMOVAL_REASONS` saiu do mock
+  para `src/constants/content-removal.ts`, e `RemovalDialog` e `StarRating`
+  subiram para `src/components/blocks/`. Quando a Server Action nascer, as duas
+  telas já falam igual.
+- **Primeira dependência de UI de terceiro: o [Trophy UI Kit](https://ui.trophy.so).**
+  `AchievementBadge` entrou por registry (`npx shadcn@latest add
+  https://ui.trophy.so/achievement-badge`) e foi **adaptado**, não consumido
+  como está — o registry entrega o código, então ele vira nosso. O original
+  tinha os estados travado/desbloqueado invertidos, só renderizava troféu ou
+  imagem (o catálogo escolhe ícone lucide + cor) e estava em inglês. Detalhe
+  em `docs/todo/admin/achievements.md`.
+- **Três formas de tela para três formas de trabalho:** fila mestre-detalhe
+  onde a decisão *é* a tela (moderação), listagem simples onde o CRUD é o
+  trabalho (categorias), e listagem com painel lateral onde se despacha vários
+  itens sem perder a posição na tabela (comércios). Em `/admin/businesses` a
+  casca de tabela virou componente genérico porque as três abas mostram
+  entidades diferentes com a mesma moldura.
+
+### 2026-08-12 — Gamificação sem XP: conquista só, e "nível" vira contagem
+**Decisão:** o pilar de gamificação fica **só com conquista** (`Conquista` +
+`GanhaConquista`). As colunas `pontuacao`/`nivel` do modelo conceitual do TCC
+seguem sem prazo, e o "Nível N" que já apareceu na UI é substituído por um
+**título derivado do número de conquistas** — função pura sobre
+`COUNT(GanhaConquista)`, sem coluna, sem curva, sem ledger:
+`0–2 Novato · 3–6 Explorador · 7–12 Guia local · 13+ Veterano`.
+**Motivo:** a diferença de custo entre os dois não é número de tabela, é a
+natureza do dado. **Conquista é estado idempotente** — a PK composta de
+`GanhaConquista` impede duplicata, então errar o critério e reprocessar é
+seguro. **XP é acumulador** — conceder duas vezes deixa o saldo errado para
+sempre, e tornar isso reprocessável exige uma tabela de transações. Some a
+curva de nível (segundo catálogo de regras, mutável) e o balanceamento: cada
+conquista nova passaria a exigir a decisão extra "quanto isso vale em XP?",
+acoplando os dois sistemas. É o dobro de superfície de calibragem para a mesma
+sensação — hierarquia visível ao lado do nome —, que o título derivado entrega
+de graça. Confirma o que `docs/todo/user/achievements.md` já registrava como
+fase 2.
+**Consequência pendente:** cinco lugares mostram "Nível N" sobre mock e
+precisam migrar para a contagem —
+`components/blocks/{place-leaderboard,verified-comment-card}.tsx`,
+`admin/moderation/_components/author-card.tsx` (via `nivel` em
+`mocks/admin-moderation.ts`) e os stubs de `/stats` e `/admin/achievements`,
+cujo texto ainda promete "evolução de nível" e "pontuação".
+
 ### 2026-07-28 — Mermaid como fonte de verdade dos diagramas
 **Decisão:** todo diagrama vive em Mermaid dentro do Markdown; os PNGs
 exportados foram para `/docs/archive/diagramas-originais/`.
@@ -401,6 +485,13 @@ geolocalização tem persistência.
 - [x] Camada `src/http` (leitura com envelope + cache tags) e `src/actions/users.ts` (escrita com `FormState`)
 - [x] Markers no mesmo padrão: `validations` + `http` + Server Actions, criação em dois estágios e edição/exclusão sem `fetch` cru no cliente
 - [x] Página de detalhe do ponto (`/places/[id]`) com editar/excluir; marcador do mapa virou só display
+- [x] Dashboard admin (`/admin/dashboard`): filas de atenção, quatro cards de número e dois gráficos Recharts — **inteiro sobre `src/mocks/admin-dashboard.ts`**, sem chamada à API
+- [x] Moderação de pontos (`/admin/moderation`): fila mestre-detalhe com filtros, ação em lote, atalhos de teclado, rejeição com motivo, comparação de duplicata e aba de histórico — **inteiro sobre `src/mocks/admin-moderation.ts`**
+- [x] Categorias (`/admin/categories`) no padrão de listagem, reusando `useTableConfig` + `src/components/table/*` + chips de filtro: pin renderizado, alerta de colisão de cor, formulário com preview ao vivo e exclusão com reatribuição — **inteiro sobre `src/mocks/admin-categories.ts`**
+- [x] Comércios (`/admin/businesses`): três abas (pedidos, verificados, sem dono) sobre uma casca de tabela genérica, com cinco sinais de risco, painel lateral de decisão, comparação de conflito e revogação de vínculo — **inteiro sobre `src/mocks/admin-businesses.ts`**
+- [x] Conquistas (`/admin/achievements`): catálogo com construtor de critério declarativo, estimativa de alcance, faixa de badges, prévia de desbloqueio e aba de calibragem — **inteiro sobre `src/mocks/admin-achievements.ts`**, com `AchievementBadge` adaptado do Trophy UI Kit
+- [x] Denúncias e feedback (`/admin/reports`): fila agrupada por alvo com selo de denúncia coordenada, conteúdo renderizado por tipo, remoção com motivo, e aba de triagem de feedback — **inteiro sobre `src/mocks/admin-reports.ts`**
+- [x] Avaliações (`/admin/reviews`): quatro KPIs, listagem com três sinais formais (spam, duplicada, discrepante), ações de pivô por autor e por local, remoção em lote e linha expansível com os comentários — **inteiro sobre `src/mocks/admin-reviews.ts`**
 - [x] Slot de modal global `(app)/@modals` com rotas espelho
 - [x] Deploy: front na Vercel, API no Azure App Service, banco no Supabase
 
@@ -434,6 +525,7 @@ geolocalização tem persistência.
 - [ ] Upload de fotos (RF-08)
 - [ ] `Segue` (RF-13)
 - [ ] Gamificação: `Conquista` + `GanhaConquista`
+- [ ] `GET /api/admin/stats` — endpoint agregado que tira o dashboard admin do mock (evita N chamadas de lista só para contar)
 - [ ] Paginação e filtro por bounding box em `/api/markers`
 - [ ] App mobile Expo
 
