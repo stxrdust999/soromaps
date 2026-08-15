@@ -54,9 +54,9 @@ Regra: concluiu um módulo → atualiza o status aqui e no `.md` dele, **na mesm
 | [Categorias](./admin/categories.md) | `/admin/categories` | 🟡 | Tela pronta sobre `src/mocks/admin-categories.ts` — falta a tabela `Categoria` |
 | [Moderação](./admin/moderation.md) | `/admin/moderation` | 🟡 | Tela pronta sobre `src/mocks/admin-moderation.ts` — falta coluna `status` em markers |
 | [Conquistas (catálogo)](./admin/achievements.md) | `/admin/achievements` | 🟡 | Tela pronta sobre `src/mocks/admin-achievements.ts` — falta a tabela `Conquista` |
-| [Denúncias e feedback](./admin/reports.md) | `/admin/reports` | 💤 | Entidades novas `Denuncia` e `Feedback` |
+| [Denúncias e feedback](./admin/reports.md) | `/admin/reports` | 🟡 | Tela pronta sobre `src/mocks/admin-reports.ts` — faltam `Denuncia` e `Feedback` |
 | [Comércios](./admin/businesses.md) | `/admin/businesses` | 🟡 | Tela pronta sobre `src/mocks/admin-businesses.ts` — falta `tipoUsuario` + FK `UsuarioDono` |
-| [Avaliações](./admin/reviews.md) | `/admin/reviews` | 💤 | `Analise` + `Comentario` |
+| [Avaliações](./admin/reviews.md) | `/admin/reviews` | 🟡 | Tela pronta sobre `src/mocks/admin-reviews.ts` — faltam `Analise` e `Comentario` |
 
 > `/admin/users` não aparece aqui porque já está entregue — este índice rastreia pendência, não o que existe.
 

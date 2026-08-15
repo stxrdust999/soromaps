@@ -316,11 +316,12 @@ exemplo. As seções do feed, que tinham picsum e nomes hardcoded inline,
 passaram a ler dessa mesma fonte.
 
 ### 2026-08-09 — Telas de admin construídas sobre mock, antes do schema
-**Decisão:** `/admin/dashboard`, `/admin/moderation`, `/admin/categories`,
-`/admin/businesses` e `/admin/achievements` foram implementadas inteiras —
-layout, interação, estados vazios — lendo de `src/mocks/admin-*.ts`, sem
-nenhuma chamada à API. As cinco ficam 🟡 no `docs/todo/README.md` até existir
-dado real.
+**Decisão:** as sete telas de admin que faltavam — `dashboard`, `moderation`,
+`categories`, `businesses`, `achievements`, `reports` e `reviews` — foram
+implementadas inteiras (layout, interação, estados vazios) lendo de
+`src/mocks/admin-*.ts`, sem nenhuma chamada à API. Todas ficam 🟡 no
+`docs/todo/README.md` até existir dado real. Com isso a área de admin está
+completa em superfície: sete telas 🟡 mais `/admin/users`, a única ✅.
 **Motivo:** as duas dependem de coisas que o banco não tem (`status` em
 `markers`, tabela de decisão, agregado `GET /api/admin/stats`), e esperar o
 schema deixaria o produto sem tela para revisar. É a mesma aposta do formulário
@@ -352,6 +353,13 @@ de cada mock.
   interceptada precisa de um servidor como fonte da verdade; com o catálogo em
   `useState`, a rota leria o mock original e salvaria no vazio. Migra junto com
   a API.
+- **A promessa de "uma remoção só" foi cumprida antes da API.**
+  `docs/todo/admin/reviews.md` avisava que `/admin/reviews` e `/admin/reports`
+  removem o mesmo conteúdo por caminhos diferentes e que duas implementações
+  divergiriam no primeiro ajuste de regra. Então `REMOVAL_REASONS` saiu do mock
+  para `src/constants/content-removal.ts`, e `RemovalDialog` e `StarRating`
+  subiram para `src/components/blocks/`. Quando a Server Action nascer, as duas
+  telas já falam igual.
 - **Primeira dependência de UI de terceiro: o [Trophy UI Kit](https://ui.trophy.so).**
   `AchievementBadge` entrou por registry (`npx shadcn@latest add
   https://ui.trophy.so/achievement-badge`) e foi **adaptado**, não consumido
@@ -482,6 +490,8 @@ geolocalização tem persistência.
 - [x] Categorias (`/admin/categories`) no padrão de listagem, reusando `useTableConfig` + `src/components/table/*` + chips de filtro: pin renderizado, alerta de colisão de cor, formulário com preview ao vivo e exclusão com reatribuição — **inteiro sobre `src/mocks/admin-categories.ts`**
 - [x] Comércios (`/admin/businesses`): três abas (pedidos, verificados, sem dono) sobre uma casca de tabela genérica, com cinco sinais de risco, painel lateral de decisão, comparação de conflito e revogação de vínculo — **inteiro sobre `src/mocks/admin-businesses.ts`**
 - [x] Conquistas (`/admin/achievements`): catálogo com construtor de critério declarativo, estimativa de alcance, faixa de badges, prévia de desbloqueio e aba de calibragem — **inteiro sobre `src/mocks/admin-achievements.ts`**, com `AchievementBadge` adaptado do Trophy UI Kit
+- [x] Denúncias e feedback (`/admin/reports`): fila agrupada por alvo com selo de denúncia coordenada, conteúdo renderizado por tipo, remoção com motivo, e aba de triagem de feedback — **inteiro sobre `src/mocks/admin-reports.ts`**
+- [x] Avaliações (`/admin/reviews`): quatro KPIs, listagem com três sinais formais (spam, duplicada, discrepante), ações de pivô por autor e por local, remoção em lote e linha expansível com os comentários — **inteiro sobre `src/mocks/admin-reviews.ts`**
 - [x] Slot de modal global `(app)/@modals` com rotas espelho
 - [x] Deploy: front na Vercel, API no Azure App Service, banco no Supabase
 
