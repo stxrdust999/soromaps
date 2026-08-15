@@ -1,10 +1,20 @@
-export default function Page() {
+import { PageBreadcrumb } from "@/components/blocks/page-breadcrumb";
+
+import { ReportsWorkspace } from "./_components/reports-workspace";
+
+/**
+ * Caixa de entrada do admin. `h-dvh` pela mesma razão de `/admin/moderation`:
+ * a aba de denúncias é mestre-detalhe e cada coluna rola por conta própria —
+ * sem altura fechada, o `overflow-hidden` do `main` cortaria a fila.
+ */
+export default function AdminReportsPage() {
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">Denúncias e Feedback</h1>
-      <p className="text-muted-foreground text-sm">
-        Denúncias abertas por usuários e feedback enviado sobre a plataforma.
-      </p>
+    <div className="flex h-dvh flex-col overflow-hidden">
+      <PageBreadcrumb
+        items={[{ label: "Admin" }, { label: "Denúncias e Feedback" }]}
+      />
+
+      <ReportsWorkspace />
     </div>
   );
 }
