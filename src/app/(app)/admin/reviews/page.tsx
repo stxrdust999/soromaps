@@ -1,10 +1,13 @@
-export default function Page() {
+import { PageBreadcrumb } from "@/components/blocks/page-breadcrumb";
+
+import { ReviewsWorkspace } from "./_components/reviews-workspace";
+
+export default function AdminReviewsPage() {
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">Avaliações</h1>
-      <p className="text-muted-foreground text-sm">
-        Todas as avaliações da plataforma, com remoção do que violar as regras.
-      </p>
-    </div>
+    <>
+      <PageBreadcrumb items={[{ label: "Admin" }, { label: "Avaliações" }]} />
+
+      <ReviewsWorkspace />
+    </>
   );
 }
