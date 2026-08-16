@@ -14,16 +14,8 @@ O recorte por vibe é a parte que não existe em app de review comum: categoria 
 - É a página com melhor SEO em potencial: o mapa é um canvas opaco para crawler; cards com nome, categoria e bairro indexam.
 - "Joias escondidas" inverte o viés de popularidade que todo agregador tem — dá visibilidade a estabelecimento pequeno, que é a tese do produto.
 
-## O que já existe
-
-| Peça | Onde |
-|---|---|
-| Trilhas, chips de categoria e vibe, tiles por tipo | `places/_components/places-explorer.tsx` |
-| Card de local reutilizável | `src/components/blocks/place-card.tsx` |
-| Trilha horizontal com cabeçalho e "Ver tudo" | `src/components/blocks/place-rail.tsx` |
-| Categorias, vibes e cor de tag | `src/constants/places.ts` |
-
-A lista de pontos vem real (`getMarkers()`); **todo o resto é fictício** e sai de `src/mocks/markers.ts`, escolhido pelo id do marker.
+> Decisões já tomadas e componentes existentes em
+> [adr/user/0001-explorar-lugares-sobre-mock.md](../../adr/user/0001-explorar-lugares-sobre-mock.md)
 
 ## Dependências para sair do parcial
 
