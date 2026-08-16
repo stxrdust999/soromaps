@@ -16,7 +16,7 @@ Exports das ferramentas de modelagem usados na entrega do TCC. Foram convertidos
 |---|---|---|
 | `diagrama-conceitual.png` | Diagrama de classes (modelo conceitual OO), com `UsuarioNormal`/`Estabelecimento`, `Feed`, `Badge` e `Endereco` | [`wiki/05-modelagem-projetada.md`](../wiki/05-modelagem-projetada.md) |
 | `Diagrama_Entidade-Relacionamento.png` | DER com entidades, atributos e cardinalidades `(min, max)` | [`wiki/05-modelagem-projetada.md`](../wiki/05-modelagem-projetada.md) |
-| `Modelo-Logico.png` | Modelo lógico: 10 tabelas com tipos, PK e FK | [`04-database.md`](../04-database.md) e [`wiki/05-modelagem-projetada.md`](../wiki/05-modelagem-projetada.md) |
+| `Modelo-Logico.png` | Modelo lógico: 10 tabelas com tipos, PK e FK | [`wiki/05-modelagem-projetada.md`](../wiki/05-modelagem-projetada.md) |
 | `Diagrama-de-Sequencia.png` | Sequência MVC da criação de ponto (View → Controller → Model → BD) | [`wiki/04-arquitetura-projetada.md`](../wiki/04-arquitetura-projetada.md) |
 
 ---
