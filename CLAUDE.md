@@ -1,7 +1,7 @@
 # 🤖 CLAUDE.md — Soromaps
 
 > Registro vivo do projeto. Atualizado no momento em que decisões são tomadas.
-> Última atualização: 2026-08-03
+> Última atualização: 2026-08-16
 
 ---
 
@@ -398,6 +398,32 @@ precisam migrar para a contagem —
 `admin/moderation/_components/author-card.tsx` (via `nivel` em
 `mocks/admin-moderation.ts`) e os stubs de `/stats` e `/admin/achievements`,
 cujo texto ainda promete "evolução de nível" e "pontuação".
+
+### 2026-08-16 — Conexão com o Supabase pelo pooler, em session mode
+**Decisão:** a API conecta em `aws-1-sa-east-1.pooler.supabase.com:5432`
+(Supavisor, session mode) em vez do host direto `db.<ref>.supabase.co`. O
+`Username` passa a ser `postgres.<project-ref>`, não `postgres`.
+**Motivo:** o host direto do Supabase é **IPv6-only** desde jan/2024 — resolve
+só AAAA, nenhum registro A. O sintoma foi a API conectar em rede móvel e
+**nunca** em Wi-Fi, em qualquer Wi-Fi: carrier brasileiro entrega IPv6 de
+verdade, roteador residencial costuma anunciar prefixo sem rotear nada pra
+fora. Diagnóstico confirmado medindo que nem `ipv6.google.com:443` respondia na
+mesma rede, enquanto o pooler conectava por IPv4 em 1,5s. Vale também para
+produção: a saída do Azure App Service é IPv4-only, então o host direto não era
+alcançável de lá — **a mesma troca precisa ser aplicada nas Application
+Settings do App Service**.
+**Session (5432) e não transaction (6543):** session mode é proxy transparente,
+com o protocolo Postgres inteiro, então o EF Core não muda em nada. Transaction
+mode devolve a conexão real a cada transação — escala melhor, mas descarta
+estado de sessão entre comandos (prepared statement, `SET`, tabela temporária,
+`LISTEN/NOTIFY`) e exigiria `Max Auto Prepare=0` + `No Reset On Close=true` no
+Npgsql. Como o Npgsql já poola no cliente e a API roda em instância única, esse
+ganho não existe aqui — só o risco.
+**Armadilha registrada:** errar o `Username` ou o prefixo `aws-0-`/`aws-1-`
+devolve `XX000: (ENOTFOUND) tenant/user ... not found`, e não um erro de senha.
+O prefixo varia por projeto; copiar do painel em **Connect → Session pooler**.
+Detalhe em `docs/wiki/14-deploy.md`, cuja nota anterior recomendava justamente
+a conexão direta e foi reescrita.
 
 ### 2026-07-28 — Mermaid como fonte de verdade dos diagramas
 **Decisão:** todo diagrama vive em Mermaid dentro do Markdown; os PNGs

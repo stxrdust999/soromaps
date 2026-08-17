@@ -74,7 +74,29 @@ O schema foi criado **manualmente no SQL Editor** do painel. O projeto continua 
 
 Detalhe das tabelas em [08 — Banco atual](./08-banco-atual.md).
 
-> 💡 Ao montar a connection string, o Supabase oferece **conexão direta** (porta 5432) e **pooler** (6543, PgBouncer). Para uma API .NET com pool próprio do Npgsql em App Service, a conexão direta costuma ser a escolha certa; o pooler em modo transaction não suporta prepared statements, que o Npgsql usa por padrão. Se aparecerem erros de prepared statement, é esse o motivo.
+### Use o pooler, nunca a conexão direta
+
+O Supabase oferece dois caminhos de conexão, e **um deles não é alcançável da maioria das redes**:
+
+| Caminho | Host | IP |
+|---|---|---|
+| Conexão direta | `db.<ref>.supabase.co` | **só IPv6** — nenhum registro A |
+| Pooler (Supavisor) | `aws-<n>-<region>.pooler.supabase.com` | IPv4 e IPv6 |
+
+Desde janeiro de 2024 o host direto responde apenas por IPv6. Rede que não roteia IPv6 — a maioria dos provedores residenciais brasileiros, e a saída do Azure App Service — simplesmente não chega lá: a conexão pendura até estourar o timeout, sem mensagem que aponte a causa.
+
+A string em uso é a do **session pooler**:
+
+```
+Host=aws-1-sa-east-1.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.<ref>;Password=<senha>;SSL Mode=Require;Trust Server Certificate=true
+```
+
+Dois detalhes que derrubam a autenticação se passarem batido:
+
+- o `Username` **não** é `postgres`, e sim `postgres.<project-ref>` — o pooler usa o sufixo para saber qual projeto atender. Errar isso devolve `XX000: (ENOTFOUND) tenant/user ... not found`
+- o prefixo `aws-0-` / `aws-1-` varia por projeto. O mesmo erro `tenant/user not found` aparece quando a região está certa mas o prefixo não — sempre copie do painel: **Connect → Session pooler**
+
+Sobre o modo: usamos **session (5432)**, que é proxy transparente e suporta o protocolo Postgres inteiro. O **transaction (6543)** escala melhor, mas descarta estado de sessão entre comandos — prepared statement, `SET`, tabela temporária e `LISTEN/NOTIFY` param de funcionar, e exigiria `Max Auto Prepare=0` e `No Reset On Close=true` no Npgsql. Como o Npgsql já mantém pool próprio no cliente e a API roda numa instância só, o transaction mode não compra nada aqui.
 
 ---
 
@@ -146,6 +168,10 @@ Resolve os dois defeitos de uma vez:
 ### Três provedores em vez de um só
 **Decisão:** Vercel (front), Azure (API) e Supabase (banco).
 **Motivo:** cada camada foi para onde tem melhor tier gratuito e menos configuração — Next.js na Vercel é deploy sem configuração alguma; ASP.NET Core no Azure é o caminho de menor atrito; Postgres gerenciado no Supabase evita administrar servidor de banco. **Custo:** três painéis para configurar, três lugares onde uma variável de ambiente pode faltar.
+
+### Banco pelo pooler, em session mode
+**Decisão:** conectar em `aws-1-sa-east-1.pooler.supabase.com:5432` em vez do host direto `db.<ref>.supabase.co`.
+**Motivo:** o host direto é **IPv6-only**, e nem toda rede roteia IPv6 — o sintoma que revelou isso foi a API conectar em rede móvel e nunca em Wi-Fi, em qualquer Wi-Fi. O pooler tem IPv4. Session mode em vez de transaction porque é drop-in: o EF Core não precisa de ajuste nenhum, e o ganho de escala do transaction não se aplica a uma instância única cujo Npgsql já poola no cliente.
 
 ### Deploy manual da API
 **Decisão:** publish pelo Visual Studio, sem pipeline.
