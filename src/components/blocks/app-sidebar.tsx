@@ -1,6 +1,4 @@
 import { MapIcon } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -13,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { SIDEBAR_NAV } from "@/constants/navigation";
 import { getSession } from "@/lib/session";
-import { cn } from "@/lib/utils";
+import { SidebarRouteButton } from "./sidebar-route-button";
 import { SidebarUserSection } from "./sidebar-user-section";
 
 export async function AppSidebar() {
@@ -48,7 +46,7 @@ export async function AppSidebar() {
             <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
             <SidebarGroupContent className="flex flex-col gap-0">
               {group.items.map(({ label, url, icon: Icon }) => (
-                <RouteButton
+                <SidebarRouteButton
                   key={url}
                   url={url}
                   name={label}
@@ -66,31 +64,5 @@ export async function AppSidebar() {
         <SidebarUserSection userName={name} email={email} initials={initials} />
       </SidebarFooter>
     </Sidebar>
-  );
-}
-
-interface RouteButtonProps {
-  name: string;
-  url: string;
-  icon?: React.ReactNode;
-}
-
-function RouteButton({ name, url, icon }: RouteButtonProps) {
-  const hoverStyles =
-    "hover:bg-foreground hover:text-background transition-all duration-200";
-
-  return (
-    <Link href={url} className="w-full">
-      <Button
-        variant="ghost"
-        className={cn(
-          "w-full justify-start gap-2 text-sm h-9 px-2 rounded-sm",
-          hoverStyles,
-        )}
-      >
-        {icon}
-        <span className="font-medium">{name}</span>
-      </Button>
-    </Link>
   );
 }
