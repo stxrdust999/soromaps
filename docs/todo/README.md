@@ -27,7 +27,7 @@ Regra: concluiu um módulo → atualiza o status aqui e no `.md` dele, **na mesm
 | [Favoritos](./user/favorites.md) | `/favorites` | 💤 | `Favorita` |
 | [Minhas visitas](./user/visits.md) | `/visits` | 💤 | `Visita` |
 | [Conquistas](./user/achievements.md) | `/achievements` | 💤 | `Conquista` + `GanhaConquista` |
-| [Feed](./user/feed.md) | `/feed` | 💤 | `Segue` + `Analise` |
+| [Feed](./user/feed.md) | `/feed` | 🟡 | Tela pronta sobre `src/mocks/feed.ts` — faltam `Analise`, `Visita`, `Favorita` e `GanhaConquista`. **Sem `Segue`: o feed não tem grafo social** |
 | [Comunidade](./user/community.md) | `/community` | 💤 | Nada bloqueia (ranking precisa de `Analise`/`Visita`) |
 | [Estatísticas](./user/stats.md) | `/stats` | 💤 | `Visita` |
 | [Notificações](./user/notifications.md) | `/notifications` | 💤 | Entidade nova `Notificacao` — ⚠️ sem rota nem item de sidebar |

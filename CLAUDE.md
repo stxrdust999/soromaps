@@ -1,7 +1,7 @@
 # 🤖 CLAUDE.md — Soromaps
 
 > Registro vivo do projeto. Atualizado no momento em que decisões são tomadas.
-> Última atualização: 2026-08-16
+> Última atualização: 2026-08-17
 
 ---
 
@@ -425,6 +425,48 @@ O prefixo varia por projeto; copiar do painel em **Connect → Session pooler**.
 Detalhe em `docs/wiki/14-deploy.md`, cuja nota anterior recomendava justamente
 a conexão direta e foi reescrita.
 
+### 2026-08-17 — Feed sem grafo social: `Segue` sai do produto
+**Decisão:** o feed (`/feed`) não tem seguir, seguidor nem aba "Seguindo". Todo
+item entra por um **vínculo com lugar**, declarado em cinco motivos — `perto`
+(bairro/raio), `salvo` (lugar acompanhado), `categoria` (o que a pessoa
+explora), `cidade` (movimento público) e `curadoria` (pauta da equipe) —, e o
+motivo é **exibido no card**. `Segue` (RF-13) sai do escopo; a Comunidade perde
+o botão de seguir e fica com perfil público, ranking por contribuição e o selo
+de explorador verificado.
+**Motivo:** o custo de `Segue` não é a tabela, é tudo que ela obriga. Feed de
+grafo abre **vazio** para quem chegou agora — o cold start só se resolve com
+uma aba "descobrir" que, no fim, é este feed. Seguir traz bloqueio, perfil
+privado e denúncia de perseguição para dentro do escopo de um TCC. E desloca o
+assunto para gente, quando a tese do produto é lugar. Os cinco motivos saem de
+`Visita`, `Favorita` e da geolocalização — dados que o produto precisa de
+qualquer jeito.
+**O que veio junto e vale além desta tela:**
+- **Seis tipos de item, união discriminada por `kind`**, então tipo novo quebra
+  o `switch` do despachante em tempo de compilação. O mais importante é
+  `movimento`: rajada **já agregada** ("4 pessoas avaliaram o Cabocafé nas
+  últimas 6 horas"). Sem grafo, o lugar movimentado do dia soterraria o resto;
+  agregar troca cinco cards repetidos por um número.
+- **Motivo obrigatório por construção.** `FeedCardFrame` exige `reason` e as
+  regras de "ver menos disso" — card que não sabe dizer por que está ali não
+  compila. Feed que não explica não dá ao usuário como corrigi-lo.
+- **"Ver menos disso" em três escopos** (bairro, categoria, tipo) vira chip
+  removível com contador no topo. Filtro que o usuário esqueceu de ter criado é
+  pior que filtro nenhum.
+- **"Útil" em vez de "curtir", "acompanhar lugar" em vez de "seguir pessoa".**
+  Útil mede se a dica ajudou a decidir e pode ordenar avaliação na página do
+  ponto; curtida mede simpatia pelo autor, que é o eixo que este feed não tem.
+- **`explorerTitle`/`explorerCredential`** (`src/constants/explorer-titles.ts`)
+  materializam a decisão de 2026-08-12 — o título vem de `COUNT(conquistas)`.
+  Os cinco lugares que ainda mostram "Nível N" sobre mock devem migrar para
+  essas funções.
+- **Ranking do feed é `relevancia` no item**, escrito à mão no mock. Quando a
+  API existir, `motivo` e `relevancia` vêm do backend: é a consulta que sabe o
+  que casou, o front só desenha e deixa corrigir.
+**Inteiro sobre `src/mocks/feed.ts`**, como as sete telas de admin: `Analise`,
+`Visita`, `Favorita`, `GanhaConquista` e a coluna `status` do ponto continuam
+sem existir. Fica 🟡 em `docs/todo/README.md`. Detalhe em
+`docs/todo/user/feed.md`.
+
 ### 2026-07-28 — Mermaid como fonte de verdade dos diagramas
 **Decisão:** todo diagrama vive em Mermaid dentro do Markdown; os PNGs
 exportados foram para `/docs/archive/diagramas-originais/`.
@@ -518,6 +560,7 @@ geolocalização tem persistência.
 - [x] Conquistas (`/admin/achievements`): catálogo com construtor de critério declarativo, estimativa de alcance, faixa de badges, prévia de desbloqueio e aba de calibragem — **inteiro sobre `src/mocks/admin-achievements.ts`**, com `AchievementBadge` adaptado do Trophy UI Kit
 - [x] Denúncias e feedback (`/admin/reports`): fila agrupada por alvo com selo de denúncia coordenada, conteúdo renderizado por tipo, remoção com motivo, e aba de triagem de feedback — **inteiro sobre `src/mocks/admin-reports.ts`**
 - [x] Avaliações (`/admin/reviews`): quatro KPIs, listagem com três sinais formais (spam, duplicada, discrepante), ações de pivô por autor e por local, remoção em lote e linha expansível com os comentários — **inteiro sobre `src/mocks/admin-reviews.ts`**
+- [x] Feed do explorador (`/feed`): cinco fontes de relevância no lugar de seguidores, seis tipos de item (avaliação, rajada agregada, ponto novo, conquista, marco de lugar, pauta), selo de motivo em todo card, "ver menos disso" em três escopos, ordenação por relevância ou cronológica agrupada e coluna de apoio com o recorte do usuário — **inteiro sobre `src/mocks/feed.ts`**
 - [x] Slot de modal global `(app)/@modals` com rotas espelho
 - [x] Deploy: front na Vercel, API no Azure App Service, banco no Supabase
 
@@ -549,7 +592,7 @@ geolocalização tem persistência.
 - [ ] `Comentario` (RF-09)
 - [ ] Selo de **explorador verificado** — usuário cuja contribuição foi validada; a página do ponto já reserva espaço para o comentário dele. Falta definir o critério (nº de visitas? avaliações aprovadas? verificação manual pelo admin?), a coluna em `tbUsuario` e onde o selo aparece
 - [ ] Upload de fotos (RF-08)
-- [ ] `Segue` (RF-13)
+- [ ] `Favorita` — destrava o "acompanhar lugar" do feed e o motivo `salvo`; substitui `Segue` (RF-13) como assinatura do produto
 - [ ] Gamificação: `Conquista` + `GanhaConquista`
 - [ ] `GET /api/admin/stats` — endpoint agregado que tira o dashboard admin do mock (evita N chamadas de lista só para contar)
 - [ ] Paginação e filtro por bounding box em `/api/markers`
