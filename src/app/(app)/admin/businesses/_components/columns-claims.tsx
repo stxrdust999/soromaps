@@ -109,7 +109,7 @@ export function createClaimColumns({
 
       meta: {
         headerClassName: "w-12 pr-0",
-        cellClassName: "w-12 pr-0 align-top",
+        cellClassName: "w-12 pr-0",
       },
     },
 
@@ -164,7 +164,7 @@ export function createClaimColumns({
 
       meta: {
         headerClassName: "min-w-60",
-        cellClassName: "min-w-60 align-top",
+        cellClassName: "min-w-60",
       },
     },
 
@@ -217,7 +217,7 @@ export function createClaimColumns({
 
       meta: {
         headerClassName: "min-w-60",
-        cellClassName: "min-w-60 align-top",
+        cellClassName: "min-w-60",
       },
     },
 
@@ -254,7 +254,7 @@ export function createClaimColumns({
       meta: {
         visibilityDisplayName: claimColumnsNames.cnpj,
         headerClassName: "w-56",
-        cellClassName: "w-56 align-top",
+        cellClassName: "w-56",
       },
     },
 
@@ -287,8 +287,10 @@ export function createClaimColumns({
 
               return (
                 <Badge key={evidence} variant="secondary">
-                  <Icon />
-                  {CLAIM_EVIDENCE_LABEL[evidence]}
+                  <Icon size={12} />
+                  <span className="text-xs font-light">
+                    {CLAIM_EVIDENCE_LABEL[evidence]}
+                  </span>
                 </Badge>
               );
             })}
@@ -307,7 +309,7 @@ export function createClaimColumns({
       meta: {
         visibilityDisplayName: claimColumnsNames.evidencias,
         headerClassName: "w-52",
-        cellClassName: "w-52 align-top",
+        cellClassName: "w-52",
       },
     },
 
@@ -328,8 +330,8 @@ export function createClaimColumns({
 
         return diasNaFila > OVERDUE_DAYS ? (
           <Badge variant="warning">
-            <ClockIcon />
-            {age}
+            <ClockIcon size={12} />
+            <span className="text-xs font-light">{age}</span>
           </Badge>
         ) : (
           <span className="text-muted-foreground">{age}</span>
@@ -344,7 +346,7 @@ export function createClaimColumns({
       meta: {
         visibilityDisplayName: claimColumnsNames.diasNaFila,
         headerClassName: "w-36",
-        cellClassName: "w-36 align-top",
+        cellClassName: "w-36",
       },
     },
 
@@ -378,7 +380,7 @@ export function createClaimColumns({
       meta: {
         visibilityDisplayName: claimColumnsNames.sinais,
         headerClassName: "w-56",
-        cellClassName: "w-56 align-top",
+        cellClassName: "w-56",
       },
     },
 
@@ -443,7 +445,7 @@ export function createClaimColumns({
 
       meta: {
         headerClassName: "w-24",
-        cellClassName: "w-24 pr-4 pl-2 align-top",
+        cellClassName: "w-24 pr-4 pl-2",
       },
     },
   ];
