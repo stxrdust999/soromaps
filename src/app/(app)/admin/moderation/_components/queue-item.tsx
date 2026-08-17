@@ -68,9 +68,12 @@ export function QueueItem({
             <Badge variant="secondary">{item.categoria}</Badge>
 
             {overdue ? (
-              <Badge variant="warning">
-                <ClockIcon />
-                {age}
+              <Badge
+                className="flex flex-row gap-2 items-center"
+                variant="warning"
+              >
+                <ClockIcon size={12} />
+                <span className="text-xs font-light">{age}</span>
               </Badge>
             ) : (
               <span className="text-muted-foreground text-xs">{age}</span>
