@@ -40,7 +40,7 @@ export function AchievementsTable({
     data: achievements,
     columns,
     defaultSorting: [{ id: "obtencoes", desc: true }],
-    perPage: 20,
+    perPage: 10,
     getRowId: (row) => row.id,
   });
 
