@@ -69,23 +69,32 @@ export function ColumnSortFilter<TData, TValue>({
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="start">
-        <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-          <ArrowUpIcon className="size-4 text-muted-foreground" />
+      <DropdownMenuContent align="start" className="w-fit">
+        <DropdownMenuItem
+          className="flex flex-row justify-between gap-6"
+          onClick={() => column.toggleSorting(false)}
+        >
           Crescente
+          <ArrowUpIcon className="size-4 text-muted-foreground" />
         </DropdownMenuItem>
 
-        <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-          <ArrowDownIcon className="size-4 text-muted-foreground" />
+        <DropdownMenuItem
+          className="flex flex-row justify-between gap-6"
+          onClick={() => column.toggleSorting(true)}
+        >
           Decrescente
+          <ArrowDownIcon className="size-4 text-muted-foreground" />
         </DropdownMenuItem>
 
         {column.getCanHide() && (
           <>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-              <EyeOffIcon className="size-4 text-muted-foreground" />
+            <DropdownMenuItem
+              className="flex flex-row justify-between gap-6"
+              onClick={() => column.toggleVisibility(false)}
+            >
               Ocultar
+              <EyeOffIcon className="size-4 text-muted-foreground" />
             </DropdownMenuItem>
           </>
         )}
