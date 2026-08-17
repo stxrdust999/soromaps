@@ -3,7 +3,6 @@ import {
   CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -18,7 +17,7 @@ interface MetricCardProps {
 /** Número seco da semana, com a variação sobre a anterior no rodapé. */
 export function MetricCard({ metric }: MetricCardProps) {
   return (
-    <Card className="justify-between gap-4">
+    <Card className="flex-1 justify-center gap-3">
       <CardHeader>
         <CardTitle>{metric.label}</CardTitle>
 
@@ -27,17 +26,15 @@ export function MetricCard({ metric }: MetricCardProps) {
         </CardAction>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <span className="text-4xl font-medium tabular-nums">
           {metric.valor.toLocaleString("pt-BR")}
         </span>
-      </CardContent>
 
-      <CardFooter>
         <CardDescription className="text-xs">
           {metric.variacaoSemanal}% a mais que na semana anterior
         </CardDescription>
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 }
