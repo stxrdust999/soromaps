@@ -204,9 +204,11 @@ export function BusinessesWorkspace() {
             <Badge>{stats.verificados} comércios verificados</Badge>
 
             {stats.conflitos > 0 && (
-              <Badge variant="destructive" className="font-semibold">
-                <OctagonAlertIcon />
-                {stats.conflitos} com conflito
+              <Badge variant="destructive">
+                <OctagonAlertIcon size={12} />
+                <span className="text-xs font-light">
+                  {stats.conflitos} com conflito
+                </span>
               </Badge>
             )}
 

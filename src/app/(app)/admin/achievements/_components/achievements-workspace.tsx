@@ -138,9 +138,11 @@ export function AchievementsWorkspace() {
             <Badge>{stats.ativas} ativas</Badge>
 
             {stats.zeradas > 0 && (
-              <Badge variant="warning" className="font-semibold">
-                <TriangleAlertIcon />
-                {stats.zeradas} que ninguém tirou
+              <Badge variant="warning">
+                <TriangleAlertIcon size={12} />
+                <span className="text-xs font-light">
+                  {stats.zeradas} que ninguém tirou
+                </span>
               </Badge>
             )}
 

@@ -281,8 +281,10 @@ export function AchievementFormDialog({
                   <span className="text-sm font-medium">Critério</span>
 
                   <Badge variant="secondary">
-                    <trigger.icon />
-                    Gatilho: {trigger.label}
+                    <trigger.icon size={12} />
+                    <span className="text-xs font-light">
+                      Gatilho: {trigger.label}
+                    </span>
                   </Badge>
                 </div>
 

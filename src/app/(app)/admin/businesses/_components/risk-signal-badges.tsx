@@ -55,7 +55,6 @@ export function RiskSignalBadges({
             key={signal.kind}
             variant={SIGNAL_VARIANT[signal.tone]}
             asChild={Boolean(clickable)}
-            className="font-semibold"
           >
             {clickable ? (
               <button
@@ -65,13 +64,13 @@ export function RiskSignalBadges({
                   onConflictClick();
                 }}
               >
-                <Icon />
-                {signal.label}
+                <Icon size={12} />
+                <span className="text-xs font-light">{signal.label}</span>
               </button>
             ) : (
               <>
-                <Icon />
-                {signal.label}
+                <Icon size={12} />
+                <span className="text-xs font-light">{signal.label}</span>
               </>
             )}
           </Badge>
