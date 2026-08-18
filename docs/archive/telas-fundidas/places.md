@@ -1,5 +1,10 @@
 # 🏙️ Explorar lugares
 
+> **Arquivado em 2026-08-17.** A tela virou [`/discover`](../../todo/user/explore.md):
+> as duas respondiam à mesma pergunta com critérios diferentes, e critério é
+> seção, não rota. O conteúdo abaixo é o documento original, preservado como
+> registro — a fronteira com o Descobrir descrita no fim dele deixou de existir.
+
 > Área: usuário público · Rota: `/places` · Status: 🟡 parcial — funciona sobre dados fictícios
 
 ## Ideia
@@ -14,16 +19,8 @@ O recorte por vibe é a parte que não existe em app de review comum: categoria 
 - É a página com melhor SEO em potencial: o mapa é um canvas opaco para crawler; cards com nome, categoria e bairro indexam.
 - "Joias escondidas" inverte o viés de popularidade que todo agregador tem — dá visibilidade a estabelecimento pequeno, que é a tese do produto.
 
-## O que já existe
-
-| Peça | Onde |
-|---|---|
-| Trilhas, chips de categoria e vibe, tiles por tipo | `places/_components/places-explorer.tsx` |
-| Card de local reutilizável | `src/components/blocks/place-card.tsx` |
-| Trilha horizontal com cabeçalho e "Ver tudo" | `src/components/blocks/place-rail.tsx` |
-| Categorias, vibes e cor de tag | `src/constants/places.ts` |
-
-A lista de pontos vem real (`getMarkers()`); **todo o resto é fictício** e sai de `src/mocks/markers.ts`, escolhido pelo id do marker.
+> Decisões já tomadas e componentes existentes em
+> [adr/user/0001-explorar-lugares-sobre-mock.md](../../adr/user/0001-explorar-lugares-sobre-mock.md)
 
 ## Dependências para sair do parcial
 

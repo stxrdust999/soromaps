@@ -95,12 +95,11 @@ export function createFeedbackColumns({
         const Icon = KIND_ICON[row.original.tipo];
 
         return (
-          <Badge
-            variant={KIND_VARIANT[row.original.tipo]}
-            className="font-semibold"
-          >
-            <Icon />
-            {FEEDBACK_KIND_LABEL[row.original.tipo]}
+          <Badge variant={KIND_VARIANT[row.original.tipo]}>
+            <Icon size={12} />
+            <span className="text-xs font-light">
+              {FEEDBACK_KIND_LABEL[row.original.tipo]}
+            </span>
           </Badge>
         );
       },

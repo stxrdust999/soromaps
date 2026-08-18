@@ -46,13 +46,15 @@ export default function AdminDashboardPage() {
           </DashboardBlock>
 
           <DashboardBlock title="Números">
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               <PlaceSegmentationCard />
               <NewPlacesCard />
 
-              {metricCardsMock.map((metric) => (
-                <MetricCard key={metric.label} metric={metric} />
-              ))}
+              <div className="flex flex-col gap-4">
+                {metricCardsMock.map((metric) => (
+                  <MetricCard key={metric.label} metric={metric} />
+                ))}
+              </div>
             </div>
           </DashboardBlock>
 

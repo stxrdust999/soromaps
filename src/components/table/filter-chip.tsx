@@ -196,7 +196,7 @@ export function TextFilterChip<TData>({
           value={value}
           onChange={(event) => handleChange(event.target.value)}
           placeholder={placeholder}
-          className="h-7 w-44 bg-transparent pl-8 text-sm outline-none placeholder:text-muted-foreground"
+          className="h-7 field-sizing-content min-w-44 bg-transparent pr-2 pl-8 text-sm outline-none placeholder:text-muted-foreground"
         />
       </div>
     </FilterChipShell>
@@ -268,7 +268,7 @@ export function SelectFilterChip<TData>({
           {selected ? selected.label : placeholder}
         </SelectTrigger>
 
-        <SelectContent align="start">
+        <SelectContent position="popper" align="start">
           <SelectGroup>
             {menuLabel && <SelectLabel>{menuLabel}</SelectLabel>}
             {options.map((option) => (

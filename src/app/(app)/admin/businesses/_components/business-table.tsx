@@ -94,15 +94,15 @@ export function BusinessTable<TData>({
         </Table>
       </div>
 
-      <div className="flex flex-col gap-2">
-        {footerNote && (
-          <p className="text-muted-foreground text-xs">{footerNote}</p>
-        )}
-
+      <div className="flex flex-col gap-4">
         <TableFooter
           table={config.table}
           hiddenSelectedRows={hiddenSelectedRows}
         />
+
+        {footerNote && (
+          <p className="text-muted-foreground text-xs">{footerNote}</p>
+        )}
       </div>
     </section>
   );

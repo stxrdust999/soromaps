@@ -63,7 +63,7 @@ export function QueuePanel({
   onRejectMarked,
 }: QueuePanelProps) {
   return (
-    <section className="relative flex w-[372px] shrink-0 flex-col border-r">
+    <section className="relative flex h-full flex-col border-r">
       <div className="flex shrink-0 flex-col gap-2.5 px-4 pt-3.5 pb-2.5">
         <div className="flex gap-2">
           <Select

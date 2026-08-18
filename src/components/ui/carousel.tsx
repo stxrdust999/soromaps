@@ -1,5 +1,6 @@
 "use client";
-import { ChevronRightIcon, MoveRightIcon } from "lucide-react";
+import { ChevronRightIcon } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 interface SlideData {
@@ -7,6 +8,10 @@ interface SlideData {
   /** Sem ele o slide mostra só o título — usado nas galerias de foto. */
   button?: string;
   src: string;
+  /** Linha de apoio sob o título: categoria, bairro, nota. */
+  subtitle?: string;
+  /** Torna o slide ativo clicável. Slide vizinho continua só trazendo o foco. */
+  href?: string;
 }
 
 interface SlideProps {
@@ -74,7 +79,7 @@ const Slide = ({
     event.currentTarget.style.opacity = "1";
   };
 
-  const { src, button, title } = slide;
+  const { src, button, title, subtitle, href } = slide;
 
   return (
     <div className="[perspective:1200px] [transform-style:preserve-3d]">
@@ -129,13 +134,29 @@ const Slide = ({
           <h2 className="text-lg md:text-2xl lg:text-4xl font-semibold  relative">
             {title}
           </h2>
+
+          {subtitle && (
+            <p className="mt-2 text-sm text-white/80 md:text-base">
+              {subtitle}
+            </p>
+          )}
+
           <div className={button ? "flex justify-center" : "hidden"}>
-            <button
-              type="button"
-              className="mt-6  px-4 py-2 w-fit mx-auto sm:text-sm text-black bg-white h-12 border border-transparent text-xs flex justify-center items-center rounded-2xl hover:shadow-lg transition duration-200 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]"
-            >
-              {button}
-            </button>
+            {href ? (
+              <Link
+                href={href}
+                className="mt-6  px-4 py-2 w-fit mx-auto sm:text-sm text-black bg-white h-12 border border-transparent text-xs flex justify-center items-center rounded-2xl hover:shadow-lg transition duration-200 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]"
+              >
+                {button}
+              </Link>
+            ) : (
+              <button
+                type="button"
+                className="mt-6  px-4 py-2 w-fit mx-auto sm:text-sm text-black bg-white h-12 border border-transparent text-xs flex justify-center items-center rounded-2xl hover:shadow-lg transition duration-200 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]"
+              >
+                {button}
+              </button>
+            )}
           </div>
         </article>
       </li>

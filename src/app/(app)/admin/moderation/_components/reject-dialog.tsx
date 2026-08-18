@@ -59,6 +59,7 @@ export function RejectDialog({
             <RadioGroup
               value={reason}
               onValueChange={(value) => setReason(value as RejectionReason)}
+              className="flex flex-col gap-1"
             >
               {REJECTION_REASONS.map((option) => (
                 <Label

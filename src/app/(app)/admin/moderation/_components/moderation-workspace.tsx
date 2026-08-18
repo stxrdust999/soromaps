@@ -5,6 +5,11 @@ import { toast } from "sonner";
 
 import { PageSection } from "@/components/blocks/page-section";
 import { Button } from "@/components/ui/button";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
 import {
   type ModerationStatus,
@@ -141,41 +146,47 @@ export function ModerationWorkspace() {
       />
 
       {tab === "fila" ? (
-        <div className="flex min-h-0 flex-1 border-t">
-          <QueuePanel
-            items={queue.visible}
-            selectedId={queue.selectedId}
-            markedIds={queue.markedIds}
-            filters={queue.filters}
-            onSelect={queue.setSelectedId}
-            onToggleMark={queue.toggleMark}
-            onFilterChange={queue.updateFilters}
-            onClearMarks={queue.clearMarks}
-            onApproveMarked={() => runBulkDecision("aprovado", "aprovados")}
-            onRejectMarked={() => runBulkDecision("rejeitado", "rejeitados")}
-          />
+        <ResizablePanelGroup orientation="horizontal" className="min-h-0 flex-1 border-t">
+          <ResizablePanel defaultSize="26%" minSize="300px" maxSize="40%">
+            <QueuePanel
+              items={queue.visible}
+              selectedId={queue.selectedId}
+              markedIds={queue.markedIds}
+              filters={queue.filters}
+              onSelect={queue.setSelectedId}
+              onToggleMark={queue.toggleMark}
+              onFilterChange={queue.updateFilters}
+              onClearMarks={queue.clearMarks}
+              onApproveMarked={() => runBulkDecision("aprovado", "aprovados")}
+              onRejectMarked={() => runBulkDecision("rejeitado", "rejeitados")}
+            />
+          </ResizablePanel>
 
-          <section className="flex min-w-0 flex-1 flex-col">
-            {selected ? (
-              <PointReview
-                item={selected}
-                author={moderationAuthorsMock[selected.autorId]}
-                onApprove={() => runDecision("aprovado", "Ponto aprovado")}
-                onReturn={() => runDecision("devolvido", "Devolvido ao autor")}
-                onReject={() => setDialog("rejeicao")}
-                onCompare={() => setDialog("duplicata")}
-              />
-            ) : (
-              <div className="flex flex-1 flex-col items-center justify-center gap-1.5 p-12 text-center">
-                <p className="font-semibold">Nada para revisar</p>
-                <p className="text-muted-foreground text-sm">
-                  Toda a fila foi decidida. Tempo médio nesta semana:{" "}
-                  {moderationSummaryMock.tempoMedio}.
-                </p>
-              </div>
-            )}
-          </section>
-        </div>
+          <ResizableHandle withHandle />
+
+          <ResizablePanel minSize="480px">
+            <section className="flex h-full min-w-0 flex-col">
+              {selected ? (
+                <PointReview
+                  item={selected}
+                  author={moderationAuthorsMock[selected.autorId]}
+                  onApprove={() => runDecision("aprovado", "Ponto aprovado")}
+                  onReturn={() => runDecision("devolvido", "Devolvido ao autor")}
+                  onReject={() => setDialog("rejeicao")}
+                  onCompare={() => setDialog("duplicata")}
+                />
+              ) : (
+                <div className="flex flex-1 flex-col items-center justify-center gap-1.5 p-12 text-center">
+                  <p className="font-semibold">Nada para revisar</p>
+                  <p className="text-muted-foreground text-sm">
+                    Toda a fila foi decidida. Tempo médio nesta semana:{" "}
+                    {moderationSummaryMock.tempoMedio}.
+                  </p>
+                </div>
+              )}
+            </section>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       ) : (
         <div className="min-h-0 flex-1 overflow-auto border-t pt-4">
           <HistoryTable />

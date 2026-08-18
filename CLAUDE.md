@@ -1,7 +1,7 @@
 # 🤖 CLAUDE.md — Soromaps
 
 > Registro vivo do projeto. Atualizado no momento em que decisões são tomadas.
-> Última atualização: 2026-08-03
+> Última atualização: 2026-08-17
 
 ---
 
@@ -28,6 +28,7 @@ estabelecimentos menores.
 | Backend | ASP.NET Core 10 (`net10.0`) + EF Core — repo `../soromaps_api` |
 | Banco de Dados | PostgreSQL (Npgsql) — **Supabase** em produção |
 | Hash de senha | BCrypt.Net-Next |
+| IA | Gemini API (`gemini-2.5-flash`), só no servidor — redige rascunho de pauta |
 | Lint/format | Biome 2 |
 | Mobile | Expo (React Native) — **não iniciado** |
 | Nuvem | **Vercel** (front) + **Azure App Service** (API) + **Supabase** (banco) |
@@ -399,6 +400,137 @@ precisam migrar para a contagem —
 `mocks/admin-moderation.ts`) e os stubs de `/stats` e `/admin/achievements`,
 cujo texto ainda promete "evolução de nível" e "pontuação".
 
+### 2026-08-16 — Conexão com o Supabase pelo pooler, em session mode
+**Decisão:** a API conecta em `aws-1-sa-east-1.pooler.supabase.com:5432`
+(Supavisor, session mode) em vez do host direto `db.<ref>.supabase.co`. O
+`Username` passa a ser `postgres.<project-ref>`, não `postgres`.
+**Motivo:** o host direto do Supabase é **IPv6-only** desde jan/2024 — resolve
+só AAAA, nenhum registro A. O sintoma foi a API conectar em rede móvel e
+**nunca** em Wi-Fi, em qualquer Wi-Fi: carrier brasileiro entrega IPv6 de
+verdade, roteador residencial costuma anunciar prefixo sem rotear nada pra
+fora. Diagnóstico confirmado medindo que nem `ipv6.google.com:443` respondia na
+mesma rede, enquanto o pooler conectava por IPv4 em 1,5s. Vale também para
+produção: a saída do Azure App Service é IPv4-only, então o host direto não era
+alcançável de lá — **a mesma troca precisa ser aplicada nas Application
+Settings do App Service**.
+**Session (5432) e não transaction (6543):** session mode é proxy transparente,
+com o protocolo Postgres inteiro, então o EF Core não muda em nada. Transaction
+mode devolve a conexão real a cada transação — escala melhor, mas descarta
+estado de sessão entre comandos (prepared statement, `SET`, tabela temporária,
+`LISTEN/NOTIFY`) e exigiria `Max Auto Prepare=0` + `No Reset On Close=true` no
+Npgsql. Como o Npgsql já poola no cliente e a API roda em instância única, esse
+ganho não existe aqui — só o risco.
+**Armadilha registrada:** errar o `Username` ou o prefixo `aws-0-`/`aws-1-`
+devolve `XX000: (ENOTFOUND) tenant/user ... not found`, e não um erro de senha.
+O prefixo varia por projeto; copiar do painel em **Connect → Session pooler**.
+Detalhe em `docs/wiki/14-deploy.md`, cuja nota anterior recomendava justamente
+a conexão direta e foi reescrita.
+
+### 2026-08-17 — Feed sem grafo social: `Segue` sai do produto
+**Decisão:** o feed (`/feed`) não tem seguir, seguidor nem aba "Seguindo". Todo
+item entra por um **vínculo com lugar**, declarado em cinco motivos — `perto`
+(bairro/raio), `salvo` (lugar acompanhado), `categoria` (o que a pessoa
+explora), `cidade` (movimento público) e `curadoria` (pauta da equipe) —, e o
+motivo é **exibido no card**. `Segue` (RF-13) sai do escopo; a Comunidade perde
+o botão de seguir e fica com perfil público, ranking por contribuição e o selo
+de explorador verificado.
+**Motivo:** o custo de `Segue` não é a tabela, é tudo que ela obriga. Feed de
+grafo abre **vazio** para quem chegou agora — o cold start só se resolve com
+uma aba "descobrir" que, no fim, é este feed. Seguir traz bloqueio, perfil
+privado e denúncia de perseguição para dentro do escopo de um TCC. E desloca o
+assunto para gente, quando a tese do produto é lugar. Os cinco motivos saem de
+`Visita`, `Favorita` e da geolocalização — dados que o produto precisa de
+qualquer jeito.
+**O que veio junto e vale além desta tela:**
+- **Seis tipos de item, união discriminada por `kind`**, então tipo novo quebra
+  o `switch` do despachante em tempo de compilação. O mais importante é
+  `movimento`: rajada **já agregada** ("4 pessoas avaliaram o Cabocafé nas
+  últimas 6 horas"). Sem grafo, o lugar movimentado do dia soterraria o resto;
+  agregar troca cinco cards repetidos por um número.
+- **Motivo obrigatório por construção.** `FeedCardFrame` exige `reason` e as
+  regras de "ver menos disso" — card que não sabe dizer por que está ali não
+  compila. Feed que não explica não dá ao usuário como corrigi-lo.
+- **"Ver menos disso" em três escopos** (bairro, categoria, tipo) vira chip
+  removível com contador no topo. Filtro que o usuário esqueceu de ter criado é
+  pior que filtro nenhum.
+- **"Útil" em vez de "curtir", "acompanhar lugar" em vez de "seguir pessoa".**
+  Útil mede se a dica ajudou a decidir e pode ordenar avaliação na página do
+  ponto; curtida mede simpatia pelo autor, que é o eixo que este feed não tem.
+- **`explorerTitle`/`explorerCredential`** (`src/constants/explorer-titles.ts`)
+  materializam a decisão de 2026-08-12 — o título vem de `COUNT(conquistas)`.
+  Os cinco lugares que ainda mostram "Nível N" sobre mock devem migrar para
+  essas funções.
+- **Ranking do feed é `relevancia` no item**, escrito à mão no mock. Quando a
+  API existir, `motivo` e `relevancia` vêm do backend: é a consulta que sabe o
+  que casou, o front só desenha e deixa corrigir.
+**Inteiro sobre `src/mocks/feed.ts`**, como as sete telas de admin: `Analise`,
+`Visita`, `Favorita`, `GanhaConquista` e a coluna `status` do ponto continuam
+sem existir. Fica 🟡 em `docs/todo/README.md`. Detalhe em
+`docs/adr/user/0002-feed-sem-grafo-social.md`.
+
+### 2026-08-17 — Comunidade: selo por régua pública e pauta redigida por IA
+**Decisão:** `/community` nasce com busca de exploradores, perfil público
+`/community/[id]` e ranking de contribuição (geral e por bairro), sem nenhum
+botão de seguir. Junto vêm as **pautas** — texto editorial ancorado em lugares
+do mapa, em rota própria `/pautas/[slug]` —, **redigidas pelo Gemini e
+publicadas só depois de revisão humana**.
+**Selo de explorador verificado — critério objetivo, não chancela manual:** ≥5
+visitas, ≥3 avaliações publicadas, nenhuma removida e ≥1 mês de conta, em
+`src/constants/verification.ts` como função pura sobre contadores.
+**Motivo:** decisão caso a caso não escala e não se explica para quem não
+recebeu; régua pura muda em um arquivo, sem migração; e
+`missingForVerification` transforma "você não tem" em roteiro do que fazer. O
+critério aparece inteiro na tela — selo cujo critério não se lê vira fofoca.
+Chancela manual, se um dia entrar, é um booleano a mais no `&&`.
+**Pauta com IA — geração é etapa de autoria, não de render.** Nada roda durante
+a navegação do leitor: alguém pede o rascunho, o modelo escreve, um humano
+publica. **Motivo:** texto sobre comércio real que inventa preço, horário ou
+qualidade vira prejuízo para um negócio de verdade — um guia local vive de não
+fazer isso. Três defesas, nesta ordem: (1) os lugares vêm da tela, o modelo
+recebe lista fechada com ficha de fatos e não escolhe assunto; (2) a instrução
+de sistema enumera o que é proibido inventar; (3) a saída é revalidada com Zod,
+porque `responseSchema` garante forma, não conteúdo — saída de LLM é entrada
+não confiável. Mais duas regras: pauta de origem `ia` **aparece rotulada** ao
+leitor, e `status: "rascunho"` responde **404** na rota pública.
+**`GEMINI_API_KEY` é server-only**, sem `NEXT_PUBLIC_` — chave de modelo no
+bundle é conta de terceiro paga por quem abrir o DevTools. `src/lib/gemini.ts`
+não lança: devolve envelope discriminado, e falta de chave é estado esperado
+(`sem-chave`), não exceção. Sem a chave a tela funciona e o gerador avisa que
+está desligado. `GEMINI_MODEL` sobrescreve o padrão `gemini-2.5-flash`.
+**Pauta em rota própria, fora de `/community`:** ela é destino de três lugares
+— vitrine da comunidade, card `curadoria` do feed (que agora leva a ela pelo
+`slug`) e, no futuro, a página do ponto. Aninhar em comunidade daria uma URL
+que mente sobre o assunto, e evita a armadilha de `/community/pautas` disputar
+com `/community/[id]`.
+**Inteiro sobre mock** (`src/mocks/community.ts` e `src/mocks/stories.ts`): o
+único caminho de verdade é a chamada ao Gemini. Fica 🟡. Detalhe em
+`docs/adr/user/0003-comunidade-selo-e-pauta-ia.md`.
+
+### 2026-08-17 — `/places` funde em `/discover`; a sidebar encolhe
+**Decisão:** a vitrine de lugares vira `/discover`, segunda posição da
+navegação, logo abaixo do mapa. `/places` deixa de ser tela: continua só como
+prefixo real de `/places/[id]` e `/places/new`, com a rota-índice reduzida a um
+`redirect("/discover")`. Os componentes migraram para `discover/_components/`,
+com `PlacesExplorer`/`PlacesHeader` renomeados.
+**Motivo:** as duas telas respondiam à **mesma pergunta** do usuário — "que
+lugar vale hoje?" — com critérios diferentes, e critério é seção, não rota. A
+personalização que justificaria `/discover` (trilha "você esteve aqui",
+recomendação por tag) cabe como mais uma trilha dentro das cinco que já
+existem; mantê-la como rota separada obrigaria a duplicar chips, busca, cards e
+estado vazio para exibir os mesmos pontos. Somando o feed, eram **três** telas
+disputando "sugerir lugar".
+**Por que o nome que ficou foi `Descobrir`:** a tela que sobrou faz descoberta,
+não listagem — quem quer uma lista abre o mapa ou busca. E `/discover` era o
+nome que já carregava a promessa de personalização, que é para onde ela vai.
+**Custo aceito:** uma rota que só redireciona, para a URL já publicada não dar
+404, e uma ADR de 2026-08-09 que descreve a tela pelo nome antigo (anotada, não
+reescrita). `docs/todo/user/places.md` foi para
+`docs/archive/telas-fundidas/`, e o conteúdo vivo está em
+`docs/todo/user/explore.md` + `docs/adr/user/0001-explorar-lugares-sobre-mock.md`.
+**A régua que ficou:** tela nova só se responder uma pergunta que nenhuma outra
+responde. Pelo mesmo critério, `/visits`, `/favorites` e `/stats` são abas de
+`/profile`, não rotas — pendente de decisão do time.
+
 ### 2026-07-28 — Mermaid como fonte de verdade dos diagramas
 **Decisão:** todo diagrama vive em Mermaid dentro do Markdown; os PNGs
 exportados foram para `/docs/archive/diagramas-originais/`.
@@ -492,6 +624,9 @@ geolocalização tem persistência.
 - [x] Conquistas (`/admin/achievements`): catálogo com construtor de critério declarativo, estimativa de alcance, faixa de badges, prévia de desbloqueio e aba de calibragem — **inteiro sobre `src/mocks/admin-achievements.ts`**, com `AchievementBadge` adaptado do Trophy UI Kit
 - [x] Denúncias e feedback (`/admin/reports`): fila agrupada por alvo com selo de denúncia coordenada, conteúdo renderizado por tipo, remoção com motivo, e aba de triagem de feedback — **inteiro sobre `src/mocks/admin-reports.ts`**
 - [x] Avaliações (`/admin/reviews`): quatro KPIs, listagem com três sinais formais (spam, duplicada, discrepante), ações de pivô por autor e por local, remoção em lote e linha expansível com os comentários — **inteiro sobre `src/mocks/admin-reviews.ts`**
+- [x] Feed do explorador (`/feed`): cinco fontes de relevância no lugar de seguidores, seis tipos de item (avaliação, rajada agregada, ponto novo, conquista, marco de lugar, pauta), selo de motivo em todo card, "ver menos disso" em três escopos, ordenação por relevância ou cronológica agrupada e coluna de apoio com o recorte do usuário — **inteiro sobre `src/mocks/feed.ts`**
+- [x] Comunidade (`/community`): busca de exploradores, perfil público `/community/[id]`, ranking de contribuição geral e por bairro com a linha do próprio usuário fixa, selo de verificado por régua publicada, vitrine de pautas e gerador de rascunho com o Gemini — **sobre `src/mocks/{community,stories}.ts`**, com a chamada ao modelo real em `src/lib/gemini.ts` + `src/actions/stories.ts`
+- [x] Pauta em rota própria (`/pautas/[slug]`), com rótulo de origem e 404 para rascunho
 - [x] Slot de modal global `(app)/@modals` com rotas espelho
 - [x] Deploy: front na Vercel, API no Azure App Service, banco no Supabase
 
@@ -523,9 +658,11 @@ geolocalização tem persistência.
 - [ ] `Comentario` (RF-09)
 - [ ] Selo de **explorador verificado** — usuário cuja contribuição foi validada; a página do ponto já reserva espaço para o comentário dele. Falta definir o critério (nº de visitas? avaliações aprovadas? verificação manual pelo admin?), a coluna em `tbUsuario` e onde o selo aparece
 - [ ] Upload de fotos (RF-08)
-- [ ] `Segue` (RF-13)
+- [ ] `Favorita` — destrava o "acompanhar lugar" do feed e o motivo `salvo`; substitui `Segue` (RF-13) como assinatura do produto
 - [ ] Gamificação: `Conquista` + `GanhaConquista`
 - [ ] `GET /api/admin/stats` — endpoint agregado que tira o dashboard admin do mock (evita N chamadas de lista só para contar)
+- [ ] Persistir a pauta (`slug`, `status`, `origem`, corpo) + fila de revisão em `/admin` — hoje o rascunho do Gemini volta para a tela e é copiado à mão
+- [ ] Selo de verificado como coluna derivada em `tbUsuario` — hoje `isVerifiedExplorer` roda sobre contadores fictícios
 - [ ] Paginação e filtro por bounding box em `/api/markers`
 - [ ] App mobile Expo
 

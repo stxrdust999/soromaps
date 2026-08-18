@@ -43,10 +43,10 @@ export function PlaceSegmentationCard() {
         </CardAction>
       </CardHeader>
 
-      <CardContent className="flex items-center gap-6">
+      <CardContent className="flex items-center gap-4 sm:gap-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-square h-28 shrink-0"
+          className="aspect-square h-24 shrink-0 sm:h-28"
         >
           <PieChart>
             <ChartTooltip
@@ -69,7 +69,7 @@ export function PlaceSegmentationCard() {
           </PieChart>
         </ChartContainer>
 
-        <ul className="flex flex-1 flex-col gap-1.5">
+        <ul className="flex min-w-0 flex-1 flex-col gap-1.5">
           {placeSegmentsMock.map((segment) => (
             <li
               key={segment.key}
@@ -80,8 +80,10 @@ export function PlaceSegmentationCard() {
                 className="size-2 shrink-0 rounded-full"
                 style={{ backgroundColor: `var(--color-${segment.key})` }}
               />
-              <span className="text-muted-foreground">{segment.categoria}</span>
-              <span className="ml-auto font-medium tabular-nums">
+              <span className="truncate text-muted-foreground">
+                {segment.categoria}
+              </span>
+              <span className="ml-auto shrink-0 font-medium tabular-nums">
                 {segment.total.toLocaleString("pt-BR")}
               </span>
             </li>

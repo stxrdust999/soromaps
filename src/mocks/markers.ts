@@ -360,6 +360,16 @@ export function getMarkerDetailsMock(id: number): MarkerDetailsMock {
 }
 
 /**
+ * O mesmo catálogo, com id. O id é o índice justamente para
+ * `getMarkerDetailsMock(id)` devolver este item — quem precisa escolher um
+ * lugar numa lista (o gerador de pauta, por exemplo) usa daqui.
+ */
+export const markerCatalogMock = markerDetailsMocks.map((details, index) => ({
+  id: index,
+  ...details,
+}));
+
+/**
  * Quem mais visitou um local. Depende de três coisas que o banco não tem:
  * tabela `Visita`, FK ligando visita a usuário e a pontuação/nível do perfil.
  */

@@ -10,7 +10,6 @@ import {
   MapPinned,
   MessageSquare,
   MessagesSquare,
-  Search,
   Shield,
   Store,
   Tags,
@@ -36,9 +35,8 @@ export const NAV_GROUP_GENERAL: NavGroup = {
   label: "Navegação",
   items: [
     { label: "Mapa Interativo", url: "/home", icon: MapIcon },
-    { label: "Explorar Lugares", url: "/places", icon: Search },
-    { label: "Feed", url: "/feed", icon: LayoutList },
     { label: "Descobrir", url: "/discover", icon: Compass },
+    { label: "Feed", url: "/feed", icon: LayoutList },
     { label: "Comunidade", url: "/community", icon: UsersRound },
   ],
 };

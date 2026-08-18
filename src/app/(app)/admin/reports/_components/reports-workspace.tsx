@@ -8,6 +8,11 @@ import { PageSection } from "@/components/blocks/page-section";
 import { RemovalDialog } from "@/components/blocks/removal-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
 import { reportsSummaryMock, TARGET_LABEL } from "@/mocks/admin-reports";
 
@@ -119,9 +124,11 @@ export function ReportsWorkspace() {
                 </Badge>
 
                 {stats.coordenadas > 0 && (
-                  <Badge variant="destructive" className="font-semibold">
-                    <OctagonAlertIcon />
-                    {stats.coordenadas} com denúncia coordenada
+                  <Badge variant="destructive">
+                    <OctagonAlertIcon size={12} />
+                    <span className="text-xs font-light">
+                      {stats.coordenadas} com denúncia coordenada
+                    </span>
                   </Badge>
                 )}
 
@@ -143,35 +150,41 @@ export function ReportsWorkspace() {
       />
 
       {isReports ? (
-        <div className="flex min-h-0 flex-1 border-t">
-          <ReportQueue
-            reports={visible}
-            selectedId={selectedId}
-            filters={filters}
-            hasFilters={hasFilters}
-            onSelect={setSelectedId}
-            onFilterChange={updateFilters}
-            onClearFilters={clearFilters}
-          />
+        <ResizablePanelGroup orientation="horizontal" className="min-h-0 flex-1 border-t">
+          <ResizablePanel defaultSize="26%" minSize="300px" maxSize="40%">
+            <ReportQueue
+              reports={visible}
+              selectedId={selectedId}
+              filters={filters}
+              hasFilters={hasFilters}
+              onSelect={setSelectedId}
+              onFilterChange={updateFilters}
+              onClearFilters={clearFilters}
+            />
+          </ResizablePanel>
 
-          <section className="flex min-w-0 flex-1 flex-col">
-            {selected ? (
-              <ReportDetail
-                report={selected}
-                onDiscard={discard}
-                onRemove={() => setRemoving(true)}
-              />
-            ) : (
-              <div className="flex flex-1 flex-col items-center justify-center gap-1.5 p-12 text-center">
-                <p className="font-semibold">Nada para revisar</p>
-                <p className="text-muted-foreground text-sm">
-                  Todos os casos foram encerrados. Tempo médio nesta semana:{" "}
-                  {reportsSummaryMock.tempoMedioResolucao}.
-                </p>
-              </div>
-            )}
-          </section>
-        </div>
+          <ResizableHandle withHandle />
+
+          <ResizablePanel minSize="480px">
+            <section className="flex h-full min-w-0 flex-col">
+              {selected ? (
+                <ReportDetail
+                  report={selected}
+                  onDiscard={discard}
+                  onRemove={() => setRemoving(true)}
+                />
+              ) : (
+                <div className="flex flex-1 flex-col items-center justify-center gap-1.5 p-12 text-center">
+                  <p className="font-semibold">Nada para revisar</p>
+                  <p className="text-muted-foreground text-sm">
+                    Todos os casos foram encerrados. Tempo médio nesta semana:{" "}
+                    {reportsSummaryMock.tempoMedioResolucao}.
+                  </p>
+                </div>
+              )}
+            </section>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       ) : (
         <div className="min-h-0 flex-1 overflow-auto border-t pt-4">
           <FeedbackTable
