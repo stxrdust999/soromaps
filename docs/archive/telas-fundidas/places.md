@@ -1,5 +1,10 @@
 # 🏙️ Explorar lugares
 
+> **Arquivado em 2026-08-17.** A tela virou [`/discover`](../../todo/user/explore.md):
+> as duas respondiam à mesma pergunta com critérios diferentes, e critério é
+> seção, não rota. O conteúdo abaixo é o documento original, preservado como
+> registro — a fronteira com o Descobrir descrita no fim dele deixou de existir.
+
 > Área: usuário público · Rota: `/places` · Status: 🟡 parcial — funciona sobre dados fictícios
 
 ## Ideia
