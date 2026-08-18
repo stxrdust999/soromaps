@@ -56,4 +56,6 @@ conteúdo nos dois lugares.
 
 | ADR | Módulo |
 |---|---|
-| [0001](./user/0001-explorar-lugares-sobre-mock.md) | Explorar lugares |
+| [0001](./user/0001-explorar-lugares-sobre-mock.md) | Descobrir (era Explorar lugares, até `/places` fundir em `/discover`) |
+| [0002](./user/0002-feed-sem-grafo-social.md) | Feed |
+| [0003](./user/0003-comunidade-selo-e-pauta-ia.md) | Comunidade e pautas |
