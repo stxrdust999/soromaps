@@ -141,9 +141,14 @@
   &:hover,
   &:focus-visible {
     border-color: var(--primary);
+    /*
+     * Alpha baixo de propósito: a borda já diz que o card está sob o cursor, e
+     * a sombra só sugere elevação. Acima de ~30% ela vira brilho colorido e
+     * disputa atenção com o conteúdo do card.
+     */
     box-shadow:
-      0 2px 8px -2px color-mix(in oklab, var(--primary) 55%, transparent),
-      0 8px 24px -4px color-mix(in oklab, var(--primary) 70%, transparent);
+      0 1px 4px -2px color-mix(in oklab, var(--primary) 18%, transparent),
+      0 6px 16px -6px color-mix(in oklab, var(--primary) 28%, transparent);
   }
 }
 
