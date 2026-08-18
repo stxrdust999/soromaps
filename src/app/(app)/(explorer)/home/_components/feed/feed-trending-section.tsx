@@ -14,7 +14,7 @@ interface FeedTrendingSectionProps {
 
 /**
  * Prévia dos locais em alta — a lista completa, com as outras trilhas, é
- * `/places`. Aqui cabe só o suficiente para tirar quem está no mapa da
+ * `/discover`. Aqui cabe só o suficiente para tirar quem está no mapa da
  * inércia.
  */
 export function FeedTrendingSection({ markers }: FeedTrendingSectionProps) {
@@ -31,7 +31,7 @@ export function FeedTrendingSection({ markers }: FeedTrendingSectionProps) {
     <PlaceRail
       title="Em alta"
       icon={<FlameIcon className="size-4 text-orange-500" />}
-      seeAllHref="/places"
+      seeAllHref="/discover"
     >
       {trending.map((marker) => (
         <PlaceCard

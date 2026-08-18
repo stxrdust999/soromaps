@@ -3,19 +3,19 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
-import { getMarkerDetailsMock } from "@/mocks/markers";
-import type { MarkerResource } from "@/types/marker";
+
+import type { DiscoverPlace } from "./use-discover";
 
 interface RecentlyAddedRailProps {
-  markers: MarkerResource[];
+  places: DiscoverPlace[];
 }
 
 /**
  * Últimos locais cadastrados. Deliberadamente menor que os cards das outras
  * trilhas: é novidade, não recomendação — ninguém escolheu esses lugares.
  */
-export function RecentlyAddedRail({ markers }: RecentlyAddedRailProps) {
-  if (markers.length === 0) return null;
+export function RecentlyAddedRail({ places }: RecentlyAddedRailProps) {
+  if (places.length === 0) return null;
 
   return (
     <section className="flex flex-col gap-3">
@@ -25,9 +25,7 @@ export function RecentlyAddedRail({ markers }: RecentlyAddedRailProps) {
       </div>
 
       <div className="scrollbar-none -mx-1 flex gap-3 overflow-x-auto px-1 pb-2">
-        {markers.map((marker) => {
-          const details = getMarkerDetailsMock(marker.id);
-
+        {places.map(({ marker, details }) => {
           return (
             <Link
               key={marker.id}

@@ -1,11 +1,11 @@
-export default function Page() {
-  return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">Descobrir</h1>
-      <p className="text-muted-foreground text-sm">
-        Sugestões de lugares por categoria, proximidade e o que anda em alta em
-        Sorocaba.
-      </p>
-    </div>
-  );
+import { MARKERS_LIST_TAG } from "@/constants/markers";
+import { getMarkers } from "@/http/markers/markers";
+
+import { DiscoverExplorer } from "./_components/discover-explorer";
+
+export default async function DiscoverPage() {
+  const response = await getMarkers({ next: { tags: [MARKERS_LIST_TAG] } });
+  const markers = response.status === 200 ? response.data : [];
+
+  return <DiscoverExplorer markers={markers} />;
 }
