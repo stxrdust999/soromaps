@@ -1,10 +1,11 @@
 "use client";
 
-import { NewspaperIcon } from "lucide-react";
+import { BookOpenIcon, NewspaperIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import type { FeedCurationItem } from "@/mocks/feed";
 import { formatWaitingDays } from "@/utils/formatters/format-waiting-days";
 
@@ -43,10 +44,24 @@ export function FeedCurationCard({
       reasonDetail={item.motivoDetalhe}
       mutes={mutes}
       onMute={handlers.onMute}
-      title={<span className="font-semibold text-base">{item.titulo}</span>}
+      title={
+        <Link
+          href={`/pautas/${item.slug}`}
+          className="font-semibold text-base hover:underline"
+        >
+          {item.titulo}
+        </Link>
+      }
       meta={`Por ${item.editor} · ${item.locais.length} lugares · ${formatWaitingDays(item.diasAtras)}`}
       footer={
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <Button asChild size="sm" variant="ghost">
+            <Link href={`/pautas/${item.slug}`}>
+              <BookOpenIcon />
+              Ler a pauta
+            </Link>
+          </Button>
+
           {item.locais.map((local) => (
             <Badge key={local.id} variant="outline" asChild>
               <Link href={`/places/${local.id}`}>
@@ -59,7 +74,10 @@ export function FeedCurationCard({
       }
     >
       <div className="flex flex-col gap-3">
-        <div className="relative h-44 w-full overflow-hidden rounded-xl bg-muted">
+        <Link
+          href={`/pautas/${item.slug}`}
+          className="relative h-44 w-full overflow-hidden rounded-xl bg-muted"
+        >
           <Image
             src={item.fotoUrl}
             alt={item.titulo}
@@ -67,7 +85,7 @@ export function FeedCurationCard({
             sizes="(min-width: 1280px) 640px, 100vw"
             className="object-cover"
           />
-        </div>
+        </Link>
 
         <p className="text-pretty text-sm leading-relaxed text-muted-foreground">
           {item.chamada}

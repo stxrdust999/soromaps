@@ -322,6 +322,8 @@ export interface FeedMilestoneItem extends FeedItemBase {
 /** Roteiro montado pela equipe: o editorial que não depende de atividade. */
 export interface FeedCurationItem extends FeedItemBase {
   kind: "curadoria";
+  /** Casa com o slug de `src/mocks/stories.ts` — o card leva à pauta inteira. */
+  slug: string;
   titulo: string;
   chamada: string;
   fotoUrl: string;
@@ -439,6 +441,7 @@ export const feedItemsMock: FeedItemMock[] = [
     hora: "10:00",
     motivo: "curadoria",
     relevancia: 84,
+    slug: "tres-cafes-para-trabalhar",
     titulo: "Três cafés para trabalhar sem gastar o dia inteiro",
     chamada:
       "Tomada em quase toda mesa, wi-fi que aguenta chamada de vídeo e ninguém olhando torto para quem fica duas horas. Roteiro montado com o que os exploradores marcaram como “bom para trabalhar”.",
@@ -556,6 +559,7 @@ export const feedItemsMock: FeedItemMock[] = [
     hora: "08:00",
     motivo: "curadoria",
     relevancia: 68,
+    slug: "o-que-abre-cedo-no-domingo",
     titulo: "O que abre cedo no domingo",
     chamada:
       "A pergunta mais repetida no mapa em fim de semana. Três lugares que já estão funcionando antes das oito, conferidos por visita registrada este mês.",
@@ -764,7 +768,7 @@ export interface FeedTrendingPlaceMock {
   novidades: number;
 }
 
-/** Lugares com mais movimento na semana — a lista completa é `/places`. */
+/** Lugares com mais movimento na semana — a lista completa é `/discover`. */
 export const feedTrendingMock: FeedTrendingPlaceMock[] = [
   { id: 1, nome: "Cabocafé", bairro: "Santa Rosália", novidades: 14 },
   { id: 3, nome: "Bar do Zeca", bairro: "Centro", novidades: 11 },
