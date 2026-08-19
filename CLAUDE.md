@@ -45,7 +45,7 @@ AWS) está preservada em `/docs` e comparada em
 - Commits: Conventional Commits
 - Diagramas: Mermaid como fonte de verdade; exports originais em `/docs/archive`
 - Docs numerados `NN-tema.md` em `/docs`; wiki numerada em `/docs/wiki`
-- Módulos de produto pendentes em `/docs/todo/{user,business,admin}/` — um `.md` por módulo, índice com status em `docs/todo/README.md`; concluiu módulo → atualiza status na mesma entrega
+- Módulos de produto pendentes em `/docs/todo/{user,admin}/` — um `.md` por módulo, índice com status em `docs/todo/README.md`; concluiu módulo → atualiza status na mesma entrega
 - Spec técnico escrito antes da implementação vai para `/docs/propostas`, com bloco de status no topo; implementou → conteúdo migra para `/docs/wiki` e a proposta vai para `/docs/archive`
 - Estrutura de pastas: padrão Dara (Stardust)
 - Material obsoleto vai para `/docs/archive` em subpasta por contexto, nunca é apagado
@@ -531,6 +531,28 @@ reescrita). `docs/todo/user/places.md` foi para
 responde. Pelo mesmo critério, `/visits`, `/favorites` e `/stats` são abas de
 `/profile`, não rotas — pendente de decisão do time.
 
+### 2026-08-19 — Dono de estabelecimento sai do produto: `business/*` e `/admin/businesses` cancelados
+**Decisão:** cancela o grupo inteiro `business/` (5 módulos 💤: dashboard,
+reviews, place, visits, moderation) e `/admin/businesses` (par administrativo
+que aprovava a reivindicação de ponto). Rotas, grupo de sidebar
+`NAV_GROUP_BUSINESS`, `/business` do `middleware.ts` e
+`src/mocks/admin-businesses.ts` foram removidos do código; os `.md` de
+`docs/todo/business/`, `docs/todo/admin/businesses.md` e
+`docs/adr/admin/0006-comercios-tres-abas.md` foram para
+`docs/archive/gerenciamento-por-dono/`.
+**Motivo:** o par (`tipoUsuario`+`CNPJ` em `tbUsuario`, FK `UsuarioDono` em
+`markers`, fluxo de reivindicação pendente/aprovada/recusada) é a maior peça
+de modelagem ainda não paga do produto, e cortá-la evita lidar com CNPJ —
+validação de documento, distinção pessoa física/jurídica, tudo que isso
+arrasta de compliance. O grupo `business/` inteiro estava 💤 (nenhuma tela
+construída) e `/admin/businesses` só fazia sentido como par dele; sem dono
+para aprovar, a tela perde a pergunta que respondia.
+**Consequência:** a persona Augusto (dono de estabelecimento) perde a metade
+do produto que a representava — o TCC segue com ela na documentação de
+personas (`/docs`), mas o dono não gerencia mais nada dentro do app. Categoria
+`comercios`/pontos de interesse comercial no mapa continua existindo como
+marker comum, só sem dono nem painel próprio.
+
 ### 2026-07-28 — Mermaid como fonte de verdade dos diagramas
 **Decisão:** todo diagrama vive em Mermaid dentro do Markdown; os PNGs
 exportados foram para `/docs/archive/diagramas-originais/`.
@@ -620,7 +642,6 @@ geolocalização tem persistência.
 - [x] Dashboard admin (`/admin/dashboard`): filas de atenção, quatro cards de número e dois gráficos Recharts — **inteiro sobre `src/mocks/admin-dashboard.ts`**, sem chamada à API
 - [x] Moderação de pontos (`/admin/moderation`): fila mestre-detalhe com filtros, ação em lote, atalhos de teclado, rejeição com motivo, comparação de duplicata e aba de histórico — **inteiro sobre `src/mocks/admin-moderation.ts`**
 - [x] Categorias (`/admin/categories`) no padrão de listagem, reusando `useTableConfig` + `src/components/table/*` + chips de filtro: pin renderizado, alerta de colisão de cor, formulário com preview ao vivo e exclusão com reatribuição — **inteiro sobre `src/mocks/admin-categories.ts`**
-- [x] Comércios (`/admin/businesses`): três abas (pedidos, verificados, sem dono) sobre uma casca de tabela genérica, com cinco sinais de risco, painel lateral de decisão, comparação de conflito e revogação de vínculo — **inteiro sobre `src/mocks/admin-businesses.ts`**
 - [x] Conquistas (`/admin/achievements`): catálogo com construtor de critério declarativo, estimativa de alcance, faixa de badges, prévia de desbloqueio e aba de calibragem — **inteiro sobre `src/mocks/admin-achievements.ts`**, com `AchievementBadge` adaptado do Trophy UI Kit
 - [x] Denúncias e feedback (`/admin/reports`): fila agrupada por alvo com selo de denúncia coordenada, conteúdo renderizado por tipo, remoção com motivo, e aba de triagem de feedback — **inteiro sobre `src/mocks/admin-reports.ts`**
 - [x] Avaliações (`/admin/reviews`): quatro KPIs, listagem com três sinais formais (spam, duplicada, discrepante), ações de pivô por autor e por local, remoção em lote e linha expansível com os comentários — **inteiro sobre `src/mocks/admin-reviews.ts`**
@@ -670,5 +691,5 @@ geolocalização tem persistência.
 - [ ] Apagar Route Handlers órfãos (`src/app/api/auth/{login,logout}`) e o `WeatherForecastController`
 - [ ] Limpar regras obsoletas do `.gitignore` (`/src/services/Soromaps`)
 - [ ] Remover `registerSchema` de `src/validations/auth.ts` (sem uso) ou passar a usá-lo no cadastro
-- [ ] Aplicar o padrão de listagem em `/admin/businesses` e `/admin/reviews` (hoje stubs)
+- [ ] Aplicar o padrão de listagem em `/admin/reviews` (hoje stub)
 - [ ] Reconferir o override de `sharp` a cada bump do Next (ver decisão abaixo)
