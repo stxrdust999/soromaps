@@ -1,41 +1,51 @@
 # 👤 Perfil
 
-> Área: usuário público · Rota: `/profile` · Status: 💤 não iniciado
+> Área: usuário público · Rota: `/profile` (com as abas `visits`, `favorites`, `achievements`, `stats`) · Status: 🟡 telas prontas, dados em mock
 
 ## Ideia
 
-A página do próprio usuário: quem ele é na plataforma e o que já fez nela. Avatar, nome, desde quando participa, nível e pontuação, contadores (lugares visitados, avaliações escritas, seguidores) e as conquistas em destaque. Abaixo, a atividade recente — últimas visitas e avaliações.
+O hub pessoal do explorador: quem ele é na plataforma, o que já fez nela e o
+que falta para o próximo passo. Cinco abas sobre o mesmo cabeçalho —
+**Visão geral**, [Visitas](./visits.md), [Favoritos](./favorites.md),
+[Conquistas](./achievements.md) e [Estatísticas](./stats.md).
 
-Hoje `/profile` é uma tela de texto estático. O dado existe em `tbUsuario`, mas nada dele chega à tela.
+Não é o espelho privado do perfil público. `/community/[id]` responde "dá para
+confiar nessa pessoa?"; aqui a pergunta é "o que eu já fiz e o que falta?" — e
+é por isso que o selo aparece como régua item a item, e a conquista travada
+aparece com o quanto falta.
 
 ## Por que vale
 
-- É onde a gamificação vira visível para o dono dela. Conquista sem vitrine não retém ninguém.
-- Fecha o ciclo do pilar social: o usuário precisa ver o próprio perfil antes de entender o que os outros veem dele em [Comunidade](./community.md).
-- Barato de começar: nome, e-mail e data de cadastro já existem no banco e já viajam na sessão.
+- É onde a gamificação vira visível para o dono dela. Conquista sem vitrine não
+  retém ninguém.
+- Fecha o ciclo: o usuário precisa ver o próprio perfil antes de entender o que
+  os outros veem dele em [Comunidade](./community.md).
+- Identidade já existe de verdade — nome e e-mail viajam no cookie de sessão.
 
 ## Dependências
 
 | O quê | Situação |
 |---|---|
-| Dados básicos do usuário (`nome`, `email`, `created_at`) | 🟢 existem em `tbUsuario` e já vão no cookie de sessão |
-| Nível / pontuação | ❌ coluna não existe |
-| Avatar | ❌ sem upload e sem coluna — ver [Upload de fotos](../../wiki/12-gap-modelo-vs-implementacao.md) |
-| `Visita`, `Analise`, `Segue` (contadores) | ❌ |
-| `Conquista` + `GanhaConquista` | ❌ |
-| Selo de explorador verificado | ❌ critério ainda em aberto — ver [Comunidade](./community.md) |
+| Nome, e-mail (cabeçalho) | 🟢 já vêm de `getSession()` |
+| `Visita` (timeline, cobertura, gráfico) | ❌ ver [Visitas](./visits.md) |
+| `Favorita` (aba de salvos) | ❌ ver [Favoritos](./favorites.md) |
+| `Analise` (contador e "minhas avaliações") | ❌ |
+| `Conquista` + `GanhaConquista` (galeria) | ❌ ver [Conquistas](./achievements.md) |
+| Selo de verificado como dado, não cálculo sobre mock | ❌ critério já publicado em `src/constants/verification.ts` |
+| Avatar | ❌ sem upload e sem coluna (RF-08) |
+| Data de cadastro | 🟡 existe em `tbUsuario`, mas "desde" ainda sai do mock |
 
-## Escopo inicial
+## Fora do escopo
 
-- Cabeçalho com nome, e-mail, iniciais no avatar e "membro desde"
-- Contadores zerados por enquanto, com a estrutura pronta para receber os números
-- Link para [Configurações](./settings.md) e para o perfil público
+- Edição de dados e preferências — é [Configurações](./settings.md)
+- Perfil de outro usuário — é [Comunidade](./community.md)
+- Pontuação e nível — descartados em 2026-08-12, não adiados
 
-## Fora do escopo inicial
-
-- Edição de dados — é [Configurações](./settings.md)
-- Perfil de outro usuário — é [Comunidade](./community.md), com regras de privacidade próprias
+> Decisões já tomadas e componentes existentes em
+> [adr/user/0004-perfil-hub-com-abas.md](../../adr/user/0004-perfil-hub-com-abas.md)
 
 ## Distinção que precisa ficar clara
 
-Três telas falam de usuário e é fácil confundir: **`/profile`** é a vitrine de quem sou, **`/settings`** é onde altero dados e preferências, e **`/community/[id]`** é como os outros me veem — com menos campo, sem e-mail.
+Três telas falam de usuário e é fácil confundir: **`/profile`** é o hub de
+quem sou e do que fiz, **`/settings`** é onde altero dados e preferências, e
+**`/community/[id]`** é como os outros me veem — com menos campo, sem e-mail.

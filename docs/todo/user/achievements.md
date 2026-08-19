@@ -1,6 +1,6 @@
 # 🏆 Conquistas
 
-> Área: usuário público · Rota: `/achievements` · Status: 💤 não iniciado
+> Área: usuário público · Rota: `/profile/achievements` (aba de [Perfil](./profile.md)) · Status: 🟡 galeria pronta sobre `src/mocks/profile.ts` — faltam `Conquista` e `GanhaConquista`
 
 ## Ideia
 
@@ -38,3 +38,6 @@ Modelagem já definida no TCC: `Conquista` é catálogo, `GanhaConquista` é a N
   título derivado de `COUNT(GanhaConquista)`:
   `0–2 Novato · 3–6 Explorador · 7–12 Guia local · 13+ Veterano`
 - Conquistas sazonais/por tempo limitado
+
+> A rota antiga redireciona para a aba desde 2026-08-19. Decisões de
+> implementação em [adr/user/0004-perfil-hub-com-abas.md](../../adr/user/0004-perfil-hub-com-abas.md)

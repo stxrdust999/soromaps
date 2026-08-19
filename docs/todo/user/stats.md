@@ -1,6 +1,6 @@
 # 📊 Estatísticas pessoais
 
-> Área: usuário público · Rota: `/stats` · Status: 💤 não iniciado
+> Área: usuário público · Rota: `/profile/stats` (aba de [Perfil](./profile.md)) · Status: 🟡 tela pronta sobre `src/mocks/profile.ts` — falta `Visita`
 
 ## Ideia
 
@@ -34,3 +34,6 @@ O número-âncora é o % de exploração — é a mecânica de completar mapa qu
 - Mini-mapa de cobertura (camada MapLibre — fase 2)
 - Wrapped anual compartilhável
 - Comparação com a média dos usuários
+
+> A rota antiga redireciona para a aba desde 2026-08-19. Decisões de
+> implementação em [adr/user/0004-perfil-hub-com-abas.md](../../adr/user/0004-perfil-hub-com-abas.md)

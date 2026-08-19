@@ -1,6 +1,6 @@
 # ⭐ Favoritos
 
-> Área: usuário público · Rota: `/favorites` · Status: 💤 não iniciado
+> Área: usuário público · Rota: `/profile/favorites` (aba de [Perfil](./profile.md)) · Status: 🟡 tela pronta sobre `src/mocks/profile.ts` — falta `Favorita`
 
 ## Ideia
 
@@ -32,3 +32,6 @@ Favoritar é **estado**, não evento (decisão de modelagem do TCC: `Favorita` s
 
 - Listas múltiplas nomeadas e compartilháveis (fase 2)
 - Ordenação por distância em tempo real
+
+> A rota antiga redireciona para a aba desde 2026-08-19. Decisões de
+> implementação em [adr/user/0004-perfil-hub-com-abas.md](../../adr/user/0004-perfil-hub-com-abas.md)

@@ -22,17 +22,20 @@ Regra: concluiu um módulo → atualiza o status aqui e no `.md` dele, **na mesm
 | Módulo | Rota | Status | Depende de |
 |---|---|---|---|
 | [Descobrir](./user/explore.md) | `/discover` | 🟡 | Tela pronta sobre `src/mocks/markers.ts` — falta o modelo real do ponto. Absorveu `/places` em 2026-08-17; a trilha personalizada espera `Visita` |
-| [Perfil](./user/profile.md) | `/profile` | 💤 | Nada bloqueia o básico (contadores precisam de `Visita`/`Analise`) |
-| [Favoritos](./user/favorites.md) | `/favorites` | 💤 | `Favorita` |
-| [Minhas visitas](./user/visits.md) | `/visits` | 💤 | `Visita` |
-| [Conquistas](./user/achievements.md) | `/achievements` | 💤 | `Conquista` + `GanhaConquista` |
+| [Perfil](./user/profile.md) | `/profile` | 🟡 | Hub de cinco abas pronto sobre `src/mocks/profile.ts` — identidade é real, o resto espera `Visita`, `Favorita`, `Analise` e `GanhaConquista`. Absorveu visitas, favoritos, conquistas e estatísticas em 2026-08-19 |
+| [Favoritos](./user/favorites.md) | `/profile/favorites` | 🟡 | Aba pronta sobre mock — `Favorita` destrava salvar e remover |
+| [Minhas visitas](./user/visits.md) | `/profile/visits` | 🟡 | Aba pronta sobre mock — `Visita` e o check-in por GPS |
+| [Conquistas](./user/achievements.md) | `/profile/achievements` | 🟡 | Galeria pronta sobre mock — `Conquista` + `GanhaConquista` e o motor de concessão |
 | [Feed](./user/feed.md) | `/feed` | 🟡 | Tela pronta sobre `src/mocks/feed.ts` — faltam `Analise`, `Visita`, `Favorita` e `GanhaConquista`. **Sem `Segue`: o feed não tem grafo social** |
 | [Comunidade](./user/community.md) | `/community` | 🟡 | Telas prontas sobre `src/mocks/{community,stories}.ts` — faltam `Analise`/`Visita` e a entidade de pauta. Inclui `/community/[id]` e `/pautas/[slug]` |
-| [Estatísticas](./user/stats.md) | `/stats` | 💤 | `Visita` |
+| [Estatísticas](./user/stats.md) | `/profile/stats` | 🟡 | Aba pronta sobre mock — `Visita` e bairro no ponto |
 | [Notificações](./user/notifications.md) | `/notifications` | 💤 | Entidade nova `Notificacao` — ⚠️ sem rota nem item de sidebar |
 | [Configurações](./user/settings.md) | `/settings` | 💤 | `PATCH` parcial de usuário na API — ⚠️ sem rota nem item de sidebar |
 | [Sobre](./user/about.md) | `/about` | 💤 | Nada — ⚠️ sem rota nem item de sidebar |
 
+> As quatro abas de `/profile` mantêm `.md` próprio porque cada uma espera uma
+> tabela diferente; a rota antiga de cada uma virou `redirect()` em 2026-08-19.
+>
 > ⚠️ Os três marcados foram escritos antes de a navegação fechar no Figma e **não existem** como rota nem na sidebar. Precisam entrar em algum grupo de `src/constants/navigation.ts` ou serem movidos para `/docs/archive`.
 
 ## 🛡️ Admin (`admin/`)

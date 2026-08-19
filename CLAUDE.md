@@ -1,7 +1,7 @@
 # 🤖 CLAUDE.md — Soromaps
 
 > Registro vivo do projeto. Atualizado no momento em que decisões são tomadas.
-> Última atualização: 2026-08-17
+> Última atualização: 2026-08-19
 
 ---
 
@@ -397,8 +397,9 @@ fase 2.
 precisam migrar para a contagem —
 `components/blocks/{place-leaderboard,verified-comment-card}.tsx`,
 `admin/moderation/_components/author-card.tsx` (via `nivel` em
-`mocks/admin-moderation.ts`) e os stubs de `/stats` e `/admin/achievements`,
-cujo texto ainda promete "evolução de nível" e "pontuação".
+`mocks/admin-moderation.ts`) e o stub de `/admin/achievements`, cujo texto
+ainda promete "pontuação". O stub de `/stats` saiu em 2026-08-19: virou aba de
+`/profile`, já sobre `explorerCredential`.
 
 ### 2026-08-16 — Conexão com o Supabase pelo pooler, em session mode
 **Decisão:** a API conecta em `aws-1-sa-east-1.pooler.supabase.com:5432`
@@ -529,7 +530,8 @@ reescrita). `docs/todo/user/places.md` foi para
 `docs/todo/user/explore.md` + `docs/adr/user/0001-explorar-lugares-sobre-mock.md`.
 **A régua que ficou:** tela nova só se responder uma pergunta que nenhuma outra
 responde. Pelo mesmo critério, `/visits`, `/favorites` e `/stats` são abas de
-`/profile`, não rotas — pendente de decisão do time.
+`/profile`, não rotas — ~~pendente de decisão do time~~ **resolvido em
+2026-08-19**, junto com `/achievements`.
 
 ### 2026-08-19 — Dono de estabelecimento sai do produto: `business/*` e `/admin/businesses` cancelados
 **Decisão:** cancela o grupo inteiro `business/` (5 módulos 💤: dashboard,
@@ -552,6 +554,59 @@ do produto que a representava — o TCC segue com ela na documentação de
 personas (`/docs`), mas o dono não gerencia mais nada dentro do app. Categoria
 `comercios`/pontos de interesse comercial no mapa continua existindo como
 marker comum, só sem dono nem painel próprio.
+
+### 2026-08-19 — `/profile` vira hub de cinco abas; `/visits`, `/favorites`, `/stats` e `/achievements` deixam de ser rotas
+**Decisão:** o grupo "Eu" da sidebar cai de cinco itens para um. `/profile`
+ganha `layout.tsx` com o cabeçalho compartilhado e cinco abas em **segmento de
+rota** — visão geral, `visits`, `favorites`, `achievements`, `stats`. As quatro
+rotas antigas viram `redirect()`, e a lista de abas mora em `PROFILE_TABS`
+(`src/constants/navigation.ts`), reusando o tipo `NavItem`.
+**Motivo:** fecha a pendência que a decisão de 2026-08-17 deixou escrita —
+"tela nova só se responder uma pergunta que nenhuma outra responde". Histórico,
+coleção, galeria e placar respondem à **mesma** pergunta ("o que eu já fiz?")
+com recortes diferentes do mesmo dado, e recorte é aba. Mantidas separadas,
+cada uma repetiria cabeçalho, identidade e contadores, e comparar números
+exigiria passear pela sidebar. Eram cinco stubs de dez linhas: a área pessoal
+era a única do produto sem nada construído.
+**Segmento de rota e não `useState`,** ao contrário das abas de
+`/admin/reports` e `/admin/achievements`: lá a aba é passo de um fluxo de
+trabalho; aqui é conteúdo que se lê, se compartilha e ao qual se volta. Rota dá
+URL compartilhável, botão voltar e F5 no lugar certo — e mantém as cinco abas
+como Server Component, com um `"use client"` só na navegação, que precisa do
+`usePathname`.
+**A pergunta que `/profile` responde não é a de `/community/[id]`.** O perfil
+público é vitrine ("dá para confiar nessa pessoa?"); o privado é roteiro ("o
+que falta para o próximo passo?"). Por isso o selo aparece como a régua inteira
+item a item — é onde `missingForVerification()`, escrito na Comunidade, enfim
+aparece na tela — e a conquista travada aparece com o quanto falta, não só
+cinza.
+**O que veio junto e vale além desta tela:**
+- **Mock que deriva em vez de repetir.** `currentExplorerMock` segue sendo a
+  fonte dos contadores (é o que `/community` publica no ranking) e
+  `src/mocks/profile.ts` calcula o resto **sobre as mesmas 24 visitas**: o
+  progresso de "visitar 5 cafeterias" conta cafeterias na lista, não um número
+  digitado. As cinco conquistas obtidas caem de pé, não foram ajustadas à mão —
+  as duas telas não têm como discordar.
+- **Fuso fixo em mock, junto com data fixa.** `PROFILE_ANCHOR` e todo
+  formatador preso em `timeZone: "UTC"`: data que chega como dia puro
+  (`2026-08-17`) é meia-noite UTC, e formatar no fuso local devolveria o dia
+  anterior no Brasil — servidor e navegador em fusos diferentes quebram a
+  hidratação do mesmo jeito que `Date.now()`.
+- **Conquista de evento `seguir` não entra na galeria do explorador.** `Segue`
+  saiu do produto em 2026-08-17; cobrar "siga 15 pessoas" seria pedir o que a
+  plataforma não faz. O catálogo do admin continua com elas — quem decide o que
+  é cobrável é a tela de quem cumpre.
+- **`PlaceCard` e `PlaceRow` passam a aceitar `Pick<MarkerResource, "id" |
+  "nome">`.** Só isso eles leem; o resto vem de `getMarkerDetailsMock`. Tela
+  sobre mock reusa os cards sem inventar `lat`/`lng` — a alternativa era
+  duplicá-los, como o feed precisou fazer.
+- **`StatCard` subiu para `src/components/blocks/`**, saindo de dentro de
+  `/community/[id]`: segundo consumidor promove.
+**Fora de escopo, e continua aberto:** edição de dados (é `/settings`, travado
+pelo `PUT` que re-hasheia a senha, então "Editar perfil" e "Gerenciar Conta" no
+popover da sidebar seguem sem destino); remover favorito (nasce com a tabela,
+como `toggleFavoriteAction`); e o mini-mapa da mancha explorada. Detalhe em
+`docs/adr/user/0004-perfil-hub-com-abas.md`.
 
 ### 2026-07-28 — Mermaid como fonte de verdade dos diagramas
 **Decisão:** todo diagrama vive em Mermaid dentro do Markdown; os PNGs
@@ -650,6 +705,8 @@ geolocalização tem persistência.
 - [x] Pauta em rota própria (`/pautas/[slug]`), com rótulo de origem e 404 para rascunho
 - [x] Slot de modal global `(app)/@modals` com rotas espelho
 - [x] Deploy: front na Vercel, API no Azure App Service, banco no Supabase
+
+- [x] Perfil do explorador (`/profile`): hub de cinco abas em segmento de rota — visão geral com a régua do selo, timeline de visitas por mês, lugares salvos, galeria de conquistas com progresso e placar com cobertura da cidade. Identidade vem da sessão real, o resto é `src/mocks/profile.ts`; `/visits`, `/favorites`, `/stats` e `/achievements` viraram `redirect()`
 
 ### 🔥 Próximo passo — quebrado em produção
 - [ ] Rota `/api/proxy/[...path]` + migrar as chamadas de markers — hoje o mapa **não carrega marcadores em produção** (sem `NEXT_PUBLIC_API_URL` o fetch vira caminho relativo e dá 404; e o CORS só conhece localhost). Ver `docs/wiki/14-deploy.md`
