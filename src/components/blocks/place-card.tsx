@@ -19,7 +19,12 @@ import type { MarkerResource } from "@/types/marker";
 type PlaceCardSize = "sm" | "md" | "featured";
 
 interface PlaceCardProps {
-  marker: MarkerResource;
+  /**
+   * Só id e nome: o resto do card vem de `getMarkerDetailsMock`. Aceitar o
+   * recorte deixa telas sobre mock, que não têm coordenada, reusarem o card
+   * sem inventar `lat`/`lng`.
+   */
+  marker: Pick<MarkerResource, "id" | "nome">;
   size?: PlaceCardSize;
   showTags?: boolean;
   /** Selo sobreposto à foto, no canto superior esquerdo — ex.: "Em alta". */

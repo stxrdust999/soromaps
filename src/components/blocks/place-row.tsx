@@ -7,7 +7,8 @@ import { getMarkerDetailsMock } from "@/mocks/markers";
 import type { MarkerResource } from "@/types/marker";
 
 interface PlaceRowProps {
-  marker: MarkerResource;
+  /** Só id e nome, como em `PlaceCard`; o resto vem do mock de detalhes. */
+  marker: Pick<MarkerResource, "id" | "nome">;
   /** Número à direita — distância, nota, contagem. Cabe uma informação só. */
   trailing?: ReactNode;
   /** Posição, quando a linha faz parte de um ranking. */
