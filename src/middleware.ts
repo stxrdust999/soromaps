@@ -4,7 +4,6 @@ import { decryptSession } from "@/lib/session";
 const PROTECTED_ROUTES = [
   "/home",
   "/admin",
-  "/business",
   "/places",
   "/profile",
   "/feed",
@@ -52,7 +51,6 @@ export const config = {
   matcher: [
     "/home/:path*",
     "/admin/:path*",
-    "/business/:path*",
     "/places/:path*",
     "/profile/:path*",
     "/feed/:path*",

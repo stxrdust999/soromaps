@@ -35,16 +35,6 @@ Regra: concluiu um módulo → atualiza o status aqui e no `.md` dele, **na mesm
 
 > ⚠️ Os três marcados foram escritos antes de a navegação fechar no Figma e **não existem** como rota nem na sidebar. Precisam entrar em algum grupo de `src/constants/navigation.ts` ou serem movidos para `/docs/archive`.
 
-## 🏪 Estabelecimento (`business/`)
-
-| Módulo | Rota | Status | Depende de |
-|---|---|---|---|
-| [Painel do negócio](./business/dashboard.md) | `/business/dashboard` | 💤 | `tipoUsuario` + `Analise` + `Visita` |
-| [Responder avaliações](./business/reviews.md) | `/business/reviews` | 💤 | `Analise` + `Comentario` |
-| [Meu ponto](./business/place.md) | `/business/place` | 💤 | `tipoUsuario` + FK `UsuarioDono` em markers |
-| [Visitas](./business/visits.md) | `/business/visits` | 💤 | `Visita` + FK `UsuarioDono` em markers |
-| [Moderação](./business/moderation.md) | `/business/moderation` | 💤 | `Comentario` + coluna `status` |
-
 ## 🛡️ Admin (`admin/`)
 
 | Módulo | Rota | Status | Depende de |
@@ -54,7 +44,6 @@ Regra: concluiu um módulo → atualiza o status aqui e no `.md` dele, **na mesm
 | [Moderação](./admin/moderation.md) | `/admin/moderation` | 🟡 | Tela pronta sobre `src/mocks/admin-moderation.ts` — falta coluna `status` em markers |
 | [Conquistas (catálogo)](./admin/achievements.md) | `/admin/achievements` | 🟡 | Tela pronta sobre `src/mocks/admin-achievements.ts` — falta a tabela `Conquista` |
 | [Denúncias e feedback](./admin/reports.md) | `/admin/reports` | 🟡 | Tela pronta sobre `src/mocks/admin-reports.ts` — faltam `Denuncia` e `Feedback` |
-| [Comércios](./admin/businesses.md) | `/admin/businesses` | 🟡 | Tela pronta sobre `src/mocks/admin-businesses.ts` — falta `tipoUsuario` + FK `UsuarioDono` |
 | [Avaliações](./admin/reviews.md) | `/admin/reviews` | 🟡 | Tela pronta sobre `src/mocks/admin-reviews.ts` — faltam `Analise` e `Comentario` |
 
 > `/admin/users` não aparece aqui porque já está entregue — este índice rastreia pendência, não o que existe.
@@ -65,6 +54,5 @@ Regra: concluiu um módulo → atualiza o status aqui e no `.md` dele, **na mesm
 
 1. **Expansão do modelo de Ponto** ([proposta](../propostas/2026-08-03-expansao-modelo-ponto.md)) — é o que tira [Descobrir](./user/explore.md) do parcial. Tela pronta esperando só o dado chegar; enquanto isso, foto, categoria, tags e nota são fixos em `src/mocks/markers.ts`
 2. **[Categorias](./admin/categories.md)** — destrava categoria como entidade (hoje é constante no front) e é o caso de uso perfeito pra reusar o padrão de tabela
-3. **[Painel do negócio](./business/dashboard.md)** — o módulo que mais justifica o produto (persona do Augusto) e ainda não tem nenhuma tela
 
 > ⚠️ Nada disso antes da prioridade 0/1 do [backlog técnico](../wiki/12-gap-modelo-vs-implementacao.md): proxy dos markers e autenticação na API. Módulo novo sobre API pública aberta só aumenta a superfície.
