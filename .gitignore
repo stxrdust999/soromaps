@@ -57,5 +57,8 @@ next-env.d.ts
 /src/services/Soromaps/bin/Debug
 /.vscode
 
+# docs locais para entregas de trabalho
+/docs/diagramas
+
 # registro local de tarefas concluídas na dev, consolidado na descrição do merge
 /task-logs
