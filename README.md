@@ -130,4 +130,3 @@ Divisão acordada no TCC:
 - Commits: [Conventional Commits](https://www.conventionalcommits.org/)
 - Código em inglês, comentários e docs em pt-BR
 - Diagramas em Mermaid como fonte de verdade; exports originais em [`/docs/archive`](./docs/archive/README.md)
-- Estrutura de pastas no padrão Dara (Stardust) — ver [Frontend web](./docs/wiki/11-frontend-web.md)
