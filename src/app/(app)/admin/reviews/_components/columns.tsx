@@ -112,7 +112,7 @@ export function createReviewColumns({
 
       meta: {
         headerClassName: "w-12 pr-0",
-        cellClassName: "w-12 pr-0 align-top",
+        cellClassName: "w-12 pr-0",
       },
     },
 
@@ -134,7 +134,7 @@ export function createReviewColumns({
       meta: {
         visibilityDisplayName: reviewColumnsNames.nota,
         headerClassName: "w-36",
-        cellClassName: "w-36 align-top",
+        cellClassName: "w-36",
       },
     },
 
@@ -183,7 +183,7 @@ export function createReviewColumns({
 
       meta: {
         headerClassName: "min-w-85",
-        cellClassName: "min-w-85 align-top whitespace-normal",
+        cellClassName: "min-w-85 whitespace-normal",
       },
     },
 
@@ -226,7 +226,7 @@ export function createReviewColumns({
       meta: {
         visibilityDisplayName: reviewColumnsNames.autor,
         headerClassName: "w-52",
-        cellClassName: "w-52 align-top",
+        cellClassName: "w-52",
       },
     },
 
@@ -264,7 +264,7 @@ export function createReviewColumns({
       meta: {
         visibilityDisplayName: reviewColumnsNames.local,
         headerClassName: "w-56",
-        cellClassName: "w-56 align-top",
+        cellClassName: "w-56",
       },
     },
 
@@ -297,10 +297,9 @@ export function createReviewColumns({
                 <Badge
                   key={signal.kind}
                   variant={signal.tone === "bad" ? "destructive" : "warning"}
-                  className="font-semibold"
                 >
-                  <Icon />
-                  {signal.label}
+                  <Icon size={12} />
+                  <span className="text-xs font-light">{signal.label}</span>
                 </Badge>
               );
             })}
@@ -318,7 +317,7 @@ export function createReviewColumns({
       meta: {
         visibilityDisplayName: reviewColumnsNames.sinais,
         headerClassName: "w-52",
-        cellClassName: "w-52 align-top",
+        cellClassName: "w-52",
       },
     },
 
@@ -338,7 +337,7 @@ export function createReviewColumns({
       meta: {
         visibilityDisplayName: reviewColumnsNames.diasPublicado,
         headerClassName: "w-32",
-        cellClassName: "w-32 align-top text-muted-foreground",
+        cellClassName: "w-32 text-muted-foreground",
       },
     },
 
@@ -364,7 +363,7 @@ export function createReviewColumns({
       meta: {
         visibilityDisplayName: reviewColumnsNames.status,
         headerClassName: "w-32",
-        cellClassName: "w-32 align-top",
+        cellClassName: "w-32",
       },
     },
 
@@ -436,7 +435,7 @@ export function createReviewColumns({
 
       meta: {
         headerClassName: "w-20",
-        cellClassName: "w-20 pr-4 pl-2 align-top",
+        cellClassName: "w-20 pr-4 pl-2",
       },
     },
   ];

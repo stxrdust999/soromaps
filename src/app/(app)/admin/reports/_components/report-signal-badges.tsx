@@ -32,13 +32,9 @@ export function ReportSignalBadges({ signals }: ReportSignalBadgesProps) {
         const Icon = SIGNAL_ICON[signal.kind];
 
         return (
-          <Badge
-            key={signal.kind}
-            variant={SIGNAL_VARIANT[signal.tone]}
-            className="font-semibold"
-          >
-            <Icon />
-            {signal.label}
+          <Badge key={signal.kind} variant={SIGNAL_VARIANT[signal.tone]}>
+            <Icon size={12} />
+            <span className="text-xs font-light">{signal.label}</span>
           </Badge>
         );
       })}

@@ -83,7 +83,7 @@ export function ReportQueue({
   onClearFilters,
 }: ReportQueueProps) {
   return (
-    <section className="flex w-95 shrink-0 flex-col border-r">
+    <section className="flex h-full flex-col border-r">
       <div className="flex shrink-0 flex-col gap-2.5 border-b p-3.5">
         <div className="relative">
           <SearchIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2" />
@@ -202,24 +202,30 @@ export function ReportQueue({
               >
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary">
-                    <Icon />
-                    {TARGET_LABEL[report.alvoTipo].label}
+                    <Icon size={12} />
+                    <span className="text-xs font-light">
+                      {TARGET_LABEL[report.alvoTipo].label}
+                    </span>
                   </Badge>
 
                   <Badge
                     variant={
                       total >= HEAVY_REPORT_COUNT ? "destructive" : "outline"
                     }
-                    className="font-semibold tabular-nums"
+                    className="tabular-nums"
                   >
-                    <FlagIcon />
-                    {total === 1 ? "1 denúncia" : `${total} denúncias`}
+                    <FlagIcon size={12} />
+                    <span className="text-xs font-light">
+                      {total === 1 ? "1 denúncia" : `${total} denúncias`}
+                    </span>
                   </Badge>
 
                   {overdue ? (
                     <Badge variant="warning" className="ml-auto">
-                      <ClockIcon />
-                      {formatWaitingDays(report.diasAberto)}
+                      <ClockIcon size={12} />
+                      <span className="text-xs font-light">
+                        {formatWaitingDays(report.diasAberto)}
+                      </span>
                     </Badge>
                   ) : (
                     <span className="text-muted-foreground ml-auto text-xs whitespace-nowrap">

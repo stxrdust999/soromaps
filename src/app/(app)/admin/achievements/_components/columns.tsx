@@ -216,8 +216,8 @@ export function createAchievementColumns({
 
         return (
           <Badge variant="secondary">
-            <Icon />
-            {label}
+            <Icon size={12} />
+            <span className="text-xs font-light">{label}</span>
           </Badge>
         );
       },
@@ -283,8 +283,8 @@ export function createAchievementColumns({
       cell: ({ row }) =>
         row.original.obtencoes === 0 ? (
           <Badge variant="warning">
-            <TriangleAlertIcon />
-            Ninguém tirou
+            <TriangleAlertIcon size={12} />
+            <span className="text-xs font-light">Ninguém tirou</span>
           </Badge>
         ) : (
           <span className="tabular-nums">

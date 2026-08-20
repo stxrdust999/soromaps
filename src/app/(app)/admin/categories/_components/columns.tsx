@@ -118,8 +118,10 @@ export function createCategoryColumns({
                   <Tooltip>
                     <TooltipTrigger>
                       <Badge variant="warning">
-                        <TriangleAlertIcon />
-                        Cor parecida com {collision.nome}
+                        <TriangleAlertIcon size={12} />
+                        <span className="text-xs font-light">
+                          Cor parecida com {collision.nome}
+                        </span>
                       </Badge>
                     </TooltipTrigger>
 

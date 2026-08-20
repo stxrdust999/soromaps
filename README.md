@@ -97,19 +97,13 @@ E preencha a connection string do PostgreSQL em `appsettings.Development.json` n
 
 ## 📖 Documentação
 
-**Wiki** — [`/docs/wiki`](./docs/wiki/00-home.md): duas trilhas, o projetado no TCC e o implementado hoje, mais a página de gap entre elas. É o melhor ponto de partida.
+**Mapa** — [`/docs`](./docs/README.md): índice de todas as pastas de documentação, com "por onde começar" pra humano e pra agente de IA.
 
-**Docs de referência** em [`/docs`](./docs):
-
-| Doc | Conteúdo |
-|---|---|
-| [01 — Visão geral](./docs/01-visao-geral.md) | Contexto, dores, modelo de negócio e personas |
-| [02 — Requisitos e casos de uso](./docs/02-requisitos-casos-de-uso.md) | Requisitos de alto nível + diagrama de casos de uso |
-| [03 — Arquitetura](./docs/03-arquitetura.md) | Stack real, topologia de dois repos e fluxo de sequência |
-| [04 — Database](./docs/04-database.md) | Modelo projetado (10 tabelas) + estado implementado (2 tabelas) |
-| [05 — Protótipo](./docs/05-prototipo.md) | Protótipos Lovable/Figma e vídeos de apresentação |
+**Wiki** — [`/docs/wiki`](./docs/wiki/00-home.md): duas trilhas, o projetado no TCC e o implementado hoje, mais a página de gap entre elas. É o melhor ponto de partida técnico.
 
 Páginas da wiki mais consultadas: [Deploy e infraestrutura](./docs/wiki/14-deploy.md), [Ambiente e setup](./docs/wiki/13-ambiente-e-setup.md) e [Gap modelo × implementação](./docs/wiki/12-gap-modelo-vs-implementacao.md).
+
+**Decisões de implementação por módulo** em [`/docs/adr`](./docs/adr/README.md).
 
 **Roadmap de módulos** em [`/docs/todo`](./docs/todo/README.md) — o que ainda vai existir, por área (usuário, estabelecimento, admin).
 

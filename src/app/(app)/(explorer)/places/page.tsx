@@ -1,11 +1,13 @@
-import { MARKERS_LIST_TAG } from "@/constants/markers";
-import { getMarkers } from "@/http/markers/markers";
+import { redirect } from "next/navigation";
 
-import { PlacesExplorer } from "./_components/places-explorer";
-
-export default async function PlacesPage() {
-  const response = await getMarkers({ next: { tags: [MARKERS_LIST_TAG] } });
-  const markers = response.status === 200 ? response.data : [];
-
-  return <PlacesExplorer markers={markers} />;
+/**
+ * A vitrine de lugares virou `/discover` — as trilhas de descoberta pública e
+ * a descoberta pessoal eram a mesma tela com dois nomes.
+ *
+ * O redirect fica porque `/places` continua existindo como prefixo real
+ * (`/places/[id]`, `/places/new`): sem ele, a URL que o produto já publicou
+ * responderia 404.
+ */
+export default function PlacesPage() {
+  redirect("/discover");
 }

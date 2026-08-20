@@ -33,7 +33,8 @@ flowchart TD
 
     APP --> EXP["(explorer)"]
     EXP --> HOME["/home<br/>mapa + feed"]
-    EXP --> PLACES["/places"]
+    EXP --> DISC["/discover<br/>trilhas de lugares"]
+    EXP --> PLACES["/places/[id]<br/>detalhe do ponto"]
     PLACES --> NEW["/places/new<br/>criar ponto"]
     EXP --> PROF["/profile"]
 ```

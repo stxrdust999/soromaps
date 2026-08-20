@@ -8,15 +8,42 @@ import { cn } from "@/lib/utils";
 import { getMarkerDetailsMock } from "@/mocks/markers";
 import type { MarkerResource } from "@/types/marker";
 
+/**
+ * Três formas, três trabalhos — e nenhuma outra.
+ *
+ * `sm` é o cartão de trilha, onde cabe pouco; `md` é o padrão, com bairro e
+ * avaliações; `featured` ocupa a coluna inteira de um grid, com foto larga,
+ * para a seção que a página quer que seja lida primeiro. Tamanho aqui é
+ * hierarquia — se um card novo não muda o peso da seção, ele é `md`.
+ */
+type PlaceCardSize = "sm" | "md" | "featured";
+
 interface PlaceCardProps {
   marker: MarkerResource;
-  /** `sm` mostra só categoria e distância; `md` abre bairro e avaliações. */
-  size?: "sm" | "md";
+  size?: PlaceCardSize;
   showTags?: boolean;
   /** Selo sobreposto à foto, no canto superior esquerdo — ex.: "Em alta". */
   badge?: React.ReactNode;
   className?: string;
 }
+
+const FRAME: Record<PlaceCardSize, string> = {
+  sm: "w-44 flex-none",
+  md: "w-60 flex-none",
+  featured: "w-full",
+};
+
+const PHOTO: Record<PlaceCardSize, string> = {
+  sm: "h-28",
+  md: "h-40",
+  featured: "h-52",
+};
+
+const SIZES: Record<PlaceCardSize, string> = {
+  sm: "176px",
+  md: "240px",
+  featured: "(min-width: 1024px) 360px, 100vw",
+};
 
 /**
  * Card de local das trilhas de descoberta. Identifica e leva ao detalhe: o que
@@ -31,25 +58,30 @@ export function PlaceCard({
 }: PlaceCardProps) {
   const details = getMarkerDetailsMock(marker.id);
   const isSmall = size === "sm";
+  const isFeatured = size === "featured";
 
   return (
     <Link
       href={`/places/${marker.id}`}
       className={cn(
-        "card-interactive flex flex-none flex-col overflow-hidden rounded-2xl border border-border bg-card",
-        isSmall ? "w-44" : "w-60",
+        "card-interactive group flex flex-col overflow-hidden rounded-2xl border border-border bg-card",
+        FRAME[size],
         className,
       )}
     >
       <div
-        className={cn("relative w-full bg-muted", isSmall ? "h-28" : "h-40")}
+        className={cn("relative w-full overflow-hidden bg-muted", PHOTO[size])}
       >
         <Image
           src={details.fotoUrl}
           alt={`Foto de ${marker.nome}`}
           fill
-          sizes={isSmall ? "176px" : "240px"}
-          className="object-cover"
+          sizes={SIZES[size]}
+          className={cn(
+            "object-cover",
+            isFeatured &&
+              "transition-transform duration-500 group-hover:scale-105",
+          )}
         />
 
         {badge && <div className="absolute top-2 left-2">{badge}</div>}
@@ -61,13 +93,26 @@ export function PlaceCard({
       </div>
 
       <div className="flex flex-col gap-1 p-3">
-        <span className="truncate font-semibold text-sm">{marker.nome}</span>
+        <span
+          className={cn(
+            "truncate font-semibold",
+            isFeatured ? "text-base" : "text-sm",
+          )}
+        >
+          {marker.nome}
+        </span>
 
         <span className="truncate text-muted-foreground text-xs">
           {isSmall
             ? `${details.categoria} · ${details.distancia}km`
             : `${details.categoria} · ${details.bairro}`}
         </span>
+
+        {isFeatured && (
+          <p className="mt-1 line-clamp-2 text-pretty text-muted-foreground text-xs leading-relaxed">
+            {details.sobre}
+          </p>
+        )}
 
         {showTags && details.tags.length > 0 && (
           <div className="mt-1 flex flex-wrap gap-1">

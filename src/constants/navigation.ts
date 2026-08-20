@@ -6,13 +6,9 @@ import {
   Heart,
   LayoutList,
   MapIcon,
-  MapPin,
   MapPinned,
   MessageSquare,
-  MessagesSquare,
-  Search,
   Shield,
-  Store,
   Tags,
   Trophy,
   UserRound,
@@ -36,9 +32,8 @@ export const NAV_GROUP_GENERAL: NavGroup = {
   label: "Navegação",
   items: [
     { label: "Mapa Interativo", url: "/home", icon: MapIcon },
-    { label: "Explorar Lugares", url: "/places", icon: Search },
-    { label: "Feed", url: "/feed", icon: LayoutList },
     { label: "Descobrir", url: "/discover", icon: Compass },
+    { label: "Feed", url: "/feed", icon: LayoutList },
     { label: "Comunidade", url: "/community", icon: UsersRound },
   ],
 };
@@ -55,22 +50,6 @@ export const NAV_GROUP_EXPLORER: NavGroup = {
   ],
 };
 
-/** Rotas do dono de estabelecimento — o ponto dele e o que gira em torno dele. */
-export const NAV_GROUP_BUSINESS: NavGroup = {
-  label: "Gerenciamento",
-  items: [
-    { label: "Meu Ponto", url: "/business/place", icon: MapPin },
-    { label: "Dashboard", url: "/business/dashboard", icon: ChartNoAxesColumn },
-    { label: "Visitas", url: "/business/visits", icon: MapPinned },
-    { label: "Moderação", url: "/business/moderation", icon: Shield },
-    {
-      label: "Responder Avaliações",
-      url: "/business/reviews",
-      icon: MessagesSquare,
-    },
-  ],
-};
-
 /**
  * Rotas de administração da plataforma. As cinco primeiras são o topo do menu
  * no Figma; as três seguintes são os CRUDs que ficam atrás do "More".
@@ -84,7 +63,6 @@ export const NAV_GROUP_ADMIN: NavGroup = {
     { label: "Categorias", url: "/admin/categories", icon: Tags },
     { label: "Conquistas", url: "/admin/achievements", icon: Award },
     { label: "Usuários", url: "/admin/users", icon: Users },
-    { label: "Comércios", url: "/admin/businesses", icon: Store },
     { label: "Avaliações", url: "/admin/reviews", icon: MessageSquare },
   ],
 };
@@ -96,6 +74,5 @@ export const NAV_GROUP_ADMIN: NavGroup = {
 export const SIDEBAR_NAV: NavGroup[] = [
   NAV_GROUP_GENERAL,
   NAV_GROUP_EXPLORER,
-  NAV_GROUP_BUSINESS,
   NAV_GROUP_ADMIN,
 ];

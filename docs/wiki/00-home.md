@@ -63,10 +63,12 @@ O que existe rodando hoje, extraído do código dos dois repositórios.
 
 ## 📎 Fora da wiki
 
-| Onde                                    | O quê                                                                                    |
-| --------------------------------------- | ---------------------------------------------------------------------------------------- |
-| [`/docs`](../)                          | Docs numerados de referência (visão geral, requisitos, arquitetura, database, protótipo) |
-| [`/docs/todo`](../todo/README.md)       | Módulos de produto pendentes por área (usuário, estabelecimento, admin)                  |
-| [`/docs/archive`](../archive/README.md) | Exports originais dos diagramas e material histórico                                     |
-| [`/CLAUDE.md`](../../CLAUDE.md)         | Registro vivo: decisões arquiteturais com data e estado atual do roadmap                 |
-| [`/README.md`](../../README.md)         | Porta de entrada pública do repositório                                                  |
+| Onde                                     | O quê                                                                     |
+| ----------------------------------------- | -------------------------------------------------------------------------- |
+| [`/docs`](../README.md)                   | Mapa central — índice de todas as pastas de documentação                 |
+| [`/docs/adr`](../adr/README.md)           | Decisões de implementação já tomadas, por módulo                         |
+| [`/docs/todo`](../todo/README.md)         | Módulos de produto pendentes por área (usuário, estabelecimento, admin)  |
+| [`/docs/propostas`](../propostas/README.md) | Spec técnico aguardando implementação                                  |
+| [`/docs/archive`](../archive/README.md)   | Exports originais dos diagramas e material histórico                     |
+| [`/CLAUDE.md`](../../CLAUDE.md)           | Registro vivo: decisões arquiteturais com data e estado atual do roadmap |
+| [`/README.md`](../../README.md)           | Porta de entrada pública do repositório                                  |
