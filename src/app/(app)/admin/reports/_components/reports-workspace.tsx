@@ -150,7 +150,10 @@ export function ReportsWorkspace() {
       />
 
       {isReports ? (
-        <ResizablePanelGroup orientation="horizontal" className="min-h-0 flex-1 border-t">
+        <ResizablePanelGroup
+          orientation="horizontal"
+          className="min-h-0 flex-1 border-t"
+        >
           <ResizablePanel defaultSize="26%" minSize="300px" maxSize="40%">
             <ReportQueue
               reports={visible}

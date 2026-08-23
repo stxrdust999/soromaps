@@ -1,8 +1,7 @@
+import { SiGithub, SiInstagram, SiX } from "@icons-pack/react-simple-icons";
 import { CircleIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-import { SiGithub, SiInstagram, SiX } from "@icons-pack/react-simple-icons";
 
 import { Separator } from "@/components/ui/separator";
 
