@@ -83,6 +83,7 @@ const Slide = ({
 
   return (
     <div className="[perspective:1200px] [transform-style:preserve-3d]">
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: onClick aqui é atalho de mouse pra pular pro slide vizinho — a navegação por teclado já existe via o Link/button focável dentro do slide ativo (linhas abaixo); tornar cada <li> (x3 com o loop) focável adicionaria tab-stops indesejados. */}
       <li
         ref={slideRef}
         className="flex flex-1 flex-col items-center justify-center relative text-center text-white opacity-100 transition-all duration-300 ease-in-out z-10 "
@@ -110,6 +111,7 @@ const Slide = ({
                 : "none",
           }}
         >
+          {/* biome-ignore lint/performance/noImgElement: crossfade depende do onLoad nativo de <img> mutando style diretamente, e slide.src aceita URL arbitrária não coberta por remotePatterns do next/image. */}
           <img
             className="absolute inset-0 w-[120%] h-[120%] object-cover opacity-100 transition-opacity duration-600 ease-in-out"
             style={{

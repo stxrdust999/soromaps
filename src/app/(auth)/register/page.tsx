@@ -1,14 +1,14 @@
 "use client";
 
-import { PasswordInput } from "@/components/blocks/password-input";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 import { registerAction } from "@/actions/auth";
+import { PasswordInput } from "@/components/blocks/password-input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { responseToast } from "@/lib/toaster";
-import { useRouter } from "next/navigation";
 
 /**
  * Página de login
@@ -55,7 +55,7 @@ export default function RegisterPage() {
 
         router.push("/login");
         router.refresh();
-      } catch (error) {
+      } catch (_error) {
         responseToast.error({
           title: "Erro ao criar usuário",
           description: "Ocorreu um problema ao tentar salvar os dados.",

@@ -70,7 +70,7 @@ flowchart LR
 **Decisão:** Administrador herda todos os casos do Usuário e acrescenta só moderação e estatísticas globais.
 **Motivo:** evita duplicar caso de uso no diagrama — a diferença real entre os papéis é conjunto de permissões, não fluxo distinto.
 
-**Estado no código:** existe uma área `/admin` no front (listagem de usuários com criar/editar/excluir, mais telas de negócios e avaliações), mas **não há papel/role em lugar nenhum** — nem coluna no banco, nem checagem no `middleware.ts`, nem autorização na API. Na prática, qualquer sessão válida acessa `/admin`. Ver [10 — Autenticação e sessão](./10-autenticacao-e-sessao.md).
+**Estado no código:** existe uma área `/admin` no front (listagem de usuários com criar/editar/excluir, mais telas de negócios e avaliações), mas **não há papel/role em lugar nenhum** — nem coluna no banco, nem checagem no `middleware.ts`, nem autorização na API. Na prática, qualquer sessão válida acessa `/admin`. Ver [10 — Autenticação e sessão](../../wiki/05-autenticacao-e-sessao.md).
 
 ---
 

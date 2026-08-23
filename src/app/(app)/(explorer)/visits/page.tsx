@@ -1,10 +1,11 @@
-export default function Page() {
-  return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">Visitas</h1>
-      <p className="text-muted-foreground text-sm">
-        Histórico dos lugares por onde você passou, com data de cada visita.
-      </p>
-    </div>
-  );
+import { redirect } from "next/navigation";
+
+/**
+ * Virou aba de `/profile` em 2026-08-19.
+ *
+ * A rota sobrevive só para a URL já divulgada não dar 404 — mesmo arranjo de
+ * `/places`, que virou `/discover` em 2026-08-17.
+ */
+export default function VisitsPage() {
+  redirect("/profile/visits");
 }

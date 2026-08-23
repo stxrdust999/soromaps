@@ -1,4 +1,4 @@
-> 📐 **Trilha: projetado (TCC).** Os três diagramas de modelagem, convertidos dos exports originais para Mermaid. O banco real hoje tem duas tabelas — ver [08 — Banco atual](./08-banco-atual.md).
+> 📐 **Trilha: projetado (TCC).** Os três diagramas de modelagem, convertidos dos exports originais para Mermaid. O banco real hoje tem duas tabelas — ver [08 — Banco atual](../../wiki/03-banco.md).
 
 # 🗄️ 05. Modelagem projetada
 
@@ -6,9 +6,9 @@ A modelagem foi feita em três níveis, do mais abstrato ao mais concreto:
 
 | Nível | Artefato | O que acrescenta | Export original |
 |---|---|---|---|
-| Conceitual OO | Diagrama de classes | Herança, agregação, visão de produto | [`diagrama-conceitual.png`](../archive/diagramas-originais/diagrama-conceitual.png) |
-| Conceitual ER | DER | Atributos e cardinalidades `(min, max)` | [`Diagrama_Entidade-Relacionamento.png`](../archive/diagramas-originais/Diagrama_Entidade-Relacionamento.png) |
-| Lógico | Tabelas | Tipos, PK, FK, tabelas associativas | [`Modelo-Logico.png`](../archive/diagramas-originais/Modelo-Logico.png) |
+| Conceitual OO | Diagrama de classes | Herança, agregação, visão de produto | [`diagrama-conceitual.png`](../diagramas-originais/diagrama-conceitual.png) |
+| Conceitual ER | DER | Atributos e cardinalidades `(min, max)` | [`Diagrama_Entidade-Relacionamento.png`](../diagramas-originais/Diagrama_Entidade-Relacionamento.png) |
+| Lógico | Tabelas | Tipos, PK, FK, tabelas associativas | [`Modelo-Logico.png`](../diagramas-originais/Modelo-Logico.png) |
 
 ---
 

@@ -1,4 +1,4 @@
-> 📐 **Trilha: projetado (TCC).** Status de implementação de cada requisito está na coluna própria — detalhe em [12 — Gap](./12-gap-modelo-vs-implementacao.md).
+> 📐 **Trilha: projetado (TCC).** Status de implementação de cada requisito está na coluna própria — detalhe em [12 — Gap](../../wiki/09-backlog.md).
 
 # 📋 02. Requisitos
 
@@ -28,11 +28,11 @@ Treze requisitos funcionais de alto nível definidos na fase de levantamento. A 
 
 | ID | Evidência no código |
 |---|---|
-| RF-01 | `POST /api/users` (`UsersController.Create`) + tela [`(auth)/register`](../../src/app/(auth)/register/page.tsx); perfil ainda é placeholder |
+| RF-01 | `POST /api/users` (`UsersController.Create`) + tela [`(auth)/register`](../../../src/app/(auth)/register/page.tsx); perfil ainda é placeholder |
 | RF-02 | `PUT /api/users/{id}` existe; a tela de perfil ainda não edita |
-| RF-03 | [`src/components/ui/map.tsx`](../../src/components/ui/map.tsx) — MapLibre GL com basemaps CARTO |
+| RF-03 | [`src/components/ui/map.tsx`](../../../src/components/ui/map.tsx) — MapLibre GL com basemaps CARTO |
 | RF-04 | Controle `showLocate` do mapa usa a geolocalização do browser; não há persistência de posição |
-| RF-05 | [`(app)/places/new`](../../src/app/(app)/(explorer)/places/new/page.tsx) → `POST /api/markers` |
+| RF-05 | [`(app)/places/new`](../../../src/app/(app)/(explorer)/places/new/page.tsx) → `POST /api/markers` |
 | RF-06 | Edição e exclusão do ponto pelo popup do marcador (`PUT`/`DELETE /api/markers/{id}`) |
 
 Detalhe importante para RF-01/RF-02: o cadastro grava `user_name`, `user_email` e hash da senha — **não existem CPF, CNPJ nem `tipoUsuario`**, então a distinção entre usuário comum e estabelecimento, central no modelo, ainda não existe no sistema.

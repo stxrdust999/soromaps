@@ -41,14 +41,24 @@ export const NAV_GROUP_GENERAL: NavGroup = {
 /** Rotas pessoais do explorador — perfil, histórico e gamificação. */
 export const NAV_GROUP_EXPLORER: NavGroup = {
   label: "Eu",
-  items: [
-    { label: "Perfil", url: "/profile", icon: UserRound },
-    { label: "Visitas", url: "/visits", icon: MapPinned },
-    { label: "Minhas Estatísticas", url: "/stats", icon: ChartNoAxesColumn },
-    { label: "Favoritos", url: "/favorites", icon: Heart },
-    { label: "Conquistas", url: "/achievements", icon: Trophy },
-  ],
+  items: [{ label: "Perfil", url: "/profile", icon: UserRound }],
 };
+
+/**
+ * Abas de `/profile`.
+ *
+ * Eram cinco itens deste grupo até 2026-08-19: histórico, coleção, galeria e
+ * placar respondem à mesma pergunta ("o que eu já fiz?") com recortes
+ * diferentes, e recorte é aba, não rota. A ordem é a da leitura — o que
+ * aconteceu, o que foi guardado, o que rendeu, o quanto somou.
+ */
+export const PROFILE_TABS: NavItem[] = [
+  { label: "Visão geral", url: "/profile", icon: UserRound },
+  { label: "Visitas", url: "/profile/visits", icon: MapPinned },
+  { label: "Favoritos", url: "/profile/favorites", icon: Heart },
+  { label: "Conquistas", url: "/profile/achievements", icon: Trophy },
+  { label: "Estatísticas", url: "/profile/stats", icon: ChartNoAxesColumn },
+];
 
 /**
  * Rotas de administração da plataforma. As cinco primeiras são o topo do menu

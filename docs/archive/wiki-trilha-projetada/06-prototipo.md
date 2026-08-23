@@ -52,13 +52,13 @@ flowchart LR
 
 | Elemento do protótipo | No app hoje |
 |---|---|
-| Mapa em tela cheia como tela principal | ✅ [`/home`](../../src/app/(app)/(explorer)/home/page.tsx) |
+| Mapa em tela cheia como tela principal | ✅ [`/home`](../../../src/app/(app)/(explorer)/home/page.tsx) |
 | Painel deslizante sobre o mapa | ✅ Drawer com snap points (`vaul`) |
 | Feed de tendências e novidades | 🟡 Componentes existem, dados ainda mockados |
 | Perfil do usuário | 🟡 Rota existe, conteúdo mínimo |
 | Avaliação com estrelas | ❌ Não implementado |
 
-O vídeo mostra o mapa com a API do Mapbox; a implementação trocou por MapLibre + basemaps CARTO — motivo em [07 — Arquitetura atual](./07-arquitetura-atual.md).
+O vídeo mostra o mapa com a API do Mapbox; a implementação trocou por MapLibre + basemaps CARTO — motivo em [07 — Arquitetura atual](../../wiki/02-arquitetura.md).
 
 ---
 
@@ -72,4 +72,4 @@ O vídeo mostra o mapa com a API do Mapbox; a implementação trocou por MapLibr
 
 ## ➡️ Próxima página
 
-[07 — Arquitetura atual](./07-arquitetura-atual.md) — início da trilha do que existe implementado.
+[07 — Arquitetura atual](../../wiki/02-arquitetura.md) — início da trilha do que existe implementado.

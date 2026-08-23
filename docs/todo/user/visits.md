@@ -1,6 +1,6 @@
 # 📍 Minhas visitas
 
-> Área: usuário público · Rota: `/visits` · Status: 💤 não iniciado
+> Área: usuário público · Rota: `/profile/visits` (aba de [Perfil](./profile.md)) · Status: 🟡 tela pronta sobre `src/mocks/profile.ts` — falta `Visita`
 
 ## Ideia
 
@@ -32,3 +32,6 @@ Visita é **evento repetível** (decisão do TCC: `data` na PK de `Visita`) — 
 
 - Check-in retroativo/manual (abre porta pra fraude — decidir depois)
 - Streak de dias consecutivos
+
+> A rota antiga redireciona para a aba desde 2026-08-19. Decisões de
+> implementação em [adr/user/0004-perfil-hub-com-abas.md](../../adr/user/0004-perfil-hub-com-abas.md)

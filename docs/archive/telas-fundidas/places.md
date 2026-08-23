@@ -43,10 +43,10 @@ O recorte por vibe é a parte que não existe em app de review comum: categoria 
 
 ## Fora do escopo
 
-- Recomendação personalizada — é o [Descobrir](./explore.md)
-- Listagem administrativa de pontos, com aprovação — é [Moderação](../admin/moderation.md)
+- Recomendação personalizada — é o [Descobrir](../../todo/user/explore.md)
+- Listagem administrativa de pontos, com aprovação — é [Moderação](../../todo/admin/moderation.md)
 
 ## Fronteira com as telas vizinhas
 
 - **Home (`/home`)**: o painel sobre o mapa mostra um recorte — "Perto de você" e uma prévia de "Em alta" com link para cá. Proximidade só faz sentido colada ao mapa.
-- **[Descobrir](./explore.md) (`/discover`)**: aqui o critério é público e igual para todos; lá é pessoal, derivado do que o usuário visitou.
+- **[Descobrir](../../todo/user/explore.md) (`/discover`)**: aqui o critério é público e igual para todos; lá é pessoal, derivado do que o usuário visitou.

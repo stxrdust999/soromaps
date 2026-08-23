@@ -6,7 +6,7 @@
 
 A visão administrativa de todas as avaliações da plataforma, em listagem única com busca por local ou autor, filtro por nota e ordenação por data. O admin lê, e remove o que viola as regras — com o motivo registrado.
 
-É a única tela que enxerga avaliação **fora** do contexto do local. As outras duas veem um recorte: o estabelecimento vê só as do próprio ponto ([Responder avaliações](../business/reviews.md)), e a [Moderação](./moderation.md) vê só as que alguém denunciou.
+É a única tela que enxerga avaliação **fora** do contexto do local. A [Moderação](./moderation.md) vê só as que alguém denunciou. (A terceira visão — o dono vendo as do próprio ponto — foi cancelada em 19/08/2026 com o [gerenciamento por dono](../../archive/gerenciamento-por-dono/).)
 
 ## Por que vale
 

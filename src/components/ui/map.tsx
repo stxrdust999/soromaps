@@ -1,10 +1,12 @@
 "use client";
 
-import MapLibreGL, { type PopupOptions, type MarkerOptions } from "maplibre-gl";
+import MapLibreGL, { type MarkerOptions, type PopupOptions } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { Loader2, Locate, Maximize, Minus, Plus, X } from "lucide-react";
 import {
   createContext,
   forwardRef,
+  type ReactNode,
   useCallback,
   useContext,
   useEffect,
@@ -13,10 +15,8 @@ import {
   useMemo,
   useRef,
   useState,
-  type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
-import { X, Minus, Plus, Locate, Maximize, Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -166,6 +166,7 @@ function getViewport(map: MapLibreGL.Map): MapViewport {
   };
 }
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: nome público do componente, consumido em todo o app (`import { Map } from "@/components/ui/map"`) — renomear é mudança de API, não limpeza de lint.
 const Map = forwardRef<MapRef, MapProps>(function Map(
   {
     children,
@@ -923,6 +924,7 @@ function CompassButton({ onClick }: { onClick: () => void }) {
         viewBox="0 0 24 24"
         className="size-5 transition-transform duration-200"
         style={{ transformStyle: "preserve-3d" }}
+        aria-hidden="true"
       >
         <path d="M12 2L16 12H12V2Z" className="fill-red-500" />
         <path d="M12 2L8 12H12V2Z" className="fill-red-300" />

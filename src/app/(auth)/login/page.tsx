@@ -1,14 +1,14 @@
 "use client";
 
-import { PasswordInput } from "@/components/blocks/password-input";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 import { loginAction } from "@/actions/auth";
+import { PasswordInput } from "@/components/blocks/password-input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { responseToast } from "@/lib/toaster";
-import { useRouter } from "next/navigation";
 
 /**
  * Página de login
@@ -53,7 +53,7 @@ export default function LoginPage() {
 
         router.push("/home");
         router.refresh();
-      } catch (error) {
+      } catch (_error) {
         responseToast.error({
           title: "Erro ao entrar na conta",
           description: "Ocorreu um problema de conexão com o servidor.",
