@@ -35,7 +35,7 @@ estabelecimentos menores.
 
 Stack projetada no TCC (Node.js + Express + TypeScript, SQL Server, Mapbox,
 AWS) está preservada em `/docs` e comparada em
-`docs/wiki/12-gap-modelo-vs-implementacao.md`.
+`docs/archive/wiki-trilha-projetada/`.
 
 ---
 
@@ -121,13 +121,15 @@ o idioma da comunidade Next.js para componente exclusivo de uma rota. Regra
 prática adotada: usado por uma rota só → `_components/` da rota; usado por duas
 ou mais → `src/components/`.
 
-### 2026-07-28 — Documentação em duas trilhas
+### 2026-07-28 — Documentação em duas trilhas ~~vigente~~ (revertida em 2026-08-20)
 **Decisão:** `/docs/wiki` separa o que foi **projetado no TCC** do que está
 **implementado**, com uma página de gap ligando os dois.
 **Motivo:** a stack e o modelo divergiram bastante da entrega acadêmica.
 Sobrescrever a modelagem original destruiria o entregável do TCC; deixar só ela
 faria a documentação mentir sobre o sistema. Manter as duas com a diferença
 explícita resolve os dois lados.
+**Superada:** a trilha projetada foi arquivada em 2026-08-20 — ver a decisão
+daquela data, no fim desta seção.
 
 ### 2026-07-29 — Padrão interno de telas de listagem adotado em `/admin/users`
 **Decisão:** adotar o padrão de telas do time (documentado em
@@ -208,7 +210,7 @@ marcadores em produção.** Login, cadastro e o CRUD de usuários seguem
 funcionando, porque passam pelo servidor.
 **Correção definida:** rota `/api/proxy/[...path]` no Next repassando
 server-side — resolve o 404, dispensa o CORS e mantém a URL fora do bundle.
-É o item 1 do backlog. Detalhes em `docs/wiki/14-deploy.md`.
+É o item 1 do backlog. Detalhes em `docs/wiki/08-deploy.md`.
 
 ### 2026-07-29 — Vulnerabilidades de pacote: 15 → 0
 **Decisão:** remover as cinco dependências sem nenhum import em `src/`
@@ -424,7 +426,7 @@ ganho não existe aqui — só o risco.
 **Armadilha registrada:** errar o `Username` ou o prefixo `aws-0-`/`aws-1-`
 devolve `XX000: (ENOTFOUND) tenant/user ... not found`, e não um erro de senha.
 O prefixo varia por projeto; copiar do painel em **Connect → Session pooler**.
-Detalhe em `docs/wiki/14-deploy.md`, cuja nota anterior recomendava justamente
+Detalhe em `docs/wiki/08-deploy.md`, cuja nota anterior recomendava justamente
 a conexão direta e foi reescrita.
 
 ### 2026-08-17 — Feed sem grafo social: `Segue` sai do produto
@@ -608,6 +610,42 @@ popover da sidebar seguem sem destino); remover favorito (nasce com a tabela,
 como `toggleFavoriteAction`); e o mini-mapa da mancha explorada. Detalhe em
 `docs/adr/user/0004-perfil-hub-com-abas.md`.
 
+### 2026-08-20 — Wiki fica só com o sistema atual; a trilha projetada vai para o archive
+**Decisão:** as seis páginas da trilha "projetado (TCC)" — visão geral,
+requisitos RF-01..13, casos de uso, arquitetura Node/SQL Server/Mapbox,
+modelagem de 10 tabelas e protótipo — saíram de `/docs/wiki` para
+`docs/archive/wiki-trilha-projetada/`, com um README explicando por que saíram e
+o que ocupou o lugar de cada uma. A wiki foi renumerada `00`–`09`, a página de
+gap virou `09-backlog.md` (backlog puro, sem a comparação com o TCC) e nasceu
+uma `01-visao-geral.md` descrevendo o **produto de hoje**, com uma seção do que
+foi cortado do escopo. Reverte a decisão de 2026-07-28.
+**Motivo:** a razão original — "sobrescrever a modelagem destruiria o entregável
+do TCC" — continua válida, mas *arquivar* já a preserva; o que a trilha paralela
+custava era outra coisa. Ela fazia a documentação afirmar duas coisas
+incompatíveis sobre o mesmo sistema, e quem chegava tinha que descobrir sozinho
+qual das duas valia. Pior: a especificação antiga descreve coisas que o produto
+**decidiu não fazer** — `Segue` e o feed de grafo, o dono de estabelecimento
+gerenciando o próprio ponto, `pontuacao`/`nivel` —, e essas decisões já estão
+registradas aqui e em `/docs/adr` com data e motivo. Manter a página de gap
+comparando produto atual com uma especificação abandonada media distância até um
+alvo que ninguém persegue mais.
+**O que veio junto:**
+- **A página que resta sobre estado é backlog, não gap.** `09-backlog.md` mede
+  distância até o que **se pretende construir** (dívida, segurança, tabelas que
+  faltam), não até o papel de 2026-07. A régua mudou de referencial.
+- **Defasagem corrigida de passagem**, porque a limpeza obrigou a reler tudo:
+  markers descritos como `fetch` cru no cliente com edição no popup (migrou em
+  03/08), `/business` e `/admin/businesses` no mapa de rotas (cancelados em
+  19/08), `src/mocks` listada como "vazia, aguardando uso real" (onze arquivos),
+  dependências órfãs já removidas em 29/07, viewport do mapa como state React
+  (deixou de ser em 02/08) e — a mais perigosa — a tabela de problemas do setup
+  mandando usar a **conexão direta** do Supabase, exatamente o oposto da decisão
+  de 16/08.
+- **`docs/diagramas/` continua fora do controle de versão**, por decisão do
+  time, então a wiki **não linka para lá**. Consequência aceita: requisitos,
+  casos de uso e o modelo de 20 tabelas — a documentação mais atual que existe —
+  seguem sem par versionado, e quem clona o repo não os recebe.
+
 ### 2026-07-28 — Mermaid como fonte de verdade dos diagramas
 **Decisão:** todo diagrama vive em Mermaid dentro do Markdown; os PNGs
 exportados foram para `/docs/archive/diagramas-originais/`.
@@ -679,7 +717,7 @@ geolocalização tem persistência.
 - [x] Protótipo interativo (Lovable + Figma)
 - [x] Vídeos de apresentação (protótipo + final)
 - [x] Documentação `/docs` no padrão docs-stardust
-- [x] Wiki em `/docs/wiki` (14 páginas, duas trilhas + gap)
+- [x] Wiki em `/docs/wiki` (10 páginas, só o sistema atual); trilha projetada do TCC arquivada em `docs/archive/wiki-trilha-projetada/` em 2026-08-20
 - [x] Diagramas convertidos para Mermaid; originais em `/docs/archive`
 
 ### Feito — código
@@ -709,7 +747,7 @@ geolocalização tem persistência.
 - [x] Perfil do explorador (`/profile`): hub de cinco abas em segmento de rota — visão geral com a régua do selo, timeline de visitas por mês, lugares salvos, galeria de conquistas com progresso e placar com cobertura da cidade. Identidade vem da sessão real, o resto é `src/mocks/profile.ts`; `/visits`, `/favorites`, `/stats` e `/achievements` viraram `redirect()`
 
 ### 🔥 Próximo passo — quebrado em produção
-- [ ] Rota `/api/proxy/[...path]` + migrar as chamadas de markers — hoje o mapa **não carrega marcadores em produção** (sem `NEXT_PUBLIC_API_URL` o fetch vira caminho relativo e dá 404; e o CORS só conhece localhost). Ver `docs/wiki/14-deploy.md`
+- [ ] Rota `/api/proxy/[...path]` + migrar as chamadas de markers — hoje o mapa **não carrega marcadores em produção** (sem `NEXT_PUBLIC_API_URL` o fetch vira caminho relativo e dá 404; e o CORS só conhece localhost). Ver `docs/wiki/08-deploy.md`
 
 ### 🔴 Próximos passos — segurança (a API já está publicada na internet)
 - [ ] Registrar autenticação na API (`AddAuthentication` + `[Authorize]`) — hoje **todo endpoint é público**
