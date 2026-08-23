@@ -13,6 +13,7 @@ import { publishedStoriesMock } from "@/mocks/stories";
 
 import { ContributionRanking } from "./contribution-ranking";
 import { ExplorerCard } from "./explorer-card";
+import { RecentAchievements } from "./recent-achievements";
 import { StoryGeneratorDialog } from "./story-generator-dialog";
 import { StoryShowcase } from "./story-showcase";
 import { VerificationCard } from "./verification-card";
@@ -71,6 +72,8 @@ export function CommunityWorkspace() {
       >
         <div className={`${CONTENT_WIDTH} flex-col gap-8`}>
           <StoryShowcase stories={publishedStoriesMock} />
+
+          <RecentAchievements />
 
           <div className="flex gap-6">
             <div className="flex min-w-0 flex-1 flex-col gap-4">
