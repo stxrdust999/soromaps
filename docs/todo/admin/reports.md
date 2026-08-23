@@ -54,4 +54,4 @@ Complementa a [Moderação](./moderation.md): lá é o filtro **preventivo** (co
 
 - **[Moderação](./moderation.md)**: julga ponto novo antes de publicar; aqui só entra o que já está público.
 - **[Avaliações](./reviews.md)**: mesma ação de remover avaliação, entrada diferente — lá o admin varre por conta própria, aqui ele reage a report. **A remoção precisa ser uma server action só**, consumida pelas duas telas, senão as regras divergem.
-- **[Moderação do estabelecimento](../business/moderation.md)**: o dono modera comentário nas próprias respostas; nada do que ele faz passa por esta fila.
+- ~~**Moderação do estabelecimento**~~: o dono moderaria comentário nas próprias respostas. Cancelado em 19/08/2026 — ver [`archive/gerenciamento-por-dono/`](../../archive/gerenciamento-por-dono/).

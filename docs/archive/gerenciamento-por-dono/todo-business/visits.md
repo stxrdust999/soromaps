@@ -4,7 +4,7 @@
 
 ## Ideia
 
-Espelho de [Minhas visitas](../user/visits.md), visto do lado do dono: lista de quem passou pelo ponto, quando, e se avaliou na ocasião. Agrupado por semana, com um resumo no topo ("32 visitas · 8 avaliações · pico às sextas").
+Espelho de [Minhas visitas](../../../todo/user/visits.md), visto do lado do dono: lista de quem passou pelo ponto, quando, e se avaliou na ocasião. Agrupado por semana, com um resumo no topo ("32 visitas · 8 avaliações · pico às sextas").
 
 Não é timeline pessoal — é tráfego. A pergunta que responde é "meu ponto está sendo procurado?", não "o que esse usuário fez". Reusa a mesma tabela `Visita` do lado do explorador; a diferença é o filtro (`PontoID = meu ponto`) e a agregação.
 
@@ -18,7 +18,7 @@ Não é timeline pessoal — é tráfego. A pergunta que responde é "meu ponto 
 
 | O quê | Situação |
 |---|---|
-| Tabela `Visita` (mesma de [user/visits](../user/visits.md)) | ❌ não existe — já modelada no TCC |
+| Tabela `Visita` (mesma de [user/visits](../../../todo/user/visits.md)) | ❌ não existe — já modelada no TCC |
 | `tipoUsuario` + FK `UsuarioDono` em `markers` (qual ponto é meu) | ❌ |
 | [Painel do negócio](./dashboard.md) (navegação-mãe) | 💤 |
 | Autenticação na API | 🔴 pré-requisito |
