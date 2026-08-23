@@ -44,7 +44,7 @@
 | Mobile | Expo (React Native) — não iniciado |
 | Nuvem | Vercel (front) + Azure App Service (API) + Supabase (banco) |
 
-> A stack originalmente projetada no TCC (Node.js + Express, SQL Server, Mapbox, AWS) está registrada em [`/docs`](./docs) e comparada com a atual em [Gap modelo × implementação](./docs/wiki/12-gap-modelo-vs-implementacao.md).
+> A stack originalmente projetada no TCC (Node.js + Express, SQL Server, Mapbox, AWS) está arquivada em [`/docs/archive/wiki-trilha-projetada`](./docs/archive/wiki-trilha-projetada/README.md); o motivo de cada troca está no [`/CLAUDE.md`](./CLAUDE.md).
 
 ---
 
@@ -77,7 +77,7 @@ SESSION_SECRET=uma-string-longa-e-aleatoria
 
 E preencha a connection string do PostgreSQL em `appsettings.Development.json` no repo da API.
 
-> ⚠️ O projeto **não tem migrations** — as tabelas precisam ser criadas à mão na primeira vez. O DDL pronto, a explicação de cada variável de ambiente e os problemas comuns estão em **[Ambiente e setup](./docs/wiki/13-ambiente-e-setup.md)** — é o guia completo, este aqui é só o resumo.
+> ⚠️ O projeto **não tem migrations** — as tabelas precisam ser criadas à mão na primeira vez. O DDL pronto, a explicação de cada variável de ambiente e os problemas comuns estão em **[Ambiente e setup](./docs/wiki/07-ambiente-e-setup.md)** — é o guia completo, este aqui é só o resumo.
 
 💡 Nos PCs da FATEC, subir o dev server pelo terminal integrado do VSCode costuma falhar — rode `npm run dev` direto no terminal do sistema.
 
@@ -91,7 +91,7 @@ E preencha a connection string do PostgreSQL em `appsettings.Development.json` n
 | API | Azure App Service | manual |
 | Banco | Supabase (PostgreSQL) | schema criado à mão |
 
-> 🔴 **Defeito conhecido:** o mapa não carrega marcadores em produção. Login, cadastro e o CRUD de usuários funcionam. Diagnóstico e correção em [Deploy e infraestrutura](./docs/wiki/14-deploy.md#-estado-de-produção).
+> 🔴 **Defeito conhecido:** o mapa não carrega marcadores em produção. Login, cadastro e o CRUD de usuários funcionam. Diagnóstico e correção em [Deploy e infraestrutura](./docs/wiki/08-deploy.md#-estado-de-produção).
 
 ---
 
@@ -99,9 +99,9 @@ E preencha a connection string do PostgreSQL em `appsettings.Development.json` n
 
 **Mapa** — [`/docs`](./docs/README.md): índice de todas as pastas de documentação, com "por onde começar" pra humano e pra agente de IA.
 
-**Wiki** — [`/docs/wiki`](./docs/wiki/00-home.md): duas trilhas, o projetado no TCC e o implementado hoje, mais a página de gap entre elas. É o melhor ponto de partida técnico.
+**Wiki** — [`/docs/wiki`](./docs/wiki/00-home.md): o sistema como ele está — arquitetura, banco, endpoints, autenticação, frontend, setup, deploy e backlog. É o melhor ponto de partida técnico.
 
-Páginas da wiki mais consultadas: [Deploy e infraestrutura](./docs/wiki/14-deploy.md), [Ambiente e setup](./docs/wiki/13-ambiente-e-setup.md) e [Gap modelo × implementação](./docs/wiki/12-gap-modelo-vs-implementacao.md).
+Páginas da wiki mais consultadas: [Deploy e infraestrutura](./docs/wiki/08-deploy.md), [Ambiente e setup](./docs/wiki/07-ambiente-e-setup.md) e [Backlog e dívida](./docs/wiki/09-backlog.md).
 
 **Decisões de implementação por módulo** em [`/docs/adr`](./docs/adr/README.md).
 

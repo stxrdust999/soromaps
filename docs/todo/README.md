@@ -2,7 +2,7 @@
 
 > Rastreio do que ainda não existe, organizado por área do sistema. Cada módulo tem um `.md` próprio com a ideia desenvolvida, dependências e escopo inicial.
 >
-> Isto complementa o [backlog técnico da wiki](../wiki/12-gap-modelo-vs-implementacao.md) — lá vive a dívida técnica (segurança, migrations, proxy); aqui vivem os **módulos de produto** que populam a sidebar.
+> Isto complementa o [backlog técnico da wiki](../wiki/09-backlog.md) — lá vive a dívida técnica (segurança, migrations, proxy); aqui vivem os **módulos de produto** que populam a sidebar.
 
 ## Convenção de status
 
@@ -58,4 +58,4 @@ Regra: concluiu um módulo → atualiza o status aqui e no `.md` dele, **na mesm
 1. **Expansão do modelo de Ponto** ([proposta](../propostas/2026-08-03-expansao-modelo-ponto.md)) — é o que tira [Descobrir](./user/explore.md) do parcial. Tela pronta esperando só o dado chegar; enquanto isso, foto, categoria, tags e nota são fixos em `src/mocks/markers.ts`
 2. **[Categorias](./admin/categories.md)** — destrava categoria como entidade (hoje é constante no front) e é o caso de uso perfeito pra reusar o padrão de tabela
 
-> ⚠️ Nada disso antes da prioridade 0/1 do [backlog técnico](../wiki/12-gap-modelo-vs-implementacao.md): proxy dos markers e autenticação na API. Módulo novo sobre API pública aberta só aumenta a superfície.
+> ⚠️ Nada disso antes da prioridade 0/1 do [backlog técnico](../wiki/09-backlog.md): proxy dos markers e autenticação na API. Módulo novo sobre API pública aberta só aumenta a superfície.
