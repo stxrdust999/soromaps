@@ -8,16 +8,25 @@ Regra da pasta: quando um artefato deixa de descrever o estado atual do projeto 
 
 ## 📁 Conteúdo
 
+| Subpasta | O que guarda | Arquivada em |
+|---|---|---|
+| [`wiki-trilha-projetada/`](./wiki-trilha-projetada/README.md) | As seis páginas "projetado (TCC)" que a wiki mantinha em paralelo — requisitos RF-01..13, casos de uso, DER, modelo lógico, stack Node/SQL Server/Mapbox, protótipo | 20/08/2026 |
+| [`gerenciamento-por-dono/`](./gerenciamento-por-dono/) | O grupo `business/` inteiro e `/admin/businesses` — dono de estabelecimento gerenciando o próprio ponto | 19/08/2026 |
+| [`telas-fundidas/`](./telas-fundidas/) | `/places` como vitrine, antes de fundir em `/discover` | 17/08/2026 |
+| `diagramas-originais/` | Exports PNG das ferramentas de modelagem do TCC | 28/07/2026 |
+
+---
+
 ### `diagramas-originais/`
 
-Exports das ferramentas de modelagem usados na entrega do TCC. Foram convertidos para Mermaid nativo dentro das páginas da wiki e dos docs numerados — as imagens ficam como referência do traçado original.
+Exports das ferramentas de modelagem usados na entrega do TCC. Foram convertidos para Mermaid nativo dentro das páginas hoje em [`wiki-trilha-projetada/`](./wiki-trilha-projetada/README.md) — as imagens ficam como referência do traçado original.
 
 | Arquivo | O que é | Onde vive hoje em Mermaid |
 |---|---|---|
-| `diagrama-conceitual.png` | Diagrama de classes (modelo conceitual OO), com `UsuarioNormal`/`Estabelecimento`, `Feed`, `Badge` e `Endereco` | [`wiki/05-modelagem-projetada.md`](../wiki/05-modelagem-projetada.md) |
-| `Diagrama_Entidade-Relacionamento.png` | DER com entidades, atributos e cardinalidades `(min, max)` | [`wiki/05-modelagem-projetada.md`](../wiki/05-modelagem-projetada.md) |
-| `Modelo-Logico.png` | Modelo lógico: 10 tabelas com tipos, PK e FK | [`wiki/05-modelagem-projetada.md`](../wiki/05-modelagem-projetada.md) |
-| `Diagrama-de-Sequencia.png` | Sequência MVC da criação de ponto (View → Controller → Model → BD) | [`wiki/04-arquitetura-projetada.md`](../wiki/04-arquitetura-projetada.md) |
+| `diagrama-conceitual.png` | Diagrama de classes (modelo conceitual OO), com `UsuarioNormal`/`Estabelecimento`, `Feed`, `Badge` e `Endereco` | [`wiki-trilha-projetada/05-modelagem-projetada.md`](./wiki-trilha-projetada/05-modelagem-projetada.md) |
+| `Diagrama_Entidade-Relacionamento.png` | DER com entidades, atributos e cardinalidades `(min, max)` | [`wiki-trilha-projetada/05-modelagem-projetada.md`](./wiki-trilha-projetada/05-modelagem-projetada.md) |
+| `Modelo-Logico.png` | Modelo lógico: 10 tabelas com tipos, PK e FK | [`wiki-trilha-projetada/05-modelagem-projetada.md`](./wiki-trilha-projetada/05-modelagem-projetada.md) |
+| `Diagrama-de-Sequencia.png` | Sequência MVC da criação de ponto (View → Controller → Model → BD) | [`wiki-trilha-projetada/04-arquitetura-projetada.md`](./wiki-trilha-projetada/04-arquitetura-projetada.md) |
 
 ---
 

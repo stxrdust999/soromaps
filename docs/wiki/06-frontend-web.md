@@ -1,6 +1,6 @@
-> ⚙️ **Trilha: implementado.** Estrutura do repo `soromaps_web`.
+> Estrutura do repo `soromaps_web`.
 
-# 💻 11. Frontend web
+# 💻 06. Frontend web
 
 Next.js 16 com App Router, React 19, TypeScript, Tailwind CSS 4 e shadcn/ui. Lint e formatação com Biome.
 
@@ -23,29 +23,40 @@ flowchart TD
     AUTH --> LOGIN["/login"]
     AUTH --> REG["/register"]
 
-    APP --> ADM["/admin"]
-    ADM --> ADMU["/admin/users"]
-    ADM --> ADMB["/admin/businesses"]
-    ADM --> ADMR["/admin/reviews"]
+    APP --> ADM["/admin<br/>dashboard · moderation · reports<br/>categories · achievements · reviews"]
+    ADM --> ADMU["/admin/users<br/>única tela em dado real"]
     ADMU --> MOD["@modals<br/>create · update/[id] · delete/[id]"]
 
-    APP --> BIZ["/business<br/>stub"]
-
     APP --> EXP["(explorer)"]
-    EXP --> HOME["/home<br/>mapa + feed"]
+    EXP --> HOME["/home<br/>mapa + painel arrastável"]
     EXP --> DISC["/discover<br/>trilhas de lugares"]
+    EXP --> FEED["/feed<br/>seis tipos de item"]
+    EXP --> COMM["/community<br/>ranking + pautas"]
+    COMM --> CID["/community/[id]<br/>perfil público"]
+    EXP --> PAUTA["/pautas/[slug]"]
     EXP --> PLACES["/places/[id]<br/>detalhe do ponto"]
     PLACES --> NEW["/places/new<br/>criar ponto"]
-    EXP --> PROF["/profile"]
+    EXP --> PROF["/profile<br/>+ visits · favorites<br/>achievements · stats"]
 ```
 
 | Route group | Papel |
 |---|---|
 | `(auth)` | Telas públicas de login e cadastro. Sessão ativa aqui redireciona para `/home` |
-| `(app)` | Área autenticada, com sidebar e `@modals` compartilhados no `layout.tsx` — envolve os três tipos abaixo |
-| `(explorer)` | Rotas do usuário comum (`/home`, `/places`, `/profile`) — agrupadas só por não terem prefixo de URL em comum |
+| `(app)` | Área autenticada, com sidebar e `@modals` compartilhados no `layout.tsx` |
+| `(explorer)` | Rotas do usuário comum — agrupadas só por não terem prefixo de URL em comum |
 
-`admin/` e `business/` não precisam de route group próprio: já são pastas reais com prefixo de URL (`/admin/*`, `/business/*`), o que já as agrupa. Route group (pasta entre parênteses) nunca aparece na URL — serve para compartilhar layout, ou só organizar por pasta, sem adicionar segmento de rota.
+`admin/` não precisa de route group próprio: já é pasta real com prefixo de URL, o que a agrupa. Route group (pasta entre parênteses) nunca aparece na URL — serve para compartilhar layout, ou só organizar por pasta, sem adicionar segmento de rota.
+
+### Rotas que só redirecionam
+
+Cinco rotas existem apenas para URL publicada não dar 404:
+
+| Rota | Vai para | Desde |
+|---|---|---|
+| `/places` | `/discover` | 17/08/2026 — a vitrine de lugares fundiu em Descobrir |
+| `/visits`, `/favorites`, `/achievements`, `/stats` | aba equivalente de `/profile` | 19/08/2026 — o grupo "Eu" virou hub de cinco abas |
+
+As abas de `/profile` são **segmento de rota**, não `useState`: conteúdo que se lê, se compartilha e ao qual se volta precisa de URL, botão voltar e F5 no lugar certo. A lista mora em `PROFILE_TABS` ([`src/constants/navigation.ts`](../../src/constants/navigation.ts)), e só a navegação é client — as cinco abas seguem Server Component.
 
 ### Rotas interceptadas em `/admin/users`
 
@@ -60,16 +71,38 @@ O projeto adota o padrão **Dara (Stardust)**:
 | Pasta | Papel | Estado |
 |---|---|---|
 | `src/app` | Rotas do App Router | Em uso |
-| `src/actions` | Server Actions (`auth.ts`, `users.ts`) | Em uso |
-| `src/http` | Clientes HTTP por recurso (`users/users.ts`) | Em uso |
+| `src/actions` | Server Actions (`auth`, `users`, `markers`, `stories`) | Em uso |
+| `src/http` | Clientes HTTP de leitura por recurso (`users`, `markers`) | Em uso |
 | `src/components` | `ui/` (shadcn), `blocks/`, `table/` | Em uso |
-| `src/constants` | Constantes (`auth_constants.ts`, `users.ts` com tags de cache e defaults de filtro) | Em uso |
-| `src/hooks` | Hooks (`use-mobile.ts`, `table/use-table-config.ts`) | Em uso |
-| `src/lib` | Setup de libs externas e utilitários de infra (`session.ts`, `utils.ts`, `toaster.ts`) | Em uso |
-| `src/types` | Contratos (`user`, `review`, `form`, `table`) | Em uso |
+| `src/constants` | Tags de cache, defaults de filtro, navegação, títulos de explorador, régua de verificação, motivos de remoção | Em uso |
+| `src/hooks` | `use-mobile.ts`, `use-markers.ts`, `table/use-table-config.ts` | Em uso |
+| `src/lib` | Setup de libs externas e infra (`session.ts`, `gemini.ts`, `toaster.ts`, `utils.ts`) | Em uso |
+| `src/mocks` | Onze arquivos de dado fictício — tudo que ainda não tem tabela | Em uso |
+| `src/helpers` | Regra de negócio própria (`achievement-criteria.ts`) | Em uso |
+| `src/styles` | `globals.css` com os tokens Tailwind | Em uso |
+| `src/types` | Contratos (`user`, `marker`, `form`, `table`) | Em uso |
 | `src/utils` | `formatters/`, `sorts/`, `table/`, `http/` | Em uso |
-| `src/validations` | Schemas Zod (`auth`, `users`, `review`) | Em uso |
-| `src/config`, `src/content`, `src/contexts`, `src/helpers`, `src/mocks`, `src/reducers`, `src/styles` | Criadas pelo scaffold Dara | Vazias, aguardando uso real |
+| `src/validations` | Schemas Zod (`auth`, `users`, `markers`, `categories`, `achievements`, `stories`) | Em uso |
+| `src/config`, `src/content`, `src/contexts`, `src/reducers`, `src/components/composites` | Criadas pelo scaffold Dara | Vazias, aguardando uso real |
+
+### `src/mocks` — a pasta que precisa morrer
+
+Onze arquivos, e é o maior fato do frontend hoje: **`/admin/users` é a única
+tela ligada em dado real**. Feed, comunidade, pautas, perfil, descobrir e as
+sete telas de admin funcionam inteiras sobre mock, esperando tabela nascer.
+
+Duas regras que valem enquanto isso durar, e que já custaram bug:
+
+- **Nada de `Math.random()` nem `Date.now()` em mock.** Valor aleatório ou
+  relativo a "agora" renderiza diferente no servidor e no cliente e quebra a
+  hidratação. Série temporal é ruído determinístico sobre data-âncora fixa.
+- **Fuso fixo junto com data fixa.** Todo formatador de data em mock declara
+  `timeZone: "UTC"`: dia puro (`2026-08-17`) é meia-noite UTC, e formatar no
+  fuso local devolveria o dia anterior no Brasil.
+
+Mock que **deriva** vale mais que mock que repete: `src/mocks/profile.ts`
+calcula o progresso das conquistas sobre a mesma lista de visitas que
+`/community` publica no ranking, então as duas telas não têm como discordar.
 
 ### Onde colocar um arquivo novo
 
@@ -94,7 +127,7 @@ O Dara diz que `app/` deve conter só rotas (`layout`, `page`, `loading`, `error
 
 ## 📋 Padrão de tela de listagem
 
-Toda tela com tabela do sistema segue a mesma estrutura, adotada do padrão interno de telas usado pelo time. O objetivo é que criar a próxima listagem seja **preencher lacunas**, não redesenhar a arquitetura. Referência viva: `/admin/users`.
+Toda tela com tabela do sistema segue a mesma estrutura, adotada do padrão interno de telas usado pelo time. O objetivo é que criar a próxima listagem seja **preencher lacunas**, não redesenhar a arquitetura. Referência viva: `/admin/users`; `/admin/categories` é a prova de que a aposta se pagou — busca, ordenação, visibilidade de coluna, paginação e sheet de filtro vieram prontos, e o que custou foi só o domínio.
 
 ### O princípio
 
@@ -213,13 +246,40 @@ O fechamento anima antes do `router.back()` (`MODAL_CLOSE_DELAY_MS`); sem o atra
 |---|---|
 | Tema | Detecta a classe `dark`/`light` no `<html>` via `MutationObserver`, com fallback em `prefers-color-scheme` |
 | Basemap | Estilos públicos CARTO: `positron` (claro) e `dark-matter` (escuro) |
-| Viewport controlado | `viewport` + `onViewportChange` (centro, zoom, bearing, pitch) |
+| Viewport | **Não-controlado.** As camadas leem a instância do MapLibre pelo contexto (`useMap()`) em vez de espelhar centro/zoom em state React |
 | Marcadores e popups | Renderizados como React via `createPortal` dentro dos elementos do MapLibre |
 | Controles | `MapControls` com zoom, bússola, localizar e tela cheia |
 
-Centro inicial fixo em Sorocaba: `[-47.44623758514884, -23.47205863818757]`, zoom `15.5`.
+Centro inicial fixo em Sorocaba, em [`src/constants/map.ts`](../../src/constants/map.ts): `[-47.44623758514884, -23.47205863818757]`, zoom `15.5`.
 
-**Carregamento de marcadores:** `/home` busca `GET /api/markers` sempre que o zoom muda, e limpa a lista abaixo de zoom 14 para não poluir o mapa de longe. A filtragem é toda client-side.
+**Viewport não é state React, e isso é a decisão principal do mapa.** Guardar
+centro e zoom em `useState` re-renderizava painel e feed a 60fps durante o pan,
+e um `useEffect` dependente de `viewport.zoom` disparava dezenas de
+`GET /api/markers` por gesto de zoom — `move` dispara a cada frame.
+
+**Carregamento de marcadores:** [`src/hooks/use-markers.ts`](../../src/hooks/use-markers.ts) assina
+`moveend` (não `move`) e guarda só o booleano `zoom >= minZoom`. O fetch depende
+de um booleano, não de um float: **uma requisição por cruzamento de limiar**,
+com `AbortController`. Abaixo do limiar a lista é limpa, para não poluir o mapa
+de longe. A filtragem continua toda client-side — a API não aceita bounding box.
+
+### `MapDrawerLayout`
+
+O padrão "mapa ao fundo + painel arrastável que sobe até virar a página" foi
+extraído de `/home` para [`src/components/blocks/map-drawer-layout/`](../../src/components/blocks/map-drawer-layout),
+com `map` como slot das camadas e `children` livre. Três armadilhas que ele
+resolve, e que voltam se alguém remontar isso à mão:
+
+| Armadilha | O que acontecia |
+|---|---|
+| `{!isFullyExpanded && <Map/>}` | O mapa era **desmontado** ao expandir o painel, recarregando estilo CARTO e tiles ao recolher |
+| `DrawerOverlay` sempre renderizado | Deixava o mapa sob um blur permanente, num drawer `modal={false}` que nunca fecha — daí a prop `overlay` no `DrawerContent` |
+| Portal para `document.body` | O `main` de `(app)/layout.tsx` tem `transform-[translateZ(0)]` e já é containing block do `fixed` do vaul — daí `noPortal` |
+
+**Limite conhecido:** o vaul lê `document.body` durante o render, então não
+sobrevive ao SSR. O layout mantém um gate `mounted`, mas renderiza no lugar um
+esqueleto com a moldura do painel recolhido — a primeira pintura já tem a casca,
+em vez de tela vazia.
 
 ---
 
@@ -236,18 +296,25 @@ Centro inicial fixo em Sorocaba: `[-47.44623758514884, -23.47205863818757]`, zoo
 
 ---
 
-## 🧹 Dependências sem uso
+## 📦 Dependências
 
-Instaladas em `package.json`, sem nenhum import em `src/`:
+As cinco órfãs (`firebase`, `hono`, `@hono/node-server`, `leaflet`,
+`react-leaflet`) foram removidas em 29/07/2026 e `shadcn` virou
+`devDependency` — isso levou as vulnerabilidades de pacote de **15 para 0**.
 
-| Pacote | Provável origem |
-|---|---|
-| `firebase` | Tentativa anterior de backend/auth |
-| `hono`, `@hono/node-server` | Tentativa anterior de API em Node |
-| `leaflet`, `react-leaflet` | Primeira versão do mapa, antes do MapLibre |
-| `shadcn` (como dependência de runtime) | Deveria ser `devDependency` — é CLI |
+Duas regras herdadas daquela rodada:
 
-Não foram removidas nesta rodada de documentação. Ver backlog em [12 — Gap](./12-gap-modelo-vs-implementacao.md).
+- **`sharp` está em `overrides` como `^0.35.3`**, fora do range que o Next
+  declara (`^0.34.5`). É correção antecipada de advisory. **Reconferir a cada
+  bump de versão do Next.**
+- 🚫 **Nunca rodar `npm audit fix --force` neste projeto.** Antes do override,
+  a "correção" que ele propunha para o `sharp` era instalar `next@14.2.35` —
+  regressão de dois majors.
+
+Dependência de UI de terceiro entra por registry e vira código nosso, não
+pacote: o `AchievementBadge` veio do [Trophy UI Kit](https://ui.trophy.so) e foi
+**adaptado** — o original tinha travado/desbloqueado invertidos e estava em
+inglês.
 
 ---
 
@@ -260,6 +327,7 @@ Não foram removidas nesta rodada de documentação. Ver backlog em [12 — Gap]
 ### Zod como fonte dos contratos de formulário
 **Decisão:** todo formulário valida contra schema em `src/validations`, com o tipo inferido por `z.infer`, e o **mesmo schema** roda no client (`zodResolver`) e dentro da server action (`safeParse`).
 **Motivo:** um único lugar define regra e tipo, e a validação nunca depende só do browser — a do cliente é experiência de uso, não segurança. **Inconsistência a resolver:** `registerSchema` (com `confirmPassword`) segue sem nenhum consumidor; o cadastro usa `createUserSchema`.
+**Onde o schema não serve:** conversão de `FormData` para número mora na action (`toMarkerInput`), não no schema — `z.coerce.number()` deixa o tipo de entrada `unknown` e quebra o `zodResolver` do React Hook Form.
 
 ### Leitura em `src/http`, escrita em `src/actions`
 **Decisão:** separar o cliente HTTP de leitura (envelope `{ data, status, headers }`) das mutações (`"use server"` + `FormState`).
@@ -271,6 +339,16 @@ Não foram removidas nesta rodada de documentação. Ver backlog em [12 — Gap]
 
 ---
 
+### Diálogo local onde o dado é mock
+**Decisão:** telas sobre mock (categorias, denúncias, avaliações) usam `Dialog` com estado local em vez do slot `@modals`.
+**Motivo:** rota interceptada precisa de um servidor como fonte da verdade. Com o catálogo em `useState`, a rota leria o mock original e salvaria no vazio. Migra para `@modals` junto com a API.
+
+### Segundo consumidor promove
+**Decisão:** componente nasce em `_components/` da rota; no momento em que uma segunda rota precisa dele, sobe para `src/components/blocks/`.
+**Motivo:** foi assim que `StatCard`, `RemovalDialog` e `StarRating` subiram. A exceção declarada é `MapDrawerLayout`, que vive em `blocks/` com um consumidor só — foi extraído justamente para ser reusado.
+
+---
+
 ## ➡️ Próxima página
 
-[12 — Gap modelo × implementação](./12-gap-modelo-vs-implementacao.md)
+[07 — Ambiente e setup](./07-ambiente-e-setup.md)

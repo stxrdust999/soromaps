@@ -1,4 +1,4 @@
-> 📐 **Trilha: projetado (TCC).** Esta é a arquitetura do papel. A implementação divergiu — ver [07 — Arquitetura atual](./07-arquitetura-atual.md) e [12 — Gap](./12-gap-modelo-vs-implementacao.md).
+> 📐 **Trilha: projetado (TCC).** Esta é a arquitetura do papel. A implementação divergiu — ver [07 — Arquitetura atual](../../wiki/02-arquitetura.md) e [12 — Gap](../../wiki/09-backlog.md).
 
 # 🏛️ 04. Arquitetura projetada
 
@@ -63,7 +63,7 @@ sequenceDiagram
     V-->>U: Exibe mensagem de confirmação
 ```
 
-> 🖼️ Export original: [`Diagrama-de-Sequencia.png`](../archive/diagramas-originais/Diagrama-de-Sequencia.png)
+> 🖼️ Export original: [`Diagrama-de-Sequencia.png`](../diagramas-originais/Diagrama-de-Sequencia.png)
 
 ---
 
