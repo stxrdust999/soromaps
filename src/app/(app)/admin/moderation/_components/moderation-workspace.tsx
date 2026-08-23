@@ -146,7 +146,10 @@ export function ModerationWorkspace() {
       />
 
       {tab === "fila" ? (
-        <ResizablePanelGroup orientation="horizontal" className="min-h-0 flex-1 border-t">
+        <ResizablePanelGroup
+          orientation="horizontal"
+          className="min-h-0 flex-1 border-t"
+        >
           <ResizablePanel defaultSize="26%" minSize="300px" maxSize="40%">
             <QueuePanel
               items={queue.visible}
@@ -171,7 +174,9 @@ export function ModerationWorkspace() {
                   item={selected}
                   author={moderationAuthorsMock[selected.autorId]}
                   onApprove={() => runDecision("aprovado", "Ponto aprovado")}
-                  onReturn={() => runDecision("devolvido", "Devolvido ao autor")}
+                  onReturn={() =>
+                    runDecision("devolvido", "Devolvido ao autor")
+                  }
                   onReject={() => setDialog("rejeicao")}
                   onCompare={() => setDialog("duplicata")}
                 />

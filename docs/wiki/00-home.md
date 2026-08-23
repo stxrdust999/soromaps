@@ -1,74 +1,59 @@
 # 🏠 Wiki do Soromaps
 
-O Soromaps é uma plataforma interativa para descobrir, avaliar e compartilhar experiências em estabelecimentos locais de Sorocaba, com geolocalização + gamificação + rede social. TCC da FATEC Sorocaba.
+O Soromaps é uma plataforma interativa para descobrir, avaliar e compartilhar
+experiências em lugares de Sorocaba. TCC da FATEC Sorocaba.
 
-Esta wiki tem **duas trilhas paralelas** e uma ponte entre elas. Isso é proposital: o Soromaps foi projetado com uma stack no papel e implementado com outra, e as duas coisas importam — a modelagem é o entregável acadêmico, o código é o produto.
-
-```mermaid
-flowchart LR
-    A["📐 Trilha PROJETADO<br/>o que o TCC especificou"] --> C["🔀 Gap<br/>modelo × implementação"]
-    B["⚙️ Trilha ATUAL<br/>o que roda hoje"] --> C
-```
-
----
-
-## 📐 Trilha 1 — Projetado (TCC)
-
-O que foi especificado, modelado e apresentado. Vale como referência de destino do produto.
-
-| Página                                                      | Conteúdo                                                    |
-| ----------------------------------------------------------- | ----------------------------------------------------------- |
-| [01 — Visão geral](./01-visao-geral.md)                     | Produto, dores atacadas, modelo de negócio, personas        |
-| [02 — Requisitos](./02-requisitos.md)                       | RF-01 a RF-13 e rastreabilidade para casos de uso           |
-| [03 — Casos de uso](./03-casos-de-uso.md)                   | Atores, casos, relações `include`/`extend`                  |
-| [04 — Arquitetura projetada](./04-arquitetura-projetada.md) | Stack original (Node/Express/SQL Server/Mapbox) e fluxo MVC |
-| [05 — Modelagem projetada](./05-modelagem-projetada.md)     | Diagrama de classes, DER e modelo lógico (10 tabelas)       |
-| [06 — Protótipo](./06-prototipo.md)                         | Lovable, Figma e os vídeos de apresentação                  |
+Esta wiki descreve **o sistema como ele está**: o que roda, sobre o que roda e
+o que está quebrado. Ela não guarda especificação antiga — o que o TCC projetou
+no papel está em
+[`archive/wiki-trilha-projetada/`](../archive/wiki-trilha-projetada/README.md),
+e o caminho de uma coisa até a outra está em [`/CLAUDE.md`](../../CLAUDE.md) e
+em [`docs/adr/`](../adr/README.md).
 
 ---
 
-## ⚙️ Trilha 2 — Atual (implementado)
+## 📚 Páginas
 
-O que existe rodando hoje, extraído do código dos dois repositórios.
-
-| Página                                                      | Conteúdo                                                          |
-| ----------------------------------------------------------- | ----------------------------------------------------------------- |
-| [07 — Arquitetura atual](./07-arquitetura-atual.md)         | Dois repos, Next.js 16 + ASP.NET Core 10 + Supabase + MapLibre    |
-| [08 — Banco atual](./08-banco-atual.md)                     | As duas tabelas reais (`tbUsuario`, `markers`) e o que falta      |
-| [09 — Endpoints da API](./09-api-endpoints.md)              | Catálogo completo de rotas, payloads e respostas                  |
-| [10 — Autenticação e sessão](./10-autenticacao-e-sessao.md) | Fluxo de login, cookie HS256, middleware — e os riscos conhecidos |
-| [11 — Frontend web](./11-frontend-web.md)                   | App Router, Server Actions, mapa, organização de pastas           |
-| [13 — Ambiente e setup](./13-ambiente-e-setup.md)           | Como rodar web + API, variáveis de ambiente, portas               |
-| [14 — Deploy e infraestrutura](./14-deploy.md)              | Vercel + Azure + Supabase, variáveis de produção e o defeito conhecido do mapa |
-
----
-
-## 🔀 Ponte
-
-| Página                                                                 | Conteúdo                                                                     |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [12 — Gap modelo × implementação](./12-gap-modelo-vs-implementacao.md) | Tabela entidade a entidade, drift de stack, código morto, backlog priorizado |
+| Página | Conteúdo |
+|---|---|
+| [01 — Visão geral](./01-visao-geral.md) | O que o produto é hoje, os três pilares e o que foi cortado do escopo |
+| [02 — Arquitetura](./02-arquitetura.md) | Dois repos, Next.js 16 + ASP.NET Core 10 + Supabase + MapLibre, e os dois caminhos até a API |
+| [03 — Banco](./03-banco.md) | As duas tabelas reais (`tbUsuario`, `markers`), ausência de migrations e o que falta |
+| [04 — Endpoints da API](./04-api-endpoints.md) | Catálogo de rotas, payloads e quem consome cada uma |
+| [05 — Autenticação e sessão](./05-autenticacao-e-sessao.md) | Login, cookie HS256 assinado pelo Next, middleware — e os riscos conhecidos |
+| [06 — Frontend web](./06-frontend-web.md) | App Router, mapa de rotas, padrão de listagem, modais como rota, organização de pastas |
+| [07 — Ambiente e setup](./07-ambiente-e-setup.md) | Como rodar web + API local, variáveis de ambiente, problemas comuns |
+| [08 — Deploy](./08-deploy.md) | Vercel + Azure + Supabase, variáveis de produção e o defeito conhecido do mapa |
+| [09 — Backlog e dívida](./09-backlog.md) | Tudo que se sabe que está errado, priorizado — a página que envelhece mais rápido |
 
 ---
 
 ## 🧭 Como usar
 
-- **Chegou agora no projeto?** [01](./01-visao-geral.md) → [07](./07-arquitetura-atual.md) → [13](./13-ambiente-e-setup.md). Em meia hora dá pra rodar tudo local.
-- **Vai mexer no banco ou na API?** [12](./12-gap-modelo-vs-implementacao.md) primeiro, depois [08](./08-banco-atual.md) e [09](./09-api-endpoints.md).
-- **Vai apresentar/documentar o TCC?** Trilha 1 inteira, na ordem.
-- **Vai mexer em login?** [10](./10-autenticacao-e-sessao.md) — inclusive a seção de riscos.
-- **Vai publicar ou mexer em produção?** [14](./14-deploy.md) — inclui o defeito que hoje derruba o mapa em produção.
+- **Chegou agora?** [01](./01-visao-geral.md) → [02](./02-arquitetura.md) → [07](./07-ambiente-e-setup.md). Em meia hora dá pra rodar tudo local.
+- **Vai mexer no banco ou na API?** [09](./09-backlog.md) primeiro, depois [03](./03-banco.md) e [04](./04-api-endpoints.md).
+- **Vai mexer em login?** [05](./05-autenticacao-e-sessao.md) — inclusive a seção de riscos.
+- **Vai construir tela?** [06](./06-frontend-web.md) e o [ADR](../adr/README.md) da área.
+- **Vai publicar ou mexer em produção?** [08](./08-deploy.md) — inclui o defeito que hoje derruba o mapa em produção.
 
 ---
 
-## 📎 Fora da wiki
+## 🧱 O que esta wiki não cobre
 
-| Onde                                     | O quê                                                                     |
-| ----------------------------------------- | -------------------------------------------------------------------------- |
-| [`/docs`](../README.md)                   | Mapa central — índice de todas as pastas de documentação                 |
-| [`/docs/adr`](../adr/README.md)           | Decisões de implementação já tomadas, por módulo                         |
-| [`/docs/todo`](../todo/README.md)         | Módulos de produto pendentes por área (usuário, estabelecimento, admin)  |
-| [`/docs/propostas`](../propostas/README.md) | Spec técnico aguardando implementação                                  |
-| [`/docs/archive`](../archive/README.md)   | Exports originais dos diagramas e material histórico                     |
-| [`/CLAUDE.md`](../../CLAUDE.md)           | Registro vivo: decisões arquiteturais com data e estado atual do roadmap |
-| [`/README.md`](../../README.md)           | Porta de entrada pública do repositório                                  |
+| Assunto | Onde está |
+|---|---|
+| Por que uma tela ficou do jeito que ficou | [`docs/adr/`](../adr/README.md), um arquivo por módulo |
+| O que ainda não foi construído | [`docs/todo/`](../todo/README.md), com status por módulo |
+| Spec técnico aguardando implementação | [`docs/propostas/`](../propostas/README.md) |
+| Requisitos, casos de uso e o modelo de 20 tabelas que as telas exigem | `docs/diagramas/` — pasta local, fora do controle de versão |
+| Decisões de stack e infra, em ordem cronológica | [`/CLAUDE.md`](../../CLAUDE.md) |
+| Material histórico | [`docs/archive/`](../archive/README.md) |
+
+---
+
+## 🔁 Como manter honesta
+
+Toda entrega que muda comportamento atualiza a página correspondente **na mesma
+entrega**, não depois. A regra vale em dobro para [09 — Backlog](./09-backlog.md):
+item concluído sai de lá e do [`/CLAUDE.md`](../../CLAUDE.md) junto com o código
+que o resolveu.

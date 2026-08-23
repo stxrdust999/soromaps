@@ -49,7 +49,7 @@ conteúdo nos dois lugares.
 | [0003](./admin/0003-moderacao-mestre-detalhe.md) | Moderação de pontos |
 | [0004](./admin/0004-conquistas-catalogo-trophy-kit.md) | Conquistas (catálogo) |
 | [0005](./admin/0005-denuncias-agrupadas-por-alvo.md) | Denúncias e feedback |
-| [0006](./admin/0006-comercios-tres-abas.md) | Comércios |
+| ~~0006~~ | Comércios — módulo cancelado em 2026-08-19; ADR em `docs/archive/gerenciamento-por-dono/` |
 | [0007](./admin/0007-avaliacoes-remocao-unificada.md) | Avaliações |
 
 ### `user/`
@@ -59,3 +59,4 @@ conteúdo nos dois lugares.
 | [0001](./user/0001-explorar-lugares-sobre-mock.md) | Descobrir (era Explorar lugares, até `/places` fundir em `/discover`) |
 | [0002](./user/0002-feed-sem-grafo-social.md) | Feed |
 | [0003](./user/0003-comunidade-selo-e-pauta-ia.md) | Comunidade e pautas |
+| [0004](./user/0004-perfil-hub-com-abas.md) | Perfil (absorveu visitas, favoritos, conquistas e estatísticas) |

@@ -1,7 +1,7 @@
 # 🤖 CLAUDE.md — Soromaps
 
 > Registro vivo do projeto. Atualizado no momento em que decisões são tomadas.
-> Última atualização: 2026-08-17
+> Última atualização: 2026-08-19
 
 ---
 
@@ -35,7 +35,7 @@ estabelecimentos menores.
 
 Stack projetada no TCC (Node.js + Express + TypeScript, SQL Server, Mapbox,
 AWS) está preservada em `/docs` e comparada em
-`docs/wiki/12-gap-modelo-vs-implementacao.md`.
+`docs/archive/wiki-trilha-projetada/`.
 
 ---
 
@@ -121,13 +121,15 @@ o idioma da comunidade Next.js para componente exclusivo de uma rota. Regra
 prática adotada: usado por uma rota só → `_components/` da rota; usado por duas
 ou mais → `src/components/`.
 
-### 2026-07-28 — Documentação em duas trilhas
+### 2026-07-28 — Documentação em duas trilhas ~~vigente~~ (revertida em 2026-08-20)
 **Decisão:** `/docs/wiki` separa o que foi **projetado no TCC** do que está
 **implementado**, com uma página de gap ligando os dois.
 **Motivo:** a stack e o modelo divergiram bastante da entrega acadêmica.
 Sobrescrever a modelagem original destruiria o entregável do TCC; deixar só ela
 faria a documentação mentir sobre o sistema. Manter as duas com a diferença
 explícita resolve os dois lados.
+**Superada:** a trilha projetada foi arquivada em 2026-08-20 — ver a decisão
+daquela data, no fim desta seção.
 
 ### 2026-07-29 — Padrão interno de telas de listagem adotado em `/admin/users`
 **Decisão:** adotar o padrão de telas do time (documentado em
@@ -208,7 +210,7 @@ marcadores em produção.** Login, cadastro e o CRUD de usuários seguem
 funcionando, porque passam pelo servidor.
 **Correção definida:** rota `/api/proxy/[...path]` no Next repassando
 server-side — resolve o 404, dispensa o CORS e mantém a URL fora do bundle.
-É o item 1 do backlog. Detalhes em `docs/wiki/14-deploy.md`.
+É o item 1 do backlog. Detalhes em `docs/wiki/08-deploy.md`.
 
 ### 2026-07-29 — Vulnerabilidades de pacote: 15 → 0
 **Decisão:** remover as cinco dependências sem nenhum import em `src/`
@@ -397,8 +399,9 @@ fase 2.
 precisam migrar para a contagem —
 `components/blocks/{place-leaderboard,verified-comment-card}.tsx`,
 `admin/moderation/_components/author-card.tsx` (via `nivel` em
-`mocks/admin-moderation.ts`) e os stubs de `/stats` e `/admin/achievements`,
-cujo texto ainda promete "evolução de nível" e "pontuação".
+`mocks/admin-moderation.ts`) e o stub de `/admin/achievements`, cujo texto
+ainda promete "pontuação". O stub de `/stats` saiu em 2026-08-19: virou aba de
+`/profile`, já sobre `explorerCredential`.
 
 ### 2026-08-16 — Conexão com o Supabase pelo pooler, em session mode
 **Decisão:** a API conecta em `aws-1-sa-east-1.pooler.supabase.com:5432`
@@ -423,7 +426,7 @@ ganho não existe aqui — só o risco.
 **Armadilha registrada:** errar o `Username` ou o prefixo `aws-0-`/`aws-1-`
 devolve `XX000: (ENOTFOUND) tenant/user ... not found`, e não um erro de senha.
 O prefixo varia por projeto; copiar do painel em **Connect → Session pooler**.
-Detalhe em `docs/wiki/14-deploy.md`, cuja nota anterior recomendava justamente
+Detalhe em `docs/wiki/08-deploy.md`, cuja nota anterior recomendava justamente
 a conexão direta e foi reescrita.
 
 ### 2026-08-17 — Feed sem grafo social: `Segue` sai do produto
@@ -529,7 +532,8 @@ reescrita). `docs/todo/user/places.md` foi para
 `docs/todo/user/explore.md` + `docs/adr/user/0001-explorar-lugares-sobre-mock.md`.
 **A régua que ficou:** tela nova só se responder uma pergunta que nenhuma outra
 responde. Pelo mesmo critério, `/visits`, `/favorites` e `/stats` são abas de
-`/profile`, não rotas — pendente de decisão do time.
+`/profile`, não rotas — ~~pendente de decisão do time~~ **resolvido em
+2026-08-19**, junto com `/achievements`.
 
 ### 2026-08-19 — Dono de estabelecimento sai do produto: `business/*` e `/admin/businesses` cancelados
 **Decisão:** cancela o grupo inteiro `business/` (5 módulos 💤: dashboard,
@@ -552,6 +556,95 @@ do produto que a representava — o TCC segue com ela na documentação de
 personas (`/docs`), mas o dono não gerencia mais nada dentro do app. Categoria
 `comercios`/pontos de interesse comercial no mapa continua existindo como
 marker comum, só sem dono nem painel próprio.
+
+### 2026-08-19 — `/profile` vira hub de cinco abas; `/visits`, `/favorites`, `/stats` e `/achievements` deixam de ser rotas
+**Decisão:** o grupo "Eu" da sidebar cai de cinco itens para um. `/profile`
+ganha `layout.tsx` com o cabeçalho compartilhado e cinco abas em **segmento de
+rota** — visão geral, `visits`, `favorites`, `achievements`, `stats`. As quatro
+rotas antigas viram `redirect()`, e a lista de abas mora em `PROFILE_TABS`
+(`src/constants/navigation.ts`), reusando o tipo `NavItem`.
+**Motivo:** fecha a pendência que a decisão de 2026-08-17 deixou escrita —
+"tela nova só se responder uma pergunta que nenhuma outra responde". Histórico,
+coleção, galeria e placar respondem à **mesma** pergunta ("o que eu já fiz?")
+com recortes diferentes do mesmo dado, e recorte é aba. Mantidas separadas,
+cada uma repetiria cabeçalho, identidade e contadores, e comparar números
+exigiria passear pela sidebar. Eram cinco stubs de dez linhas: a área pessoal
+era a única do produto sem nada construído.
+**Segmento de rota e não `useState`,** ao contrário das abas de
+`/admin/reports` e `/admin/achievements`: lá a aba é passo de um fluxo de
+trabalho; aqui é conteúdo que se lê, se compartilha e ao qual se volta. Rota dá
+URL compartilhável, botão voltar e F5 no lugar certo — e mantém as cinco abas
+como Server Component, com um `"use client"` só na navegação, que precisa do
+`usePathname`.
+**A pergunta que `/profile` responde não é a de `/community/[id]`.** O perfil
+público é vitrine ("dá para confiar nessa pessoa?"); o privado é roteiro ("o
+que falta para o próximo passo?"). Por isso o selo aparece como a régua inteira
+item a item — é onde `missingForVerification()`, escrito na Comunidade, enfim
+aparece na tela — e a conquista travada aparece com o quanto falta, não só
+cinza.
+**O que veio junto e vale além desta tela:**
+- **Mock que deriva em vez de repetir.** `currentExplorerMock` segue sendo a
+  fonte dos contadores (é o que `/community` publica no ranking) e
+  `src/mocks/profile.ts` calcula o resto **sobre as mesmas 24 visitas**: o
+  progresso de "visitar 5 cafeterias" conta cafeterias na lista, não um número
+  digitado. As cinco conquistas obtidas caem de pé, não foram ajustadas à mão —
+  as duas telas não têm como discordar.
+- **Fuso fixo em mock, junto com data fixa.** `PROFILE_ANCHOR` e todo
+  formatador preso em `timeZone: "UTC"`: data que chega como dia puro
+  (`2026-08-17`) é meia-noite UTC, e formatar no fuso local devolveria o dia
+  anterior no Brasil — servidor e navegador em fusos diferentes quebram a
+  hidratação do mesmo jeito que `Date.now()`.
+- **Conquista de evento `seguir` não entra na galeria do explorador.** `Segue`
+  saiu do produto em 2026-08-17; cobrar "siga 15 pessoas" seria pedir o que a
+  plataforma não faz. O catálogo do admin continua com elas — quem decide o que
+  é cobrável é a tela de quem cumpre.
+- **`PlaceCard` e `PlaceRow` passam a aceitar `Pick<MarkerResource, "id" |
+  "nome">`.** Só isso eles leem; o resto vem de `getMarkerDetailsMock`. Tela
+  sobre mock reusa os cards sem inventar `lat`/`lng` — a alternativa era
+  duplicá-los, como o feed precisou fazer.
+- **`StatCard` subiu para `src/components/blocks/`**, saindo de dentro de
+  `/community/[id]`: segundo consumidor promove.
+**Fora de escopo, e continua aberto:** edição de dados (é `/settings`, travado
+pelo `PUT` que re-hasheia a senha, então "Editar perfil" e "Gerenciar Conta" no
+popover da sidebar seguem sem destino); remover favorito (nasce com a tabela,
+como `toggleFavoriteAction`); e o mini-mapa da mancha explorada. Detalhe em
+`docs/adr/user/0004-perfil-hub-com-abas.md`.
+
+### 2026-08-20 — Wiki fica só com o sistema atual; a trilha projetada vai para o archive
+**Decisão:** as seis páginas da trilha "projetado (TCC)" — visão geral,
+requisitos RF-01..13, casos de uso, arquitetura Node/SQL Server/Mapbox,
+modelagem de 10 tabelas e protótipo — saíram de `/docs/wiki` para
+`docs/archive/wiki-trilha-projetada/`, com um README explicando por que saíram e
+o que ocupou o lugar de cada uma. A wiki foi renumerada `00`–`09`, a página de
+gap virou `09-backlog.md` (backlog puro, sem a comparação com o TCC) e nasceu
+uma `01-visao-geral.md` descrevendo o **produto de hoje**, com uma seção do que
+foi cortado do escopo. Reverte a decisão de 2026-07-28.
+**Motivo:** a razão original — "sobrescrever a modelagem destruiria o entregável
+do TCC" — continua válida, mas *arquivar* já a preserva; o que a trilha paralela
+custava era outra coisa. Ela fazia a documentação afirmar duas coisas
+incompatíveis sobre o mesmo sistema, e quem chegava tinha que descobrir sozinho
+qual das duas valia. Pior: a especificação antiga descreve coisas que o produto
+**decidiu não fazer** — `Segue` e o feed de grafo, o dono de estabelecimento
+gerenciando o próprio ponto, `pontuacao`/`nivel` —, e essas decisões já estão
+registradas aqui e em `/docs/adr` com data e motivo. Manter a página de gap
+comparando produto atual com uma especificação abandonada media distância até um
+alvo que ninguém persegue mais.
+**O que veio junto:**
+- **A página que resta sobre estado é backlog, não gap.** `09-backlog.md` mede
+  distância até o que **se pretende construir** (dívida, segurança, tabelas que
+  faltam), não até o papel de 2026-07. A régua mudou de referencial.
+- **Defasagem corrigida de passagem**, porque a limpeza obrigou a reler tudo:
+  markers descritos como `fetch` cru no cliente com edição no popup (migrou em
+  03/08), `/business` e `/admin/businesses` no mapa de rotas (cancelados em
+  19/08), `src/mocks` listada como "vazia, aguardando uso real" (onze arquivos),
+  dependências órfãs já removidas em 29/07, viewport do mapa como state React
+  (deixou de ser em 02/08) e — a mais perigosa — a tabela de problemas do setup
+  mandando usar a **conexão direta** do Supabase, exatamente o oposto da decisão
+  de 16/08.
+- **`docs/diagramas/` continua fora do controle de versão**, por decisão do
+  time, então a wiki **não linka para lá**. Consequência aceita: requisitos,
+  casos de uso e o modelo de 20 tabelas — a documentação mais atual que existe —
+  seguem sem par versionado, e quem clona o repo não os recebe.
 
 ### 2026-07-28 — Mermaid como fonte de verdade dos diagramas
 **Decisão:** todo diagrama vive em Mermaid dentro do Markdown; os PNGs
@@ -624,7 +717,7 @@ geolocalização tem persistência.
 - [x] Protótipo interativo (Lovable + Figma)
 - [x] Vídeos de apresentação (protótipo + final)
 - [x] Documentação `/docs` no padrão docs-stardust
-- [x] Wiki em `/docs/wiki` (14 páginas, duas trilhas + gap)
+- [x] Wiki em `/docs/wiki` (10 páginas, só o sistema atual); trilha projetada do TCC arquivada em `docs/archive/wiki-trilha-projetada/` em 2026-08-20
 - [x] Diagramas convertidos para Mermaid; originais em `/docs/archive`
 
 ### Feito — código
@@ -651,8 +744,10 @@ geolocalização tem persistência.
 - [x] Slot de modal global `(app)/@modals` com rotas espelho
 - [x] Deploy: front na Vercel, API no Azure App Service, banco no Supabase
 
+- [x] Perfil do explorador (`/profile`): hub de cinco abas em segmento de rota — visão geral com a régua do selo, timeline de visitas por mês, lugares salvos, galeria de conquistas com progresso e placar com cobertura da cidade. Identidade vem da sessão real, o resto é `src/mocks/profile.ts`; `/visits`, `/favorites`, `/stats` e `/achievements` viraram `redirect()`
+
 ### 🔥 Próximo passo — quebrado em produção
-- [ ] Rota `/api/proxy/[...path]` + migrar as chamadas de markers — hoje o mapa **não carrega marcadores em produção** (sem `NEXT_PUBLIC_API_URL` o fetch vira caminho relativo e dá 404; e o CORS só conhece localhost). Ver `docs/wiki/14-deploy.md`
+- [ ] Rota `/api/proxy/[...path]` + migrar as chamadas de markers — hoje o mapa **não carrega marcadores em produção** (sem `NEXT_PUBLIC_API_URL` o fetch vira caminho relativo e dá 404; e o CORS só conhece localhost). Ver `docs/wiki/08-deploy.md`
 
 ### 🔴 Próximos passos — segurança (a API já está publicada na internet)
 - [ ] Registrar autenticação na API (`AddAuthentication` + `[Authorize]`) — hoje **todo endpoint é público**

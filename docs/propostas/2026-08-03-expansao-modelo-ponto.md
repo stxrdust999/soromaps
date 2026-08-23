@@ -1,7 +1,7 @@
 > 🧪 **Proposta.** Conceito aprovado pelo time em **2026-08-03**; nada disso
 > existe no banco nem na API ainda. Este arquivo é o spec técnico para quem
 > for implementar em `soromaps_api`. Estado real do banco:
-> [08 — Banco atual](../wiki/08-banco-atual.md).
+> [03 — Banco](../wiki/03-banco.md).
 
 # 📍 Expansão do modelo de Ponto
 
@@ -65,7 +65,7 @@ cole em [dbdiagram.io](https://dbdiagram.io) para visualizar e iterar.
 fonte de verdade: enquanto o modelo está em discussão, arrastar coluna e ver
 a FK render em tempo real vale mais que diff legível. Quando for
 implementado, o modelo migra para Mermaid em
-[`05 — Modelagem projetada`](../wiki/05-modelagem-projetada.md) e volta à
+[`05 — Modelagem projetada`](../archive/wiki-trilha-projetada/05-modelagem-projetada.md) e volta à
 fonte única. O `.dbml` é rascunho, não substituto.
 
 ---
@@ -73,7 +73,7 @@ fonte única. O `.dbml` é rascunho, não substituto.
 ## 🧩 UML — classe `PontoNoMapa` atualizada
 
 Recorte do diagrama conceitual de
-[`05 — Modelagem projetada`](../wiki/05-modelagem-projetada.md), com o que
+[`05 — Modelagem projetada`](../archive/wiki-trilha-projetada/05-modelagem-projetada.md), com o que
 esta proposta acrescenta:
 
 ```mermaid
@@ -150,7 +150,7 @@ limite, `sobre` viraria o lugar onde as pessoas escrevem resenha, e a
 |---|---|
 | **`usuario_dono` (FK para `tbUsuario`)** | Sem isso não existe permissão: hoje qualquer sessão edita ou apaga qualquer ponto. Está no backlog de segurança e depende de a API ganhar autenticação primeiro |
 | **`status` (moderação)** | Só faz sentido se pontos criados por usuário comum passarem por aprovação. Muda o fluxo da tela e pede um `/admin/moderation` |
-| **Nomenclatura das tabelas** | `markers` (inglês) × `tbUsuario` (prefixo `tb` + português) × colunas em `snake_case` misto. Três convenções em duas tabelas — vale padronizar **antes** de criar `categorias` e as próximas. Já registrado em [08 — Banco atual](../wiki/08-banco-atual.md) |
+| **Nomenclatura das tabelas** | `markers` (inglês) × `tbUsuario` (prefixo `tb` + português) × colunas em `snake_case` misto. Três convenções em duas tabelas — vale padronizar **antes** de criar `categorias` e as próximas. Já registrado em [03 — Banco](../wiki/03-banco.md) |
 
 ---
 
@@ -167,7 +167,7 @@ Nada abaixo foi feito — é a lista de trabalho da implementação.
   o schema é mantido à mão em dois lugares (local e Supabase), sem nada que
   os compare. Esta é uma boa oportunidade para introduzir EF Core Migrations
   antes de o schema dobrar de tamanho — ver
-  [08 — Banco atual](../wiki/08-banco-atual.md)
+  [03 — Banco](../wiki/03-banco.md)
 - Decidir onde a foto é hospedada (Supabase Storage é o candidato óbvio, já
   que o banco está lá) e por onde o upload passa
 
@@ -181,9 +181,9 @@ Nada abaixo foi feito — é a lista de trabalho da implementação.
 - Popup do marcador — hoje só edita o nome; passa a editar o resto
 
 **Na documentação:**
-- [`05 — Modelagem projetada`](../wiki/05-modelagem-projetada.md) — modelo em
+- [`05 — Modelagem projetada`](../archive/wiki-trilha-projetada/05-modelagem-projetada.md) — modelo em
   Mermaid, convertido do `.dbml`
-- [`08 — Banco atual`](../wiki/08-banco-atual.md) — schema real
-- [`12 — Gap`](../wiki/12-gap-modelo-vs-implementacao.md) — recalcular o gap
+- [`03 — Banco`](../wiki/03-banco.md) — schema real
+- [`09 — Backlog`](../wiki/09-backlog.md) — recalcular o gap
 - `CLAUDE.md` — decisão registrada
 - Esta proposta sai de `docs/propostas` para `docs/archive`

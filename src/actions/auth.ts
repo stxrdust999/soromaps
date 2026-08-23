@@ -1,9 +1,9 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { createSession } from "@/lib/session";
 import { type LoginSchema, loginSchema } from "@/validations/auth";
 import { type CreateUserSchema, createUserSchema } from "@/validations/users";
-import { cookies } from "next/headers";
 
 /**
  * Realiza o login do usuário criando um cookie de sessão direto no servidor

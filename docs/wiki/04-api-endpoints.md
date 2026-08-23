@@ -1,6 +1,6 @@
-> ⚙️ **Trilha: implementado.** Catálogo extraído de `soromaps_api/Controllers`. Rota base de todo controller: `api/[controller]`.
+> Catálogo extraído de `soromaps_api/Controllers`. Rota base de todo controller: `api/[controller]`.
 
-# 🔌 09. Endpoints da API
+# 🔌 04. Endpoints da API
 
 Base: `api/[controller]` — o roteamento do ASP.NET Core é **case-insensitive**, então `/api/Auth/Login` e `/api/auth/login` chegam no mesmo lugar (os dois aparecem no código do front).
 
@@ -19,7 +19,12 @@ Base: `api/[controller]` — o roteamento do ASP.NET Core é **case-insensitive*
 | `DELETE` | `/api/markers/{id}` | `MarkersController.Delete` | Remove marcador |
 | `GET` | `/api/weatherforecast` | `WeatherForecastController` | 🧹 Resto do template `dotnet new webapi` — pode sair |
 
-> ⚠️ **Nenhum endpoint exige autenticação.** Detalhe e impacto em [10 — Autenticação e sessão](./10-autenticacao-e-sessao.md).
+> ⚠️ **Nenhum endpoint exige autenticação.** Detalhe e impacto em [05 — Autenticação e sessão](./05-autenticacao-e-sessao.md).
+
+> 🟡 **A API cobre duas entidades.** Feed, comunidade, pautas, conquistas,
+> categorias, moderação, denúncias e avaliações são telas prontas lendo
+> `src/mocks/*` — nenhuma delas fala com endpoint nenhum. Ver
+> [09 — Backlog](./09-backlog.md).
 
 ---
 
@@ -75,11 +80,14 @@ Cria com `BCrypt.HashPassword(dto.Password)` e `CreatedAt`/`UpdatedAt` em `DateT
 
 **Consumido por:**
 
-| Origem | Chamada |
-|---|---|
-| [`/home`](../../src/app/(app)/(explorer)/home/page.tsx) | `GET /api/markers` sempre que `viewport.zoom >= 14` |
-| [`/places/new`](../../src/app/(app)/(explorer)/places/new/page.tsx) | `POST /api/markers` ao confirmar o local |
-| [popup do marcador](../../src/app/(app)/(explorer)/home/_components/marker.tsx) | `PUT` e `DELETE /api/markers/{id}` |
+| Origem | Chamada | Onde roda |
+|---|---|---|
+| [`src/http/markers/markers.ts`](../../src/http/markers/markers.ts) | `GET /api/markers`, `GET /api/markers/{id}` | Servidor, com `API_URL` e cache tag |
+| [`src/actions/markers.ts`](../../src/actions/markers.ts) | `POST`, `PUT`, `DELETE` | Servidor, com Zod + `updateTag` |
+| [`src/hooks/use-markers.ts`](../../src/hooks/use-markers.ts) | `GET /api/markers` quando o zoom cruza `>= 14` | **Navegador** — a última chamada client-side, quebrada em produção |
+
+O popup do marcador no mapa é só display desde 03/08/2026: editar e excluir
+mudaram para a página `/places/[id]`.
 
 > A listagem devolve **todos** os marcadores do banco a cada mudança de zoom; o filtro por proximidade é feito no cliente. Com volume real, isso vira o primeiro gargalo — o caminho natural é receber os limites do viewport (bounding box) por query string.
 
@@ -99,4 +107,4 @@ Cria com `BCrypt.HashPassword(dto.Password)` e `CreatedAt`/`UpdatedAt` em `DateT
 
 ## ➡️ Próxima página
 
-[10 — Autenticação e sessão](./10-autenticacao-e-sessao.md)
+[05 — Autenticação e sessão](./05-autenticacao-e-sessao.md)

@@ -8,7 +8,7 @@ Fila de aprovação do conteúdo que entra no mapa: ponto criado por usuário na
 
 A coluna `status` em `PontoNoMapa` **já estava no modelo lógico do TCC** — o desenho sempre previu moderação; nunca foi implementada.
 
-Esta fila julga **o ponto**, não quem o reivindica: pedido de posse é vínculo entre pessoa e empresa e vive em [Comércios](./businesses.md).
+Esta fila julga **o ponto**, e só isso — reivindicação de posse saiu do produto junto com o [gerenciamento por dono](../../archive/gerenciamento-por-dono/), cancelado em 19/08/2026.
 
 ## Por que vale
 
@@ -36,7 +36,7 @@ Esta fila julga **o ponto**, não quem o reivindica: pedido de posse é vínculo
 ## Fora do escopo inicial
 
 - Moderação de avaliações/comentários (é do módulo [Denúncias e feedback](./reports.md))
-- Aprovação de reivindicação de ponto (é [Comércios](./businesses.md))
+- Aprovação de reivindicação de ponto (cancelada em 19/08/2026 — ver [`archive/gerenciamento-por-dono/`](../../archive/gerenciamento-por-dono/))
 - Auto-aprovação por reputação do criador
 
 > Decisões já tomadas e componentes existentes em

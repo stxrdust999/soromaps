@@ -1,6 +1,6 @@
-import { createSession } from "@/lib/session";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { createSession } from "@/lib/session";
 
 /**
  * Realiza o login do usuário criando um cookie de sessão

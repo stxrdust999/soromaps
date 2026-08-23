@@ -36,7 +36,7 @@ trabalhos diferentes:** `Pedidos pendentes` (a fila que exige decisão),
   `resolveConflict` receber vencedor e perdedor juntos.
 - **Terceiro estado "pedir mais evidência"**, ao lado de aprovar e recusar.
   Mesmo raciocínio do "devolver ao autor" da
-  [moderação](./0003-moderacao-mestre-detalhe.md): pedido incompleto não é
+  [moderação](../../adr/admin/0003-moderacao-mestre-detalhe.md): pedido incompleto não é
   pedido falso.
 - **Distância entre o endereço do CNPJ e o pin.** Consulta externa continua
   fora de escopo, mas comparar o que foi declarado com a coordenada do ponto
@@ -76,4 +76,4 @@ trabalhos diferentes:** `Pedidos pendentes` (a fila que exige decisão),
 
 Sai de 🟡 quando `tbUsuario` tiver `tipoUsuario`/`CNPJ`, `markers` tiver FK de
 dono e existir entidade de reivindicação — ver
-[docs/todo/admin/businesses.md](../../todo/admin/businesses.md).
+[docs/todo/admin/businesses.md](./admin-businesses.md).

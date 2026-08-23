@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { PageSection } from "@/components/blocks/page-section";
 import { StarRating } from "@/components/blocks/star-rating";
+import { StatCard } from "@/components/blocks/stat-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -145,16 +146,5 @@ export default async function ExplorerProfilePage({
         </section>
       </PageSection>
     </main>
-  );
-}
-
-function StatCard({ label, value }: { label: string; value: number }) {
-  return (
-    <Card size="sm">
-      <CardContent className="flex flex-col">
-        <span className="font-semibold text-2xl tabular-nums">{value}</span>
-        <span className="text-muted-foreground text-xs">{label}</span>
-      </CardContent>
-    </Card>
   );
 }

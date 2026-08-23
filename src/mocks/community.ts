@@ -14,6 +14,11 @@
 import type { ExplorerStats } from "@/constants/verification";
 
 export interface ExplorerReviewMock {
+  /**
+   * `id` é índice em `markerCatalogMock`, então o link do card abre o lugar
+   * que o nome promete. `src/mocks/feed.ts` ainda numera a partir de 1 e por
+   * isso mostra o vizinho — corrigir lá é entrega própria.
+   */
   local: { id: number; nome: string; bairro: string };
   nota: number;
   corpo: string;
@@ -57,7 +62,7 @@ export const explorersMock: ExplorerMock[] = [
     bio: "Ando o Centro a pé todo dia. Anoto horário de pico e onde tem tomada.",
     ultimasAvaliacoes: [
       {
-        local: { id: 4, nome: "Sebo da Rua XV", bairro: "Centro" },
+        local: { id: 3, nome: "Sebo da Rua XV", bairro: "Centro" },
         nota: 5,
         corpo:
           "O segundo andar é o motivo de ir. Peça ajuda ao dono em vez de garimpar sozinho — ele acha em dois minutos.",
@@ -65,7 +70,7 @@ export const explorersMock: ExplorerMock[] = [
         uteis: 12,
       },
       {
-        local: { id: 2, nome: "Parque das Águas", bairro: "Jardim Abaeté" },
+        local: { id: 1, nome: "Parque das Águas", bairro: "Jardim Abaeté" },
         nota: 4,
         corpo:
           "Pista boa e sombra de verdade, mas a torneira da entrada estava quebrada de novo.",
@@ -91,7 +96,7 @@ export const explorersMock: ExplorerMock[] = [
     bio: "Café, samba de quinta e qualquer lugar que abra antes das sete.",
     ultimasAvaliacoes: [
       {
-        local: { id: 10, nome: "Largo do Café", bairro: "Centro" },
+        local: { id: 9, nome: "Largo do Café", bairro: "Centro" },
         nota: 5,
         corpo:
           "Cheguei na quinta sem saber do samba e fiquei até fechar. Se for em grupo, chega antes das oito.",
@@ -117,7 +122,7 @@ export const explorersMock: ExplorerMock[] = [
     bio: "Procuro o pedido que não está no cardápio. Costuma ser o melhor.",
     ultimasAvaliacoes: [
       {
-        local: { id: 1, nome: "Cabocafé", bairro: "Santa Rosália" },
+        local: { id: 0, nome: "Cabocafé", bairro: "Santa Rosália" },
         nota: 5,
         corpo:
           "O café com rapadura não está no cardápio e é o melhor pedido da casa. Bolo de fubá sai às quatro.",
@@ -158,7 +163,7 @@ export const explorersMock: ExplorerMock[] = [
     contribuicoesSemana: 9,
     ultimasAvaliacoes: [
       {
-        local: { id: 13, nome: "Museu Ferroviário", bairro: "Vila Hortência" },
+        local: { id: 12, nome: "Museu Ferroviário", bairro: "Vila Hortência" },
         nota: 5,
         corpo:
           "Entrada gratuita e a visita leva uma hora sem pressa. Sexta tem escola em visita o dia todo.",
@@ -298,7 +303,44 @@ export const currentExplorerMock: ExplorerMock = {
   conquistas: 5,
   pontosCadastrados: 1,
   contribuicoesSemana: 6,
-  ultimasAvaliacoes: [],
+  ultimasAvaliacoes: [
+    {
+      local: { id: 0, nome: "Cabocafé", bairro: "Santa Rosália" },
+      nota: 5,
+      corpo:
+        "Virou meu escritório de terça. Tomada em quase toda mesa e ninguém te expulsa depois do segundo café.",
+      diasAtras: 2,
+      uteis: 7,
+    },
+    {
+      local: { id: 11, nome: "Padaria Estação", bairro: "Vila Barcelona" },
+      nota: 4,
+      corpo:
+        "Pão sai quente às seis e às cinco da tarde. Fora desses horários é uma padaria comum.",
+      diasAtras: 7,
+      uteis: 4,
+    },
+    {
+      local: { id: 4, nome: "Cantina da Vila", bairro: "Vila Hortência" },
+      nota: 5,
+      corpo:
+        "Porção para dois alimenta três. Chegue antes das 20h no sábado ou conte com fila na calçada.",
+      diasAtras: 17,
+      uteis: 9,
+    },
+    {
+      local: {
+        id: 5,
+        nome: "Mirante do Ipanema",
+        bairro: "Ipanema das Pedras",
+      },
+      nota: 4,
+      corpo:
+        "O pôr do sol entrega o que promete. A subida é mais puxada do que parece — leve água.",
+      diasAtras: 22,
+      uteis: 3,
+    },
+  ],
 };
 
 /** Total de contribuições registradas — a métrica do ranking geral. */

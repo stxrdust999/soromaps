@@ -6,7 +6,7 @@
 
 Fila de aprovação dos **comentários recebidos nas respostas do dono** ao próprio ponto: quando alguém responde a uma resposta oficial (ver [Responder avaliações](./reviews.md)), o comentário nasce `pendente` e só fica público depois do dono aprovar ou ocultar. É moderação de escopo próprio — não tem poder sobre a avaliação em si, só sobre a conversa que se forma em cima da resposta dele.
 
-Diferente de [admin/moderation](../admin/moderation.md), que é fila de aprovação de **pontos novos** no mapa inteiro: aqui o raio de ação é só o `Comentario` pendurado nas próprias respostas, e quem modera é o dono, não o admin.
+Diferente de [admin/moderation](../../../todo/admin/moderation.md), que é fila de aprovação de **pontos novos** no mapa inteiro: aqui o raio de ação é só o `Comentario` pendurado nas próprias respostas, e quem modera é o dono, não o admin.
 
 ## Por que vale
 
@@ -31,5 +31,5 @@ Diferente de [admin/moderation](../admin/moderation.md), que é fila de aprovaç
 
 ## Fora do escopo inicial
 
-- Denúncia formal com motivo (isso é [Denúncias](../admin/reports.md), escopo do admin)
+- Denúncia formal com motivo (isso é [Denúncias](../../../todo/admin/reports.md), escopo do admin)
 - Banimento de usuário comentarista

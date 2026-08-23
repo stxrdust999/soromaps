@@ -1,6 +1,6 @@
-> ⚙️ **Trilha: implementado.** Estado real dos ambientes em 29/07/2026. Inclui um defeito conhecido em produção — ver [Estado de produção](#-estado-de-produção).
+> Estado real dos ambientes, com a conexão de banco revista em 16/08/2026. Inclui um defeito conhecido em produção — ver [Estado de produção](#-estado-de-produção).
 
-# 🚀 14. Deploy e infraestrutura
+# 🚀 08. Deploy e infraestrutura
 
 Três serviços, três provedores:
 
@@ -43,6 +43,7 @@ flowchart TB
 |---|---|---|
 | `API_URL` | URL da API no Azure, usada por Server Actions e pela camada `src/http` | **Não** |
 | `SESSION_SECRET` | Segredo HMAC que assina o cookie de sessão | **Não** |
+| `GEMINI_API_KEY` | Chave do Gemini, usada pelo gerador de rascunho de pauta | **Não** |
 
 > `NEXT_PUBLIC_API_URL` **não é definida em produção**, por decisão: a URL da API é tratada como segredo, e qualquer variável com esse prefixo é gravada em texto puro no JavaScript que o visitante baixa. A consequência disso está em [Estado de produção](#-estado-de-produção).
 
@@ -70,9 +71,9 @@ O schema foi criado **manualmente no SQL Editor** do painel. O projeto continua 
 
 - não há forma reproduzível de recriar o banco do zero;
 - mudança de model não gera diff versionado;
-- o modelo lógico do TCC não tem caminho automático para virar schema.
+- **há dois schemas mantidos à mão** — local e Supabase — sem nada que os compare.
 
-Detalhe das tabelas em [08 — Banco atual](./08-banco-atual.md).
+Detalhe das tabelas em [03 — Banco](./03-banco.md).
 
 ### Use o pooler, nunca a conexão direta
 
@@ -83,7 +84,16 @@ O Supabase oferece dois caminhos de conexão, e **um deles não é alcançável 
 | Conexão direta | `db.<ref>.supabase.co` | **só IPv6** — nenhum registro A |
 | Pooler (Supavisor) | `aws-<n>-<region>.pooler.supabase.com` | IPv4 e IPv6 |
 
-Desde janeiro de 2024 o host direto responde apenas por IPv6. Rede que não roteia IPv6 — a maioria dos provedores residenciais brasileiros, e a saída do Azure App Service — simplesmente não chega lá: a conexão pendura até estourar o timeout, sem mensagem que aponte a causa.
+Desde janeiro de 2024 o host direto responde apenas por IPv6. Rede que não roteia IPv6 — a maioria dos roteadores residenciais brasileiros, e a saída do Azure App Service, que é IPv4-only — simplesmente não chega lá: a conexão pendura até estourar o timeout, sem mensagem que aponte a causa.
+
+O sintoma que revelou isso: a API conectava em rede móvel e **nunca** em Wi-Fi,
+em qualquer Wi-Fi. Carrier brasileiro entrega IPv6 de verdade; roteador
+residencial costuma anunciar prefixo sem rotear nada pra fora. Confirmado
+medindo que nem `ipv6.google.com:443` respondia na mesma rede, enquanto o
+pooler conectava por IPv4 em 1,5s.
+
+⚠️ **Vale para produção também:** a mesma string precisa estar nas Application
+Settings do App Service, não só na máquina local.
 
 A string em uso é a do **session pooler**:
 
@@ -106,11 +116,12 @@ Sobre o modo: usamos **session (5432)**, que é proxy transparente e suporta o p
 
 ### 1. O `fetch` vira caminho relativo
 
-`/home`, `/places/new` e o popup do marcador são Client Components e leem a URL assim:
+[`src/hooks/use-markers.ts`](../../src/hooks/use-markers.ts) roda no navegador e lê a URL assim:
 
 ```ts
+// TODO: trocar por /api/proxy — NEXT_PUBLIC_API_URL não é definida em produção
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
-fetch(`${API_URL}/api/markers`);
+fetch(`${API_URL}/api/markers`, { signal: controller.signal });
 ```
 
 Sem `NEXT_PUBLIC_API_URL` definida, `API_URL` vira `""` e a chamada final é `fetch("/api/markers")` — um caminho **relativo**, que bate em `soromaps-sigma.vercel.app/api/markers`. Essa rota não existe no Next: **404**.
@@ -127,7 +138,14 @@ O navegador bloquearia a chamada vinda de `soromaps-sigma.vercel.app`.
 
 ### O que continua funcionando
 
-Login, cadastro e o CRUD de usuários — porque passam por Server Actions e pela camada `src/http`, que rodam **no servidor** com `API_URL` e nunca dependem de CORS.
+Login, cadastro, o CRUD de usuários e o CRUD de pontos (`/places/[id]`,
+`/places/new`) — todos passam por Server Actions e pela camada `src/http`, que
+rodam **no servidor** com `API_URL` e nunca dependem de CORS. O que quebrou foi
+só a **listagem por zoom** no mapa, que é o único fetch que sobrou no navegador.
+
+As telas sobre mock (`/feed`, `/community`, `/discover`, `/profile`, `/admin/*`
+menos usuários) funcionam em produção porque não chamam a API — o que elas
+mostram é fictício nos dois ambientes.
 
 ### A correção: rota de proxy
 
@@ -163,7 +181,7 @@ Resolve os dois defeitos de uma vez:
 
 ### URL da API como segredo
 **Decisão:** não definir `NEXT_PUBLIC_API_URL` em produção.
-**Motivo:** `NEXT_PUBLIC_` significa **público** — o valor é substituído em texto puro num `.js` que qualquer visitante baixa. Como a API não tem autenticação ([ver riscos](./10-autenticacao-e-sessao.md)), publicar a URL entregaria um endpoint aberto de CRUD de usuários a quem abrisse o DevTools. **Custo assumido:** as chamadas client-side de markers pararam, até a rota de proxy existir.
+**Motivo:** `NEXT_PUBLIC_` significa **público** — o valor é substituído em texto puro num `.js` que qualquer visitante baixa. Como a API não tem autenticação ([ver riscos](./05-autenticacao-e-sessao.md)), publicar a URL entregaria um endpoint aberto de CRUD de usuários a quem abrisse o DevTools. **Custo assumido:** a listagem de marcadores por zoom parou, até a rota de proxy existir.
 
 ### Três provedores em vez de um só
 **Decisão:** Vercel (front), Azure (API) e Supabase (banco).
@@ -179,6 +197,6 @@ Resolve os dois defeitos de uma vez:
 
 ---
 
-## ⬅️ Voltar
+## ➡️ Próxima página
 
-[00 — Home](./00-home.md)
+[09 — Backlog e dívida](./09-backlog.md)

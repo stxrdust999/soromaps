@@ -32,4 +32,4 @@ A modelagem já suporta: `Comentario` pendura em `Analise` (decisão do TCC — 
 ## Fora do escopo inicial
 
 - Templates de resposta
-- Alertas de avaliação negativa (vira tipo em [Notificações](../user/notifications.md))
+- Alertas de avaliação negativa (vira tipo em [Notificações](../../../todo/user/notifications.md))

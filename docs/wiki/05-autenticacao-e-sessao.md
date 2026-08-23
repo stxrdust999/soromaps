@@ -1,6 +1,6 @@
-> ⚙️ **Trilha: implementado.** Inclui uma seção de riscos conhecidos — leia antes de expor a API fora da máquina local.
+> ⚠️ Inclui uma seção de riscos conhecidos, e a API **já está publicada na internet**. Leia antes de mexer aqui.
 
-# 🔐 10. Autenticação e sessão
+# 🔐 05. Autenticação e sessão
 
 O desenho é incomum e vale entender antes de mexer: **a API valida a senha, mas quem emite a sessão é o Next.js**.
 
@@ -53,11 +53,20 @@ O cookie é gravado com `httpOnly: true`, `sameSite: "lax"`, `path: "/"`, `maxAg
 ### Guarda de rota
 
 ```ts
-const PROTECTED_ROUTES = ["/home", "/admin", "/places", "/profile"];
+const PROTECTED_ROUTES = [
+  "/home", "/admin", "/places", "/profile", "/feed", "/discover",
+  "/community", "/pautas", "/visits", "/stats", "/favorites", "/achievements",
+];
 const AUTH_ROUTES = ["/login", "/register"];
 ```
 
-Rota protegida sem sessão → `/login`. Rota de auth com sessão → `/home`. O `matcher` limita a execução do middleware a essas rotas.
+Rota protegida sem sessão → `/login`. Rota de auth com sessão → `/home`. O
+`matcher` limita a execução do middleware a essas rotas.
+
+As quatro últimas (`/visits`, `/stats`, `/favorites`, `/achievements`) só
+existem como `redirect()` para as abas de `/profile` desde 19/08/2026, mas
+seguem na lista: sem sessão, quem abre a URL antiga vai para o login em vez de
+atravessar o redirect e cair na guarda só depois.
 
 ### Cadastro
 
@@ -73,7 +82,10 @@ Esta seção existe para não deixar nada implícito. Nenhum item abaixo é hipo
 
 `Program.cs` chama `app.UseAuthorization()`, mas **nenhum esquema de autenticação é registrado** (não há `AddAuthentication`, nem `UseAuthentication`, nem `[Authorize]` em controller algum). Na prática, todos os endpoints de `UsersController` e `MarkersController` estão abertos: qualquer pessoa que alcance a URL da API pode listar, criar, editar e excluir usuários e marcadores, sem credencial.
 
-O cookie de sessão do Next.js **não protege a API** — ele só protege a navegação no front. E como `/home` e `/places/new` chamam a API direto do navegador, a URL da API está exposta em `NEXT_PUBLIC_API_URL`, visível no bundle.
+O cookie de sessão do Next.js **não protege a API** — ele só protege a navegação
+no front. Em produção a URL da API é tratada como segredo (não há
+`NEXT_PUBLIC_API_URL` definida na Vercel), o que reduz a exposição mas não é
+proteção: URL secreta não é credencial.
 
 **Correção mínima:** a API passa a emitir o JWT (ou valida o mesmo `SESSION_SECRET` que o Next.js usa), registra `AddAuthentication().AddJwtBearer(...)`, e os controllers ganham `[Authorize]`.
 
@@ -95,11 +107,27 @@ O cadastro exige e-mail (`createUserSchema` valida `email`), mas a autenticaçã
 
 ### 5. Sem controle de papel (role)
 
-Existe uma área `/admin` com CRUD de usuários, mas não há coluna de papel no banco nem verificação no middleware ou na API. **Qualquer sessão válida acessa `/admin`** e, por consequência, exclui usuários.
+Existe uma área `/admin` inteira — sete telas mais o CRUD de usuários — e não há
+coluna de papel no banco nem verificação no middleware ou na API. **Qualquer
+sessão válida acessa `/admin`** e, por consequência, exclui usuários.
+
+O mesmo buraco aparece no lado do explorador: `/places/[id]` mostra editar e
+excluir para qualquer sessão, porque `markers` não tem dono. É o gate que
+destrava quando o papel existir.
 
 ### 6. `SESSION_SECRET` sem fallback é bom; sem rotação, não
 
 `getSecretKey` lança erro explícito se `SESSION_SECRET` não existir — comportamento correto. Mas não há versionamento de chave: trocar o segredo invalida todas as sessões de uma vez. Aceitável agora; vale registrar.
+
+---
+
+### 7. `GEMINI_API_KEY` — o que está certo, e por quê
+
+Vale registrar junto porque é a outra chave do projeto: ela é lida só no
+servidor ([`src/lib/gemini.ts`](../../src/lib/gemini.ts)), **sem** prefixo
+`NEXT_PUBLIC_`. Chave de modelo no bundle é conta de terceiro paga por quem
+abrir o DevTools. Falta de chave é estado esperado (`sem-chave`), não exceção —
+a tela funciona e o gerador avisa que está desligado.
 
 ---
 
@@ -127,4 +155,4 @@ Existe uma área `/admin` com CRUD de usuários, mas não há coluna de papel no
 
 ## ➡️ Próxima página
 
-[11 — Frontend web](./11-frontend-web.md)
+[06 — Frontend web](./06-frontend-web.md)

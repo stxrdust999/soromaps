@@ -11,8 +11,8 @@ gamificação + rede social. TCC da FATEC Sorocaba.
 
 | Pasta | O que guarda | Quando ir lá |
 |---|---|---|
-| [`wiki/`](./wiki/00-home.md) | As duas trilhas do projeto — o que o TCC **projetou** e o que está **implementado** hoje — mais a página de gap entre elas. | **Ponto de partida de verdade.** Arquitetura, banco, endpoints, deploy, setup local. |
-| [`adr/`](./adr/README.md) | Por que cada decisão de implementação foi tomada, um arquivo por módulo, organizado por área (`admin/`, `user/`, `business/`). | Vai mexer num módulo que já existe e quer saber por que foi feito assim antes de mudar. |
+| [`wiki/`](./wiki/00-home.md) | O sistema **como ele está**: arquitetura, banco, endpoints, autenticação, frontend, setup, deploy e backlog. | **Ponto de partida de verdade.** Não guarda especificação antiga — o que o TCC projetou está no `archive/`. |
+| [`adr/`](./adr/README.md) | Por que cada decisão de implementação foi tomada, um arquivo por módulo, organizado por área (`admin/`, `user/`). | Vai mexer num módulo que já existe e quer saber por que foi feito assim antes de mudar. |
 | [`todo/`](./todo/README.md) | Brainstorm do que **ainda não existe**, um `.md` por módulo de produto, por área. | Vai começar um módulo novo ou ver o que falta num que já roda parcial. |
 | [`propostas/`](./propostas/README.md) | Spec técnico escrito **antes** de a mudança existir no código, aguardando aprovação/implementação. | Vai revisar ou implementar uma mudança de modelo/API já desenhada mas não construída. |
 | [`archive/`](./archive/README.md) | Material histórico — nunca é fonte de verdade, nunca é apagado. | Curiosidade sobre uma decisão antiga ou export original de diagrama. |
@@ -34,8 +34,9 @@ gamificação + rede social. TCC da FATEC Sorocaba.
 
 - "Por que isso foi feito assim?" → `adr/<área>/`
 - "O que falta fazer nesse módulo?" → `todo/<área>/`
-- "Qual o estado real do banco/API/deploy?" → `wiki/` trilha "Atual"
-- "O que o TCC pedia originalmente?" → `wiki/` trilha "Projetado"
+- "Qual o estado real do banco/API/deploy?" → `wiki/`
+- "O que ainda é mock e o que já é dado real?" → [`wiki/09-backlog.md`](./wiki/09-backlog.md)
+- "O que o TCC pedia originalmente?" → `archive/wiki-trilha-projetada/` — **histórico, não fonte de verdade**
 - Contexto cronológico geral e decisões de stack/infra → `/CLAUDE.md`
 
 ## Convenção que atravessa as pastas

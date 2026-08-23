@@ -1,20 +1,18 @@
+import { ShieldUserIcon, StoreIcon, UsersIcon } from "lucide-react";
 import { Suspense } from "react";
-
 import { PageSection } from "@/components/blocks/page-section";
 import { SiteFooter } from "@/components/blocks/site-footer";
 import { TableSkeletonState } from "@/components/table/table-skeleton-state";
-import { USERS_LIST_TAG } from "@/constants/users";
-import { getUsers } from "@/http/users/users";
-
-import { UsersTable } from "./_components/table";
-import { Badge } from "@/components/ui/badge";
 import {
   Avatar,
   AvatarFallback,
   AvatarGroup,
   AvatarImage,
 } from "@/components/ui/avatar";
-import { ShieldUser, ShieldUserIcon, StoreIcon, UsersIcon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { USERS_LIST_TAG } from "@/constants/users";
+import { getUsers } from "@/http/users/users";
+import { UsersTable } from "./_components/table";
 
 interface InformationBadgeProps {
   icon: React.ReactNode;

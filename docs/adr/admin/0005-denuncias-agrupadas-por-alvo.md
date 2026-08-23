@@ -45,7 +45,8 @@ de virar surpresa. O chip de autoria existe para medir a proporção depois.
   contas de até 3 dias e *todos* os denunciantes são novos, o caso é marcado
   em vermelho. Sem isso a fila vira arma: cinco contas criadas ontem
   derrubam qualquer conteúdo legítimo. É o análogo do sinal de conflito de
-  [Comércios](./0006-comercios-tres-abas.md).
+  Comércios — módulo cancelado em 19/08/2026, ADR em
+  [`docs/archive/gerenciamento-por-dono/`](../../archive/gerenciamento-por-dono/0006-comercios-tres-abas.md).
 - **Selo de motivos divergentes.** Denunciantes que não concordam entre si
   (um diz spam, outro diz ofensa) costumam indicar desavença pessoal, não
   problema no conteúdo. Sinal fraco, marcado como neutro de propósito.

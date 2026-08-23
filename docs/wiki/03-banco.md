@@ -1,10 +1,12 @@
-> ⚙️ **Trilha: implementado.** O modelo de 10 tabelas do TCC está em [05 — Modelagem projetada](./05-modelagem-projetada.md); o que falta, em [12 — Gap](./12-gap-modelo-vs-implementacao.md).
+> ⚠️ **Duas tabelas.** As telas construídas já exigem cerca de vinte — o desenho
+> dessa estrutura vive em `docs/diagramas/modelo-de-dados/` (pasta local, fora
+> do controle de versão), e a distância até lá está em [09 — Backlog](./09-backlog.md).
 
-# 🐘 08. Banco atual
+# 🐘 03. Banco
 
 PostgreSQL gerenciado no **Supabase**, acessado via EF Core com o provider `Npgsql.EntityFrameworkCore.PostgreSQL`. **Duas tabelas**, ambas mapeadas por Data Annotations nos models de `soromaps_api/Models`.
 
-A connection string vive nas Application Settings do Azure App Service (`ConnectionStrings__DefaultConnection`) e nunca entra no repositório — ver [14 — Deploy](./14-deploy.md).
+A connection string vive nas Application Settings do Azure App Service (`ConnectionStrings__DefaultConnection`) e nunca entra no repositório — ver [08 — Deploy](./08-deploy.md).
 
 ```mermaid
 erDiagram
@@ -25,7 +27,10 @@ erDiagram
     }
 ```
 
-Não há linha ligando as duas: **`markers` não sabe quem criou o ponto**. No modelo projetado isso seria `PontoNoMapa.UsuarioDono`.
+Não há linha ligando as duas: **`markers` não sabe quem criou o ponto**. Sem
+essa FK não há como aplicar permissão de edição, atribuir contribuição no
+ranking da comunidade nem contar visita — três coisas que as telas já desenham
+sobre mock.
 
 ---
 
@@ -49,12 +54,19 @@ public class User
 | Coluna | Tipo .NET | Observação |
 |---|---|---|
 | `id` | `int` | PK por convenção do EF Core (propriedade `Id`) |
-| `user_name` | `string` | **É o identificador de login** — ver [10 — Autenticação](./10-autenticacao-e-sessao.md) |
+| `user_name` | `string` | **É o identificador de login** — ver [05 — Autenticação](./05-autenticacao-e-sessao.md) |
 | `user_email` | `string` | Obrigatório no cadastro (`createUserSchema`), mas não usado para autenticar |
 | `user_password` | `string` | Hash BCrypt, gerado em `UsersController.Create` |
 | `created_at` / `updated_at` | `DateTime` | Preenchidos manualmente com `DateTime.UtcNow` no controller |
 
-**Ausentes em relação ao modelo:** `tipoUsuario`, `CPF`, `CNPJ`, `pontuacao`, `nivel`. Sem `tipoUsuario` não existe distinção entre usuário comum e estabelecimento — que é a base das personas e do modelo de negócio.
+**Ausentes, e ainda esperados:** papel (`admin` × explorador) e os contadores
+de contribuição que alimentam título de explorador e selo de verificado. Sem
+papel, `/admin` fica aberto a qualquer sessão válida.
+
+**Ausentes, e agora fora do escopo:** `tipoUsuario`, `CPF`, `CNPJ` (dono de
+estabelecimento cancelado em 19/08/2026) e `pontuacao`/`nivel` (gamificação
+ficou só com conquista em 12/08/2026 — o "nível" virou título derivado da
+contagem). Não são dívida; são escopo cortado.
 
 Também não há constraint de unicidade declarada em `user_name` ou `user_email`. Como o login busca por `user_name`, duplicatas fariam `FirstOrDefault` devolver sempre a primeira linha encontrada.
 
@@ -78,12 +90,21 @@ public class Marker
 | Coluna | Tipo .NET | Observação |
 |---|---|---|
 | `id` | `int` | PK |
-| `nome` | `string` | Hoje sempre criado como `"Novo Ponto"` pela tela `/places/new` |
+| `nome` | `string` | Preenchido pelo formulário de `/places/new` desde 03/08/2026 |
 | `lat` / `lng` | `double` | Resolvem o `Coordenadas` que o modelo lógico esqueceu |
 
-**Ausentes em relação ao modelo:** `PontoDescricao`, `PontoContato`, `Foto`, `UsuarioDono` (FK), `CategoriaID` (FK), `status`, `endereco`.
+**Ausentes:** descrição, foto, contato, `UsuarioDono` (FK), `CategoriaID` (FK),
+`status`, endereço e bairro.
 
-Sem `status` não há moderação de ponto; sem `UsuarioDono` não dá para saber quem criou nem aplicar permissão de edição — hoje qualquer um edita ou apaga qualquer marcador.
+O formulário de `/places/new` **já coleta oito campos e a API recebe três** — o
+resto é validado no navegador e descartado. É deliberado: o conceito foi
+aprovado em 03/08/2026 e o spec está em
+[`docs/propostas/2026-08-03-expansao-modelo-ponto.md`](../propostas/2026-08-03-expansao-modelo-ponto.md).
+
+Consequências que já se veem nas telas: sem `status` a fila de
+`/admin/moderation` roda inteira sobre mock; sem `UsuarioDono` qualquer sessão
+edita ou apaga qualquer ponto; sem bairro o ranking por bairro de `/community` e
+a cobertura de `/profile/stats` não têm de onde sair.
 
 ---
 
@@ -95,8 +116,8 @@ Implicações:
 
 - Não existe forma reproduzível de subir o banco do zero — quem clona o repo precisa do DDL por fora.
 - Mudança de model não gera diff versionado.
-- O modelo lógico do TCC não tem caminho automático para virar schema.
 - Ambiente local e Supabase podem divergir sem ninguém perceber: são dois schemas mantidos à mão, sem nada que os compare.
+- As tabelas que faltam não têm caminho automático para nascer — cada uma vai ser DDL escrito à mão, duas vezes.
 
 Primeiro passo para resolver:
 
@@ -123,7 +144,7 @@ Três convenções diferentes em duas tabelas. Vale padronizar antes de criar as
 
 ### `lat`/`lng` como colunas `double` separadas
 **Decisão:** guardar a coordenada em dois `double` em vez de um tipo geográfico.
-**Motivo:** é exatamente o que MapLibre consome (`[lng, lat]`), sem conversão. Alternativa a considerar quando entrar busca por raio (RF-11): PostGIS com `geography(Point)`, que dá índice espacial e cálculo de distância nativo — hoje seria complexidade sem uso.
+**Motivo:** é exatamente o que MapLibre consome (`[lng, lat]`), sem conversão. Alternativa a considerar quando entrar busca por raio: PostGIS com `geography(Point)`, que dá índice espacial e cálculo de distância nativo — hoje seria complexidade sem uso.
 
 ### Hash BCrypt na aplicação, não no banco
 **Decisão:** `BCrypt.Net.BCrypt.HashPassword` no controller, gravando o hash pronto.
@@ -133,4 +154,4 @@ Três convenções diferentes em duas tabelas. Vale padronizar antes de criar as
 
 ## ➡️ Próxima página
 
-[09 — Endpoints da API](./09-api-endpoints.md)
+[04 — Endpoints da API](./04-api-endpoints.md)

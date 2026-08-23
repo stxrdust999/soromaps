@@ -1,0 +1,105 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    // Fixados por escrito (eram default implícito) pra um bump do Biome não
+    // reformatar o repo inteiro num commit só — @biomejs/biome está pinado
+    // em 2.2.0 mas o pacote já vai em 2.5.10. Valores == default atual, só
+    // travados no papel. Decisão: 2026-08-23.
+    "lineWidth": 80,
+    "lineEnding": "lf"
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "all",
+      "arrowParentheses": "always"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "style": {
+        // Travas de estilo sem nenhuma violação hoje (conferido rodando
+        // contra os 282 arquivos antes de ligar) — 2026-08-23.
+        "noParameterAssign": "error",
+        "useConsistentArrayType": "error",
+        "useShorthandFunctionType": "error",
+        "noInferrableTypes": "error",
+        "noEnum": "error",
+        "useThrowOnlyError": "error",
+        "noNonNullAssertion": "error",
+        "useFilenamingConvention": "error",
+        "useCollapsedElseIf": "error",
+        "useTemplate": "error",
+        "noUselessElse": "error",
+        // Era "warn" no recommended; sobe pra "error" porque import de tipo
+        // puro fora de `import type` sobrevive errado ao tree-shaking.
+        "useImportType": "error"
+      },
+      "correctness": {
+        // Pega import de pacote não declarado em package.json (typo de
+        // nome, ou dependência transitiva usada sem declarar).
+        "noUndeclaredDependencies": "error",
+        // Eram "warn" no recommended; sobem pra "error" pra travar no
+        // `biome check` (CI/pre-commit), não só aparecer como aviso
+        // ignorável.
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error"
+      },
+      "suspicious": {
+        "noUnknownAtRules": "off",
+        // console.error/warn ficam — todos os usos atuais são catch de
+        // Server Action ou de fetch client-side. Barra console.log
+        // esquecido de debug.
+        "noConsole": {
+          "level": "error",
+          "options": {
+            "allow": ["error", "warn"]
+          }
+        }
+      }
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    }
+  },
+  "overrides": [
+    {
+      // MapLibre roda em modo não-controlado (decisão CLAUDE.md
+      // 2026-08-02, MapDrawerLayout): o useEffect de inicialização do mapa
+      // usa deps vazias de propósito — incluir viewport/mapStyles recriaria
+      // o mapa a cada gesto (remonta, recarrega tiles CARTO). A regra
+      // continua ligada no resto do projeto; só este arquivo é isento.
+      "includes": ["src/components/ui/map.tsx"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useExhaustiveDependencies": "off"
+          }
+        }
+      }
+    }
+  ],
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  }
+}

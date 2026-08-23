@@ -107,7 +107,7 @@ async function decryptSession(token: string): Promise<SessionPayload | null> {
     }
 
     return payload;
-  } catch (error) {
+  } catch (_error) {
     return null; // Invalid token format or parsing error
   }
 }
